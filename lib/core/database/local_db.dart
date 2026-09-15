@@ -6,6 +6,7 @@ import '../../features/issues/data/models/issue_model.dart';
 import '../../features/issues/data/models/issue_category_model.dart';
 import '../../features/meetings/data/models/meeting_model.dart';
 import '../../features/villages/data/models/village_model.dart';
+import '../auth/cached_user_model.dart';
 
 // ---------------------------------------------------------------------------
 // PHASE 06 — LocalDb updated with category collections
@@ -34,6 +35,7 @@ class LocalDb {
     final dir = await getApplicationDocumentsDirectory();
     _instance = await Isar.open(
       [
+        CachedUserModelSchema,
         IssueModelSchema,
         IssueCategoryModelSchema,
         IssueSubcategoryModelSchema,

@@ -32,33 +32,43 @@ const CachedUserModelSchema = CollectionSchema(
       name: r'initials',
       type: IsarType.string,
     ),
-    r'roleStr': PropertySchema(
+    r'isActive': PropertySchema(
       id: 3,
+      name: r'isActive',
+      type: IsarType.bool,
+    ),
+    r'lastAuthenticated': PropertySchema(
+      id: 4,
+      name: r'lastAuthenticated',
+      type: IsarType.dateTime,
+    ),
+    r'roleStr': PropertySchema(
+      id: 5,
       name: r'roleStr',
       type: IsarType.string,
     ),
     r'state': PropertySchema(
-      id: 4,
+      id: 6,
       name: r'state',
       type: IsarType.string,
     ),
     r'userId': PropertySchema(
-      id: 5,
+      id: 7,
       name: r'userId',
       type: IsarType.string,
     ),
     r'username': PropertySchema(
-      id: 6,
+      id: 8,
       name: r'username',
       type: IsarType.string,
     ),
     r'villageId': PropertySchema(
-      id: 7,
+      id: 9,
       name: r'villageId',
       type: IsarType.string,
     ),
     r'villageName': PropertySchema(
-      id: 8,
+      id: 10,
       name: r'villageName',
       type: IsarType.string,
     )
@@ -124,12 +134,14 @@ void _cachedUserModelSerialize(
   writer.writeString(offsets[0], object.district);
   writer.writeString(offsets[1], object.fullName);
   writer.writeString(offsets[2], object.initials);
-  writer.writeString(offsets[3], object.roleStr);
-  writer.writeString(offsets[4], object.state);
-  writer.writeString(offsets[5], object.userId);
-  writer.writeString(offsets[6], object.username);
-  writer.writeString(offsets[7], object.villageId);
-  writer.writeString(offsets[8], object.villageName);
+  writer.writeBool(offsets[3], object.isActive);
+  writer.writeDateTime(offsets[4], object.lastAuthenticated);
+  writer.writeString(offsets[5], object.roleStr);
+  writer.writeString(offsets[6], object.state);
+  writer.writeString(offsets[7], object.userId);
+  writer.writeString(offsets[8], object.username);
+  writer.writeString(offsets[9], object.villageId);
+  writer.writeString(offsets[10], object.villageName);
 }
 
 CachedUserModel _cachedUserModelDeserialize(
@@ -142,13 +154,15 @@ CachedUserModel _cachedUserModelDeserialize(
   object.district = reader.readStringOrNull(offsets[0]);
   object.fullName = reader.readString(offsets[1]);
   object.initials = reader.readString(offsets[2]);
+  object.isActive = reader.readBoolOrNull(offsets[3]);
   object.isarId = id;
-  object.roleStr = reader.readString(offsets[3]);
-  object.state = reader.readStringOrNull(offsets[4]);
-  object.userId = reader.readString(offsets[5]);
-  object.username = reader.readString(offsets[6]);
-  object.villageId = reader.readStringOrNull(offsets[7]);
-  object.villageName = reader.readStringOrNull(offsets[8]);
+  object.lastAuthenticated = reader.readDateTimeOrNull(offsets[4]);
+  object.roleStr = reader.readString(offsets[5]);
+  object.state = reader.readStringOrNull(offsets[6]);
+  object.userId = reader.readString(offsets[7]);
+  object.username = reader.readString(offsets[8]);
+  object.villageId = reader.readStringOrNull(offsets[9]);
+  object.villageName = reader.readStringOrNull(offsets[10]);
   return object;
 }
 
@@ -166,16 +180,20 @@ P _cachedUserModelDeserializeProp<P>(
     case 2:
       return (reader.readString(offset)) as P;
     case 3:
-      return (reader.readString(offset)) as P;
+      return (reader.readBoolOrNull(offset)) as P;
     case 4:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readDateTimeOrNull(offset)) as P;
     case 5:
       return (reader.readString(offset)) as P;
     case 6:
-      return (reader.readString(offset)) as P;
-    case 7:
       return (reader.readStringOrNull(offset)) as P;
+    case 7:
+      return (reader.readString(offset)) as P;
     case 8:
+      return (reader.readString(offset)) as P;
+    case 9:
+      return (reader.readStringOrNull(offset)) as P;
+    case 10:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -704,6 +722,34 @@ extension CachedUserModelQueryFilter
   }
 
   QueryBuilder<CachedUserModel, CachedUserModel, QAfterFilterCondition>
+      isActiveIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'isActive',
+      ));
+    });
+  }
+
+  QueryBuilder<CachedUserModel, CachedUserModel, QAfterFilterCondition>
+      isActiveIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'isActive',
+      ));
+    });
+  }
+
+  QueryBuilder<CachedUserModel, CachedUserModel, QAfterFilterCondition>
+      isActiveEqualTo(bool? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isActive',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<CachedUserModel, CachedUserModel, QAfterFilterCondition>
       isarIdEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -751,6 +797,80 @@ extension CachedUserModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'isarId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<CachedUserModel, CachedUserModel, QAfterFilterCondition>
+      lastAuthenticatedIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'lastAuthenticated',
+      ));
+    });
+  }
+
+  QueryBuilder<CachedUserModel, CachedUserModel, QAfterFilterCondition>
+      lastAuthenticatedIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'lastAuthenticated',
+      ));
+    });
+  }
+
+  QueryBuilder<CachedUserModel, CachedUserModel, QAfterFilterCondition>
+      lastAuthenticatedEqualTo(DateTime? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'lastAuthenticated',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<CachedUserModel, CachedUserModel, QAfterFilterCondition>
+      lastAuthenticatedGreaterThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'lastAuthenticated',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<CachedUserModel, CachedUserModel, QAfterFilterCondition>
+      lastAuthenticatedLessThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'lastAuthenticated',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<CachedUserModel, CachedUserModel, QAfterFilterCondition>
+      lastAuthenticatedBetween(
+    DateTime? lower,
+    DateTime? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'lastAuthenticated',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -1680,6 +1800,34 @@ extension CachedUserModelQuerySortBy
     });
   }
 
+  QueryBuilder<CachedUserModel, CachedUserModel, QAfterSortBy>
+      sortByIsActive() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isActive', Sort.asc);
+    });
+  }
+
+  QueryBuilder<CachedUserModel, CachedUserModel, QAfterSortBy>
+      sortByIsActiveDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isActive', Sort.desc);
+    });
+  }
+
+  QueryBuilder<CachedUserModel, CachedUserModel, QAfterSortBy>
+      sortByLastAuthenticated() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastAuthenticated', Sort.asc);
+    });
+  }
+
+  QueryBuilder<CachedUserModel, CachedUserModel, QAfterSortBy>
+      sortByLastAuthenticatedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastAuthenticated', Sort.desc);
+    });
+  }
+
   QueryBuilder<CachedUserModel, CachedUserModel, QAfterSortBy> sortByRoleStr() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'roleStr', Sort.asc);
@@ -1806,6 +1954,20 @@ extension CachedUserModelQuerySortThenBy
     });
   }
 
+  QueryBuilder<CachedUserModel, CachedUserModel, QAfterSortBy>
+      thenByIsActive() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isActive', Sort.asc);
+    });
+  }
+
+  QueryBuilder<CachedUserModel, CachedUserModel, QAfterSortBy>
+      thenByIsActiveDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isActive', Sort.desc);
+    });
+  }
+
   QueryBuilder<CachedUserModel, CachedUserModel, QAfterSortBy> thenByIsarId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isarId', Sort.asc);
@@ -1816,6 +1978,20 @@ extension CachedUserModelQuerySortThenBy
       thenByIsarIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isarId', Sort.desc);
+    });
+  }
+
+  QueryBuilder<CachedUserModel, CachedUserModel, QAfterSortBy>
+      thenByLastAuthenticated() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastAuthenticated', Sort.asc);
+    });
+  }
+
+  QueryBuilder<CachedUserModel, CachedUserModel, QAfterSortBy>
+      thenByLastAuthenticatedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastAuthenticated', Sort.desc);
     });
   }
 
@@ -1924,6 +2100,20 @@ extension CachedUserModelQueryWhereDistinct
     });
   }
 
+  QueryBuilder<CachedUserModel, CachedUserModel, QDistinct>
+      distinctByIsActive() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isActive');
+    });
+  }
+
+  QueryBuilder<CachedUserModel, CachedUserModel, QDistinct>
+      distinctByLastAuthenticated() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'lastAuthenticated');
+    });
+  }
+
   QueryBuilder<CachedUserModel, CachedUserModel, QDistinct> distinctByRoleStr(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1990,6 +2180,19 @@ extension CachedUserModelQueryProperty
   QueryBuilder<CachedUserModel, String, QQueryOperations> initialsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'initials');
+    });
+  }
+
+  QueryBuilder<CachedUserModel, bool?, QQueryOperations> isActiveProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isActive');
+    });
+  }
+
+  QueryBuilder<CachedUserModel, DateTime?, QQueryOperations>
+      lastAuthenticatedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'lastAuthenticated');
     });
   }
 

@@ -97,10 +97,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
       if (!mounted) return;
       setState(() {
         _isLoading = false;
+        final errorStr = e.toString();
         if (e is AuthException) {
           _errorMessage = e.message;
+        } else if (errorStr.contains('SocketException') || errorStr.contains('Failed host lookup')) {
+          _errorMessage = 'You are currently offline. Please connect to the internet to log in.';
         } else {
           _errorMessage = 'Invalid username or password.\nContact your NGO coordinator if you need access.';
+          debugPrint('Login Error: $errorStr');
         }
       });
     }

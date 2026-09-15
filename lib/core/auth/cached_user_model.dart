@@ -17,6 +17,8 @@ class CachedUserModel {
   String? villageName;
   String? district;
   String? state;
+  DateTime? lastAuthenticated;
+  bool? isActive;
 }
 
 class CachedUserStore {
@@ -39,7 +41,9 @@ class CachedUserStore {
       ..villageId = user.villageId
       ..villageName = user.villageName
       ..district = user.district
-      ..state = user.state;
+      ..state = user.state
+      ..lastAuthenticated = DateTime.now()
+      ..isActive = user.active;
 
     await _db.writeTxn(() async {
       await _db.cachedUserModels.put(model);
@@ -50,6 +54,22 @@ class CachedUserStore {
     if (!LocalDb.isAvailable) return null;
     final model = await _db.cachedUserModels.get(1);
     if (model == null) return null;
+    
+    // Check 30-day expiration (default to valid if missing during migration)
+    final lastAuth = model.lastAuthenticated ?? DateTime.now();
+    final now = DateTime.now();
+    final difference = now.difference(lastAuth);
+    if (difference.inDays > 30) {
+      debugPrint('[Auth] Cached user expired (last authenticated ${difference.inDays} days ago).');
+      return null;
+    }
+
+    // Default to active if missing
+    if (!(model.isActive ?? true)) {
+      debugPrint('[Auth] Cached user is inactive.');
+      return null;
+    }
+
     final role = model.roleStr == 'admin' ? UserRole.admin : UserRole.leader;
     return AppUser(
       id: model.userId,
@@ -61,6 +81,7 @@ class CachedUserStore {
       villageName: model.villageName,
       district: model.district,
       state: model.state,
+      active: model.isActive ?? true,
     );
   }
 

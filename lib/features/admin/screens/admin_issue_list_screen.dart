@@ -198,8 +198,11 @@ class _AdminIssueListScreenState extends ConsumerState<AdminIssueListScreen> {
                         border: Border(top: BorderSide(color: Colors.grey.shade200)),
                         color: Colors.white,
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                      child: Wrap(
+                        alignment: WrapAlignment.end,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        spacing: AppConstants.spacingLg,
+                        runSpacing: AppConstants.spacingSm,
                         children: [
                           Text(
                             'Showing ${state.totalCount == 0 ? 0 : (notifier.currentPage * notifier.pageSize) + 1} '
@@ -207,19 +210,23 @@ class _AdminIssueListScreenState extends ConsumerState<AdminIssueListScreen> {
                             'of ${state.totalCount} entries',
                             style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
                           ),
-                          const SizedBox(width: AppConstants.spacingLg),
-                          IconButton(
-                            icon: const Icon(Icons.chevron_left),
-                            onPressed: notifier.currentPage > 0
-                                ? () => notifier.setPage(notifier.currentPage - 1)
-                                : null,
-                          ),
-                          Text('Page ${notifier.currentPage + 1} of ${notifier.totalPages == 0 ? 1 : notifier.totalPages}'),
-                          IconButton(
-                            icon: const Icon(Icons.chevron_right),
-                            onPressed: notifier.currentPage < notifier.totalPages - 1
-                                ? () => notifier.setPage(notifier.currentPage + 1)
-                                : null,
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.chevron_left),
+                                onPressed: notifier.currentPage > 0
+                                    ? () => notifier.setPage(notifier.currentPage - 1)
+                                    : null,
+                              ),
+                              Text('Page ${notifier.currentPage + 1} of ${notifier.totalPages == 0 ? 1 : notifier.totalPages}'),
+                              IconButton(
+                                icon: const Icon(Icons.chevron_right),
+                                onPressed: notifier.currentPage < notifier.totalPages - 1
+                                    ? () => notifier.setPage(notifier.currentPage + 1)
+                                    : null,
+                              ),
+                            ],
                           ),
                         ],
                       ),
