@@ -128,7 +128,7 @@ class AppShell extends ConsumerWidget {
     if (isMobile) {
       return _buildMobileShell(context, selectedIndex, destinations);
     }
-    return _buildRailShell(context, selectedIndex, isDesktop, destinations);
+    return _buildRailShell(context, selectedIndex, isDesktop, destinations, role);
   }
 
   // ---------------------------------------------------------------------------
@@ -167,11 +167,18 @@ class AppShell extends ConsumerWidget {
     int selectedIndex,
     bool isDesktop,
     List<_NavDestination> destinations,
+    UserRole? role,
   ) {
     return Scaffold(
       body: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          NavigationRail(
+          Container(
+            color: AppColors.surfaceCard,
+            child: Column(
+              children: [
+                Expanded(
+                  child: NavigationRail(
             selectedIndex: selectedIndex,
             onDestinationSelected: (i) => _onDestinationSelected(context, destinations, i),
             extended: isDesktop,
@@ -199,6 +206,10 @@ class AppShell extends ConsumerWidget {
                   ? Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        if (role == UserRole.admin) ...[
+                          Image.asset('assets/images/ssp_logo.png', width: 70, fit: BoxFit.contain),
+                          const SizedBox(height: AppConstants.spacingLg),
+                        ],
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -214,16 +225,24 @@ class AppShell extends ConsumerWidget {
                             ),
                           ],
                         ),
-                        const SizedBox(height: AppConstants.spacingSm),
-                        const SyncStatusIndicator(),
+                        if (role != UserRole.admin) ...[
+                          const SizedBox(height: AppConstants.spacingSm),
+                          const SyncStatusIndicator(),
+                        ],
                       ],
                     )
                   : Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        if (role == UserRole.admin) ...[
+                          Image.asset('assets/images/ssp_logo.png', width: 45, fit: BoxFit.contain),
+                          const SizedBox(height: AppConstants.spacingLg),
+                        ],
                         Icon(Icons.eco_rounded, color: AppColors.secondaryTerracotta, size: 28),
-                        const SizedBox(height: AppConstants.spacingSm),
-                        const SyncStatusIndicator(),
+                        if (role != UserRole.admin) ...[
+                          const SizedBox(height: AppConstants.spacingSm),
+                          const SyncStatusIndicator(),
+                        ],
                       ],
                     ),
             ),
@@ -236,6 +255,10 @@ class AppShell extends ConsumerWidget {
                   ),
                 )
                 .toList(),
+                  ),
+                ),
+              ],
+            ),
           ),
           const VerticalDivider(thickness: 1, width: 1),
           // Content area
