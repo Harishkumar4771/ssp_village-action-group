@@ -87,6 +87,8 @@ class AdminAnalyticsState {
 }
 
 class AdminAnalyticsNotifier extends StateNotifier<AdminAnalyticsState> {
+  int _fetchToken = 0;
+
   AdminAnalyticsNotifier() : super(AdminAnalyticsState()) {
     fetchAnalytics();
   }
@@ -152,8 +154,9 @@ class AdminAnalyticsNotifier extends StateNotifier<AdminAnalyticsState> {
   }
 
   Future<void> fetchAnalytics({bool silent = false}) async {
-    // ignore: avoid_print
-    print('[ANALYTICS] fetchAnalytics() called — current total=${state.totalIssues}');
+    final currentToken = ++_fetchToken;
+
+    print('[DIAGNOSTIC] Step 3: fetchAnalytics() called with token=$currentToken. Current total=${state.totalIssues}');
     
     if (!silent) {
       state = state.copyWith(isLoading: true, clearError: true);
@@ -162,7 +165,7 @@ class AdminAnalyticsNotifier extends StateNotifier<AdminAnalyticsState> {
     try {
       final client = Supabase.instance.client;
       
-      // We only fetch the minimal fields needed for grouping to save bandwidth
+      print('[DIAGNOSTIC] Step 4: Building Supabase query');
       var query = client
           .from('issues')
           .select('id, status, locked, created_at, category_id, village_id, issue_categories(name), villages(name)');
@@ -185,8 +188,16 @@ class AdminAnalyticsNotifier extends StateNotifier<AdminAnalyticsState> {
         query = query.lte('created_at', endOfDay.toUtc().toIso8601String());
       }
 
+      print('[DIAGNOSTIC] Step 5: Awaiting Supabase response');
       final response = await query;
+      
+      if (_fetchToken != currentToken) {
+        print('[DIAGNOSTIC] Token mismatch (stale request). Discarding response.');
+        return;
+      }
+      
       final data = List<Map<String, dynamic>>.from(response);
+      print('[DIAGNOSTIC] Step 6: Supabase query returned ${data.length} rows.');
 
       // Variables to hold aggregated data
       int total = data.length;
@@ -220,8 +231,8 @@ class AdminAnalyticsNotifier extends StateNotifier<AdminAnalyticsState> {
         byVil[vilName] = (byVil[vilName] ?? 0) + 1;
       }
 
-      // ignore: avoid_print
-      print('[ANALYTICS] fetchAnalytics() complete — new total=$total');
+      print('[DIAGNOSTIC] Step 7: Final computed counts: total=$total, rep=$rep, prog=$prog, comp=$comp, clos=$clos');
+      
       state = state.copyWith(
         totalIssues: total,
         reportedCount: rep,

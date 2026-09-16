@@ -20,6 +20,7 @@ class AdminAnalyticsScreen extends ConsumerWidget {
     // Activates the shared realtime channel — keeps Dashboard live.
     ref.watch(issuesRealtimeProvider);
     final state = ref.watch(adminAnalyticsProvider);
+    debugPrint('[DIAGNOSTIC] Step 8: AdminAnalyticsScreen rebuilt with state.totalIssues=${state.totalIssues}');
 
     void navigateToIssues({
       String? status,
@@ -210,6 +211,7 @@ class _SummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('[DIAGNOSTIC] Step 9: _SummaryCard("$title") built with value=$value');
     return Card(
       color: Colors.white,
       elevation: 0,

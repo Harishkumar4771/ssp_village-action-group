@@ -96,9 +96,15 @@ class _IssuesRealtimeNotifier extends AsyncNotifier<void> {
     debugPrint('[REALTIME] ▶ build() complete — channel reference: $_channel');
   }
 
-  void _refresh() {
+  Future<void> _refresh() async {
+    debugPrint('[DIAGNOSTIC] Step 1: _refresh() executing');
     debugPrint('[REALTIME] 🔄 _refresh() called — triggering fetchAnalytics + fetchIssues');
+
+    // Add micro-delay to prevent PostgREST race condition where queries execute before transaction commits
+    await Future.delayed(const Duration(milliseconds: 500));
+
     try {
+      debugPrint('[DIAGNOSTIC] Step 2: Reading adminAnalyticsProvider.notifier to call fetchAnalytics');
       ref.read(adminAnalyticsProvider.notifier).fetchAnalytics(silent: true);
       debugPrint('[REALTIME] 🔄 fetchAnalytics() invoked');
     } catch (e) {
