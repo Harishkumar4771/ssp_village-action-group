@@ -151,10 +151,13 @@ class AdminAnalyticsNotifier extends StateNotifier<AdminAnalyticsState> {
     fetchAnalytics();
   }
 
-  Future<void> fetchAnalytics() async {
+  Future<void> fetchAnalytics({bool silent = false}) async {
     // ignore: avoid_print
     print('[ANALYTICS] fetchAnalytics() called — current total=${state.totalIssues}');
-    state = state.copyWith(isLoading: true, clearError: true);
+    
+    if (!silent) {
+      state = state.copyWith(isLoading: true, clearError: true);
+    }
     
     try {
       final client = Supabase.instance.client;

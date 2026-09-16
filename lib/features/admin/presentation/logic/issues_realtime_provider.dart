@@ -39,60 +39,57 @@ class _IssuesRealtimeNotifier extends AsyncNotifier<void> {
 
     final client = Supabase.instance.client;
 
+    debugPrint('REALTIME CHANNEL CREATED');
     _channel = client
         .channel('admin_issues_realtime')
         .onPostgresChanges(
-          event: PostgresChangeEvent.insert,
+          event: PostgresChangeEvent.all,
           schema: 'public',
           table: 'issues',
           callback: (payload) {
-            debugPrint('[REALTIME] ✅ INSERT event received — payload: $payload');
-            _refresh();
-          },
-        )
-        .onPostgresChanges(
-          event: PostgresChangeEvent.update,
-          schema: 'public',
-          table: 'issues',
-          callback: (payload) {
-            debugPrint('[REALTIME] ✅ UPDATE event received — payload: $payload');
+            debugPrint('REALTIME EVENT RECEIVED');
+            debugPrint('TABLE NAME: issues');
+            debugPrint('EVENT TYPE: ${payload.eventType}');
+            final issueId = payload.newRecord['id'] as String? ?? payload.oldRecord['id'] as String?;
+            debugPrint('RECORD ID: $issueId');
+            
             _refresh();
             
-            // Also refresh detail screen if it's open for this issue
-            final issueId = payload.newRecord['id'] as String?;
             if (issueId != null) {
-              ref.invalidate(adminIssueDetailProvider(issueId));
+              ref.read(adminIssueDetailProvider(issueId).notifier).fetchDetail();
             }
           },
         )
         .onPostgresChanges(
-          event: PostgresChangeEvent.insert,
+          event: PostgresChangeEvent.all,
           schema: 'public',
           table: 'progress_updates',
           callback: (payload) {
-            debugPrint('[REALTIME] ✅ PROGRESS UPDATE INSERT received — payload: $payload');
-            final issueId = payload.newRecord['issue_id'] as String?;
+            debugPrint('REALTIME EVENT RECEIVED');
+            debugPrint('TABLE NAME: progress_updates');
+            debugPrint('EVENT TYPE: ${payload.eventType}');
+            final issueId = payload.newRecord['issue_id'] as String? ?? payload.oldRecord['issue_id'] as String?;
+            debugPrint('RECORD ID: $issueId');
+            
+            _refresh();
+
             if (issueId != null) {
-              ref.invalidate(adminIssueDetailProvider(issueId));
+              ref.read(adminIssueDetailProvider(issueId).notifier).fetchDetail();
             }
           },
         );
 
-    debugPrint('[REALTIME] ▶ subscribe() called');
     _channel!.subscribe((RealtimeSubscribeStatus status, [Object? error]) {
-      debugPrint('[REALTIME] 📡 subscribe status: $status  |  error: $error');
-
-      // If subscription fails, clean up so the channel doesn't linger.
+      debugPrint('REALTIME SUBSCRIPTION STATUS: $status');
+      if (error != null) debugPrint('REALTIME ERROR: $error');
+      
       if (status == RealtimeSubscribeStatus.channelError ||
           status == RealtimeSubscribeStatus.timedOut) {
-        debugPrint('[REALTIME] ❌ subscription FAILED — status=$status error=$error');
         final ch = _channel;
         _channel = null;
         if (ch != null) {
           Supabase.instance.client.removeChannel(ch);
         }
-      } else if (status == RealtimeSubscribeStatus.subscribed) {
-        debugPrint('[REALTIME] ✅ channel SUBSCRIBED — listening for issues changes');
       }
     });
 
@@ -102,13 +99,13 @@ class _IssuesRealtimeNotifier extends AsyncNotifier<void> {
   void _refresh() {
     debugPrint('[REALTIME] 🔄 _refresh() called — triggering fetchAnalytics + fetchIssues');
     try {
-      ref.read(adminAnalyticsProvider.notifier).fetchAnalytics();
+      ref.read(adminAnalyticsProvider.notifier).fetchAnalytics(silent: true);
       debugPrint('[REALTIME] 🔄 fetchAnalytics() invoked');
     } catch (e) {
       debugPrint('[REALTIME] ❌ fetchAnalytics() threw: $e');
     }
     try {
-      ref.read(adminIssuesProvider.notifier).fetchIssues();
+      ref.read(adminIssuesProvider.notifier).fetchIssues(silent: true);
       debugPrint('[REALTIME] 🔄 fetchIssues() invoked');
     } catch (e) {
       debugPrint('[REALTIME] ❌ fetchIssues() threw: $e');

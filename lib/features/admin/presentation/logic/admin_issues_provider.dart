@@ -164,10 +164,13 @@ class AdminIssuesNotifier extends StateNotifier<AdminIssuesState> {
     fetchIssues();
   }
 
-  Future<void> fetchIssues() async {
+  Future<void> fetchIssues({bool silent = false}) async {
     // ignore: avoid_print
     print('[ISSUES] fetchIssues() called — current count=${state.issues.length}');
-    state = state.copyWith(isLoading: true, clearError: true);
+    
+    if (!silent) {
+      state = state.copyWith(isLoading: true, clearError: true);
+    }
     
     try {
       final client = Supabase.instance.client;
