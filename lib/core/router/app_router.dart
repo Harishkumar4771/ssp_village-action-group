@@ -109,6 +109,16 @@ final routerProvider = Provider<GoRouter>((ref) {
                 final issueId = state.pathParameters['issueId']!;
                 return IssueDetailScreen(issueId: issueId);
               },
+              routes: [
+                GoRoute(
+                  path: 'progress',
+                  name: 'add-progress',
+                  builder: (context, state) {
+                    final issueId = state.pathParameters['issueId']!;
+                    return AddProgressScreen(issueId: issueId);
+                  },
+                ),
+              ],
             ),
           ],
         ),

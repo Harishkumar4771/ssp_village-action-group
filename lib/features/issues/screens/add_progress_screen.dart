@@ -50,14 +50,12 @@ class _AddProgressScreenState extends ConsumerState<AddProgressScreen> {
   // Milestone options — only those strictly > currentProgress are selectable
   static const List<_Milestone> _allMilestones = [
     _Milestone(percent: 10, label: 'Just started'),
-    _Milestone(percent: 20, label: 'Early progress'),
-    _Milestone(percent: 25, label: 'Quarter done'),
-    _Milestone(percent: 33, label: 'One-third done'),
-    _Milestone(percent: 40, label: 'Getting there'),
+    _Milestone(percent: 22, label: 'Early progress'),
+    _Milestone(percent: 30, label: 'Getting there'),
+    _Milestone(percent: 45, label: 'Almost halfway'),
     _Milestone(percent: 50, label: 'Halfway'),
     _Milestone(percent: 60, label: 'More than half'),
     _Milestone(percent: 70, label: 'Good progress'),
-    _Milestone(percent: 75, label: 'Three-quarters'),
     _Milestone(percent: 80, label: 'Almost there'),
     _Milestone(percent: 90, label: 'Nearly complete'),
     _Milestone(percent: 100, label: 'Fully resolved ✓'),

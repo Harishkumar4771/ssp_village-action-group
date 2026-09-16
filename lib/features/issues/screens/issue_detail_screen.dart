@@ -8,6 +8,7 @@ import 'package:vag_dmp_frontend/core/constants/app_constants.dart';
 import 'package:vag_dmp_frontend/features/issues/domain/entities/issue.dart';
 import 'package:vag_dmp_frontend/features/issues/presentation/logic/issue_providers.dart';
 import 'package:vag_dmp_frontend/features/issues/presentation/logic/category_providers.dart';
+import 'package:vag_dmp_frontend/features/issues/presentation/logic/progress_update_providers.dart';
 import 'package:vag_dmp_frontend/features/issues/presentation/utils/issue_category_ui_ext.dart';
 import 'package:vag_dmp_frontend/features/issues/domain/entities/issue_category.dart';
 
@@ -361,12 +362,14 @@ class _LargeProgressBar extends StatelessWidget {
 // PROGRESS HISTORY PLACEHOLDER
 // =============================================================================
 
-class _ProgressHistorySection extends StatelessWidget {
+class _ProgressHistorySection extends ConsumerWidget {
   final Issue issue;
   const _ProgressHistorySection({required this.issue});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final updatesAsync = ref.watch(progressUpdatesForIssueProvider(issue.id));
+
     return _SectionCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -375,26 +378,17 @@ class _ProgressHistorySection extends StatelessWidget {
             children: [
               _MetaLabel('Progress History'),
               const Spacer(),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                decoration: BoxDecoration(
-                  color: AppColors.info.withValues(alpha: 0.1),
-                  borderRadius:
-                      BorderRadius.circular(AppConstants.radiusFull),
+              if (updatesAsync.isLoading)
+                const SizedBox(
+                  width: 12,
+                  height: 12,
+                  child: CircularProgressIndicator(strokeWidth: 2),
                 ),
-                child: Text(
-                  'Coming in Phase 12',
-                  style: TextStyle(
-                    fontSize: 10,
-                    color: AppColors.info,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
             ],
           ),
           const SizedBox(height: AppConstants.spacingMd),
-          // Timeline preview — visual placeholder
+          
+          // Initial Issue Reported Item
           _TimelineItem(
             icon: Icons.flag_rounded,
             color: AppColors.statusReported,
@@ -402,32 +396,42 @@ class _ProgressHistorySection extends StatelessWidget {
             subtitle: 'Issue created and saved locally.',
             date: issue.createdAt,
             isFirst: true,
-            isLast: issue.currentProgress == 0,
+            isLast: issue.currentProgress == 0 && (updatesAsync.valueOrNull?.isEmpty ?? true),
           ),
-          if (issue.currentProgress > 0) ...[
-            _TimelineItem(
-              icon: Icons.trending_up_rounded,
-              color: AppColors.info,
-              title: 'Progress Updates',
-              subtitle:
-                  'Progress updates will be listed here after Phase 12.',
-              date: issue.updatedAt,
-              isFirst: false,
-              isLast: !issue.locked,
-            ),
-          ],
-          if (issue.locked) ...[
+          
+          // Real Updates
+          ...updatesAsync.when(
+            data: (updates) {
+              return updates.map((update) {
+                final isLast = issue.locked ? false : update == updates.last;
+                return _TimelineItem(
+                  icon: Icons.trending_up_rounded,
+                  color: AppColors.info,
+                  title: 'Progress Updated: ${update.progressPercent}%',
+                  subtitle: update.notes,
+                  date: update.createdAt,
+                  isFirst: false,
+                  isLast: isLast,
+                );
+              }).toList();
+            },
+            loading: () => [],
+            error: (e, _) => [
+              Text('Failed to load history', style: TextStyle(color: AppColors.statusReported)),
+            ],
+          ),
+          
+          // Closed Status
+          if (issue.locked)
             _TimelineItem(
               icon: Icons.lock_rounded,
               color: AppColors.textSecondary,
               title: 'Project Closed',
-              subtitle:
-                  'The project has been marked as closed by the leader.',
+              subtitle: 'The project has been marked as closed by the leader.',
               date: issue.closedAt ?? issue.updatedAt,
               isFirst: false,
               isLast: true,
             ),
-          ],
         ],
       ),
     );
@@ -545,15 +549,7 @@ class _AddProgressButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FilledButton.icon(
       onPressed: () {
-        // Phase 12 will navigate to AddProgressScreen
-        // For now show an informational snackbar
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Add Progress will be available in Phase 12.'),
-            behavior: SnackBarBehavior.floating,
-            duration: Duration(seconds: 2),
-          ),
-        );
+        context.push('/leader/issues/${issue.id}/progress');
       },
       icon: const Icon(Icons.trending_up_rounded),
       label: const Text('Add Progress Update'),
