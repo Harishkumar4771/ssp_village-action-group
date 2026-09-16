@@ -11,6 +11,7 @@ import 'package:vag_dmp_frontend/features/issues/presentation/logic/category_pro
 import 'package:vag_dmp_frontend/features/issues/presentation/logic/progress_update_providers.dart';
 import 'package:vag_dmp_frontend/features/issues/presentation/utils/issue_category_ui_ext.dart';
 import 'package:vag_dmp_frontend/features/issues/domain/entities/issue_category.dart';
+import 'package:vag_dmp_frontend/core/auth/auth_providers.dart';
 
 // ---------------------------------------------------------------------------
 // PHASE 10 — Issue Detail Screen
@@ -562,16 +563,15 @@ class _AddProgressButton extends StatelessWidget {
   }
 }
 
-class _EndProjectButton extends StatelessWidget {
+class _EndProjectButton extends ConsumerWidget {
   final Issue issue;
   const _EndProjectButton({required this.issue});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return OutlinedButton.icon(
       onPressed: () {
-        // Phase 14 will implement the full closure dialog
-        _showEndProjectPreview(context);
+        _showEndProjectPreview(context, ref);
       },
       icon: const Icon(Icons.check_circle_outline_rounded),
       label: const Text('End Project (Mark as Closed)'),
@@ -584,7 +584,7 @@ class _EndProjectButton extends StatelessWidget {
     );
   }
 
-  void _showEndProjectPreview(BuildContext context) {
+  void _showEndProjectPreview(BuildContext context, WidgetRef ref) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -597,8 +597,7 @@ class _EndProjectButton extends StatelessWidget {
         ),
         content: const Text(
           'Are you sure you want to close this project?\n\n'
-          'Once closed, it cannot be edited or updated.\n\n'
-          'Full closure will be implemented in Phase 14.',
+          'Once closed, it cannot be edited or updated. The Admin will be notified of its closure.',
         ),
         actions: [
           TextButton(
@@ -606,11 +605,33 @@ class _EndProjectButton extends StatelessWidget {
             child: const Text('Cancel'),
           ),
           FilledButton(
-            onPressed: () => Navigator.pop(ctx),
+            onPressed: () async {
+              Navigator.pop(ctx);
+              
+              final user = ref.read(currentUserProvider);
+              if (user == null) return;
+              
+              final updatedIssue = issue.copyWith(
+                locked: true,
+                closedBy: user.id,
+                closedAt: DateTime.now(),
+              );
+              
+              await ref.read(issueNotifierProvider.notifier).updateIssue(updatedIssue);
+              
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Project closed successfully.'),
+                    backgroundColor: AppColors.textSecondary,
+                  ),
+                );
+              }
+            },
             style: FilledButton.styleFrom(
               backgroundColor: AppColors.primaryGreen,
             ),
-            child: const Text('Coming in Phase 14'),
+            child: const Text('Close Project'),
           ),
         ],
       ),
@@ -846,12 +867,15 @@ class _CategoryBadge extends StatelessWidget {
         children: [
           Icon(icon, size: 16, color: color),
           const SizedBox(width: 6),
-          Text(
-            category.name,
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w700,
-              color: color,
+          Flexible(
+            child: Text(
+              category.name,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+                color: color,
+              ),
             ),
           ),
         ],
@@ -879,12 +903,15 @@ class _SubcategoryBadge extends StatelessWidget {
           Icon(Icons.subdirectory_arrow_right_rounded,
               size: 13, color: AppColors.textSecondary),
           const SizedBox(width: 5),
-          Text(
-            name,
-            style: const TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textSecondary,
+          Flexible(
+            child: Text(
+              name,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: AppColors.textSecondary,
+              ),
             ),
           ),
         ],
