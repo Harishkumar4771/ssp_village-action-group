@@ -23,8 +23,11 @@ import 'sync_manager.dart';
 /// Total number of records waiting to be uploaded to Supabase.
 /// Combines pending + failed Issues and ProgressUpdates.
 /// Refreshed whenever [issuesProvider] or [progressUpdatesForIssueProvider]
-/// is invalidated (i.e. after every local write).
+/// is invalidated (i.e. after every local write) AND when SyncManager completes an item sync.
 final pendingSyncCountProvider = FutureProvider<int>((ref) async {
+  final sub = SyncManager.onSyncStatusChanged.listen((_) => ref.invalidateSelf());
+  ref.onDispose(() => sub.cancel());
+
   final issueDs = IssueLocalDataSource();
   final progressDs = ProgressUpdateLocalDataSource();
 
@@ -39,6 +42,9 @@ final pendingSyncCountProvider = FutureProvider<int>((ref) async {
 /// Detailed breakdown of what's pending. Used for the sync status section
 /// in the leader's profile / settings screen (future phase).
 final pendingSyncDetailProvider = FutureProvider<_SyncDetail>((ref) async {
+  final sub = SyncManager.onSyncStatusChanged.listen((_) => ref.invalidateSelf());
+  ref.onDispose(() => sub.cancel());
+
   final issueDs = IssueLocalDataSource();
   final progressDs = ProgressUpdateLocalDataSource();
 

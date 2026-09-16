@@ -4,6 +4,8 @@ import '../../data/data_sources/issue_local_data_source.dart';
 import '../../data/repositories/local_issue_repository.dart';
 import '../../domain/entities/issue.dart';
 import '../../domain/repositories/issue_repository.dart';
+import '../../../../core/sync/sync_manager.dart';
+import '../../../../core/sync/sync_provider.dart';
 
 // ---------------------------------------------------------------------------
 // PHASE 07 — Issue Providers (wired through Repository)
@@ -27,12 +29,16 @@ final issueRepositoryProvider = Provider<IssueRepository>((ref) {
 
 /// All issues for the current leader, newest first.
 final issuesProvider = FutureProvider<List<Issue>>((ref) async {
+  final sub = SyncManager.onSyncStatusChanged.listen((_) => ref.invalidateSelf());
+  ref.onDispose(() => sub.cancel());
   return ref.watch(issueRepositoryProvider).getAllIssues();
 });
 
 /// Single issue by UUID.
 final issueByIdProvider =
     FutureProvider.family<Issue?, String>((ref, id) async {
+  final sub = SyncManager.onSyncStatusChanged.listen((_) => ref.invalidateSelf());
+  ref.onDispose(() => sub.cancel());
   return ref.watch(issueRepositoryProvider).getIssueById(id);
 });
 
@@ -45,6 +51,8 @@ final activeIssuesCountProvider = FutureProvider<int>((ref) async {
 /// Issues filtered by status. Null = all issues.
 final issuesByStatusProvider =
     FutureProvider.family<List<Issue>, IssueStatus?>((ref, status) async {
+  final sub = SyncManager.onSyncStatusChanged.listen((_) => ref.invalidateSelf());
+  ref.onDispose(() => sub.cancel());
   if (status == null) return ref.watch(issueRepositoryProvider).getAllIssues();
   return ref.watch(issueRepositoryProvider).getIssuesByStatus(status);
 });
@@ -52,6 +60,8 @@ final issuesByStatusProvider =
 /// Issues filtered by categoryId UUID. Null = all issues.
 final issuesByCategoryProvider =
     FutureProvider.family<List<Issue>, String?>((ref, categoryId) async {
+  final sub = SyncManager.onSyncStatusChanged.listen((_) => ref.invalidateSelf());
+  ref.onDispose(() => sub.cancel());
   if (categoryId == null) {
     return ref.watch(issueRepositoryProvider).getAllIssues();
   }
@@ -78,6 +88,8 @@ class IssueNotifier extends AsyncNotifier<void> {
     state = await AsyncValue.guard(() async {
       await ref.read(issueRepositoryProvider).saveIssue(issue);
       ref.invalidate(issuesProvider);
+      ref.invalidate(pendingSyncCountProvider);
+      SyncManager.syncNow();
     });
   }
 
@@ -88,6 +100,8 @@ class IssueNotifier extends AsyncNotifier<void> {
       await ref.read(issueRepositoryProvider).updateIssue(issue);
       ref.invalidate(issuesProvider);
       ref.invalidate(issueByIdProvider(issue.id));
+      ref.invalidate(pendingSyncCountProvider);
+      SyncManager.syncNow();
     });
   }
 }

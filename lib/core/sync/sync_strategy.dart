@@ -8,4 +8,13 @@ abstract class SyncStrategy {
 
   /// Attempts to upload a specific item to Supabase by its ID.
   Future<void> uploadItem(String id);
+
+  /// Marks an item as actively syncing.
+  Future<void> markSyncing(String id);
+
+  /// Marks an item as successfully synced.
+  Future<void> markSynced(String id);
+
+  /// Marks an item sync as failed (to be retried later).
+  Future<void> markFailed(String id);
 }

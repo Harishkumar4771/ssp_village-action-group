@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart' show debugPrint;
-import '../../../core/sync/sync_manager.dart';
 import '../../../core/sync/sync_status.dart';
 import '../../../core/sync/sync_strategy.dart';
 import '../data/data_sources/issue_local_data_source.dart';

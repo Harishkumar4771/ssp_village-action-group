@@ -4,6 +4,7 @@ import 'package:path_provider/path_provider.dart';
 
 import '../../features/issues/data/models/issue_model.dart';
 import '../../features/issues/data/models/issue_category_model.dart';
+import '../../features/issues/data/models/progress_update_model.dart';
 import '../../features/meetings/data/models/meeting_model.dart';
 import '../../features/villages/data/models/village_model.dart';
 import '../auth/cached_user_model.dart';
@@ -39,6 +40,7 @@ class LocalDb {
         IssueModelSchema,
         IssueCategoryModelSchema,
         IssueSubcategoryModelSchema,
+        ProgressUpdateModelSchema,
         MeetingModelSchema,
         VillageModelSchema,
       ],
