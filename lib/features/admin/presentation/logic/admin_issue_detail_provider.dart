@@ -68,7 +68,7 @@ class AdminIssueDetailNotifier extends StateNotifier<AdminIssueDetailState> {
       // 2. Fetch Progress Updates
       final progressResponse = await client
           .from('progress_updates')
-          .select('*, profiles(full_name)')
+          .select('*')
           .eq('issue_id', issueId)
           .order('created_at', ascending: true);
 

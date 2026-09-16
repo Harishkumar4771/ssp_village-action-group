@@ -162,7 +162,7 @@ class AdminAnalyticsNotifier extends StateNotifier<AdminAnalyticsState> {
       // We only fetch the minimal fields needed for grouping to save bandwidth
       var query = client
           .from('issues')
-          .select('id, status, created_at, category_id, village_id, issue_categories(name), villages(name)');
+          .select('id, status, locked, created_at, category_id, village_id, issue_categories(name), villages(name)');
 
       // Apply combinable filters
       if (state.categoryIdFilter != null) {
@@ -198,7 +198,10 @@ class AdminAnalyticsNotifier extends StateNotifier<AdminAnalyticsState> {
       for (var row in data) {
         // Status counts
         final status = row['status'] as String?;
-        if (status == 'reported') rep++;
+        final locked = row['locked'] as bool? ?? false;
+        
+        if (locked) clos++;
+        else if (status == 'reported') rep++;
         else if (status == 'in_progress') prog++;
         else if (status == 'completed') comp++;
         else if (status == 'closed') clos++;
