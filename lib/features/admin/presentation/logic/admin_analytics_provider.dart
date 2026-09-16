@@ -201,10 +201,10 @@ class AdminAnalyticsNotifier extends StateNotifier<AdminAnalyticsState> {
         final locked = row['locked'] as bool? ?? false;
         
         if (locked) clos++;
-        else if (status == 'reported') rep++;
-        else if (status == 'in_progress') prog++;
-        else if (status == 'completed') comp++;
-        else if (status == 'closed') clos++;
+        else if (status?.trim().toLowerCase() == 'reported' || status?.trim().toLowerCase() == 'new') rep++;
+        else if (status?.trim().toLowerCase() == 'in_progress') prog++;
+        else if (status?.trim().toLowerCase() == 'completed') comp++;
+        else if (status?.trim().toLowerCase() == 'closed') clos++;
 
         // Category counts
         final catMap = row['issue_categories'] as Map<String, dynamic>?;

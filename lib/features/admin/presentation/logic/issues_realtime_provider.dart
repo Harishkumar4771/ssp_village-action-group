@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'admin_analytics_provider.dart';
 import 'admin_issues_provider.dart';
+import 'admin_issue_detail_provider.dart';
 
 // ---------------------------------------------------------------------------
 // SHARED REALTIME — Issues table watcher (diagnostic build)
@@ -56,6 +57,24 @@ class _IssuesRealtimeNotifier extends AsyncNotifier<void> {
           callback: (payload) {
             debugPrint('[REALTIME] ✅ UPDATE event received — payload: $payload');
             _refresh();
+            
+            // Also refresh detail screen if it's open for this issue
+            final issueId = payload.newRecord['id'] as String?;
+            if (issueId != null) {
+              ref.invalidate(adminIssueDetailProvider(issueId));
+            }
+          },
+        )
+        .onPostgresChanges(
+          event: PostgresChangeEvent.insert,
+          schema: 'public',
+          table: 'progress_updates',
+          callback: (payload) {
+            debugPrint('[REALTIME] ✅ PROGRESS UPDATE INSERT received — payload: $payload');
+            final issueId = payload.newRecord['issue_id'] as String?;
+            if (issueId != null) {
+              ref.invalidate(adminIssueDetailProvider(issueId));
+            }
           },
         );
 

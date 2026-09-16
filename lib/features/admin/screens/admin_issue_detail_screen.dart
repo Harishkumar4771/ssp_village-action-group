@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../presentation/logic/admin_issue_detail_provider.dart';
+import '../presentation/logic/issues_realtime_provider.dart';
 
 /// PHASE 23 — Admin Issue Detail Screen
 /// Displays the full timeline and history of a specific issue.
@@ -16,6 +17,8 @@ class AdminIssueDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Ensure realtime updates are active for this screen.
+    ref.watch(issuesRealtimeProvider);
     final state = ref.watch(adminIssueDetailProvider(issueId));
 
     if (state.isLoading && state.issue == null) {

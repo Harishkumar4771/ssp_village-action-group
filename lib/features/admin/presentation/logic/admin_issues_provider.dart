@@ -189,7 +189,16 @@ class AdminIssuesNotifier extends StateNotifier<AdminIssuesState> {
 
       // Apply combinable filters
       if (state.statusFilter != null) {
-        query = query.eq('status', state.statusFilter!);
+        if (state.statusFilter == 'closed') {
+          query = query.or('status.eq.closed,locked.eq.true');
+        } else if (state.statusFilter == 'reported') {
+          query = query.inFilter('status', ['reported', 'new']);
+        } else {
+          query = query.eq('status', state.statusFilter!);
+          if (state.statusFilter == 'completed') {
+            query = query.eq('locked', false);
+          }
+        }
       }
       if (state.categoryIdFilter != null) {
         query = query.eq('category_id', state.categoryIdFilter!);
