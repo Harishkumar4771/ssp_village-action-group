@@ -62,7 +62,8 @@ class _SyncUploadDonutState extends ConsumerState<SyncUploadDonut>
 
     // "Upload complete" ONLY when every item in the batch succeeded.
     // partial = cycle done but not all completed (some failed or still queued)
-    final isFullyComplete = !sync.isUploading &&
+    final isFullyComplete =
+        !sync.isUploading &&
         sync.total > 0 &&
         sync.completed == sync.total &&
         sync.failed == 0;
@@ -155,10 +156,7 @@ class _DonutCard extends StatelessWidget {
             offset: const Offset(0, 4),
           ),
         ],
-        border: Border.all(
-          color: color.withValues(alpha: 0.18),
-          width: 1,
-        ),
+        border: Border.all(color: color.withValues(alpha: 0.18), width: 1),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -225,10 +223,7 @@ class _DonutCard extends StatelessWidget {
           Text(
             countText,
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 10,
-              color: AppColors.textSecondary,
-            ),
+            style: TextStyle(fontSize: 10, color: AppColors.textSecondary),
           ),
         ],
       ),

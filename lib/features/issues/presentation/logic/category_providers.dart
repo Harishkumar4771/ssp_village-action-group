@@ -9,15 +9,17 @@ import '../../domain/entities/issue_category.dart';
 // All UI category pickers must use these providers — never hardcode.
 // ---------------------------------------------------------------------------
 
-final issueCategoryDataSourceProvider =
-    Provider<IssueCategoryLocalDataSource>((ref) {
+final issueCategoryDataSourceProvider = Provider<IssueCategoryLocalDataSource>((
+  ref,
+) {
   return IssueCategoryLocalDataSource();
 });
 
 /// All active top-level categories, sorted by sortOrder.
 /// Used by: Report Issue form (Category picker), NGO filters.
-final issueCategoriesProvider =
-    FutureProvider<List<IssueCategory>>((ref) async {
+final issueCategoriesProvider = FutureProvider<List<IssueCategory>>((
+  ref,
+) async {
   final ds = ref.watch(issueCategoryDataSourceProvider);
   return ds.getAllActiveCategories();
 });
@@ -26,15 +28,20 @@ final issueCategoriesProvider =
 /// Returns empty list while categoryId is null (no category selected yet).
 /// Used by: Report Issue form (Subcategory picker after category is chosen).
 final issueSubcategoriesProvider =
-    FutureProvider.family<List<IssueSubcategory>, String?>((ref, categoryId) async {
-  if (categoryId == null || categoryId.isEmpty) return [];
-  final ds = ref.watch(issueCategoryDataSourceProvider);
-  return ds.getSubcategoriesForCategory(categoryId);
-});
+    FutureProvider.family<List<IssueSubcategory>, String?>((
+      ref,
+      categoryId,
+    ) async {
+      if (categoryId == null || categoryId.isEmpty) return [];
+      final ds = ref.watch(issueCategoryDataSourceProvider);
+      return ds.getSubcategoriesForCategory(categoryId);
+    });
 
 /// Look up a single category by UUID (for display in issue cards/detail).
-final categoryByIdProvider =
-    FutureProvider.family<IssueCategory?, String>((ref, id) async {
+final categoryByIdProvider = FutureProvider.family<IssueCategory?, String>((
+  ref,
+  id,
+) async {
   final ds = ref.watch(issueCategoryDataSourceProvider);
   return ds.getCategoryById(id);
 });
@@ -42,6 +49,6 @@ final categoryByIdProvider =
 /// Look up a single subcategory by UUID (for display in issue detail).
 final subcategoryByIdProvider =
     FutureProvider.family<IssueSubcategory?, String>((ref, id) async {
-  final ds = ref.watch(issueCategoryDataSourceProvider);
-  return ds.getSubcategoryById(id);
-});
+      final ds = ref.watch(issueCategoryDataSourceProvider);
+      return ds.getSubcategoryById(id);
+    });

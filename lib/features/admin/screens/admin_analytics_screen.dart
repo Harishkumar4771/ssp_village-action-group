@@ -20,7 +20,9 @@ class AdminAnalyticsScreen extends ConsumerWidget {
     // Activates the shared realtime channel — keeps Dashboard live.
     ref.watch(issuesRealtimeProvider);
     final state = ref.watch(adminAnalyticsProvider);
-    debugPrint('[DIAGNOSTIC] Step 8: AdminAnalyticsScreen rebuilt with state.totalIssues=${state.totalIssues}');
+    debugPrint(
+      '[DIAGNOSTIC] Step 8: AdminAnalyticsScreen rebuilt with state.totalIssues=${state.totalIssues}',
+    );
 
     void navigateToIssues({
       String? status,
@@ -28,12 +30,12 @@ class AdminAnalyticsScreen extends ConsumerWidget {
       String? villageName,
     }) {
       final options = ref.read(adminFilterOptionsProvider).valueOrNull;
-      
+
       String? categoryId = state.categoryIdFilter;
       if (categoryName != null && options != null) {
         final cat = options.categories.firstWhere(
-          (c) => c['name'] == categoryName, 
-          orElse: () => {'id': null}
+          (c) => c['name'] == categoryName,
+          orElse: () => {'id': null},
         );
         if (cat['id'] != null) categoryId = cat['id'] as String;
       }
@@ -41,21 +43,24 @@ class AdminAnalyticsScreen extends ConsumerWidget {
       String? villageId = state.villageIdFilter;
       if (villageName != null && options != null) {
         final vil = options.villages.firstWhere(
-          (v) => v['name'] == villageName, 
-          orElse: () => {'id': null}
+          (v) => v['name'] == villageName,
+          orElse: () => {'id': null},
         );
         if (vil['id'] != null) villageId = vil['id'] as String;
       }
 
       // Preserve analytics filters, apply clicked parameter
-      ref.read(adminIssuesProvider.notifier).applyFilters(
-        status: status, // summary card click determines status, or null for Total
-        categoryId: categoryId,
-        villageId: villageId,
-        leaderId: state.leaderIdFilter,
-        startDate: state.startDate,
-        endDate: state.endDate,
-      );
+      ref
+          .read(adminIssuesProvider.notifier)
+          .applyFilters(
+            status:
+                status, // summary card click determines status, or null for Total
+            categoryId: categoryId,
+            villageId: villageId,
+            leaderId: state.leaderIdFilter,
+            startDate: state.startDate,
+            endDate: state.endDate,
+          );
 
       context.go('/admin/issues');
     }
@@ -74,7 +79,7 @@ class AdminAnalyticsScreen extends ConsumerWidget {
           children: [
             const AdminAnalyticsFiltersWidget(),
             const SizedBox(height: AppConstants.spacingLg),
-            
+
             if (state.isLoading)
               const Expanded(child: Center(child: CircularProgressIndicator()))
             else if (state.error != null)
@@ -130,7 +135,8 @@ class AdminAnalyticsScreen extends ConsumerWidget {
                               value: state.inProgressCount,
                               icon: Icons.trending_up,
                               color: AppColors.statusInProgress,
-                              onTap: () => navigateToIssues(status: 'in_progress'),
+                              onTap: () =>
+                                  navigateToIssues(status: 'in_progress'),
                             ),
                           ),
                           const SizedBox(width: AppConstants.spacingLg),
@@ -140,7 +146,8 @@ class AdminAnalyticsScreen extends ConsumerWidget {
                               value: state.completedCount,
                               icon: Icons.check_circle,
                               color: Colors.purple,
-                              onTap: () => navigateToIssues(status: 'completed'),
+                              onTap: () =>
+                                  navigateToIssues(status: 'completed'),
                             ),
                           ),
                           const SizedBox(width: AppConstants.spacingLg),
@@ -155,7 +162,7 @@ class AdminAnalyticsScreen extends ConsumerWidget {
                           ),
                         ],
                       ),
-                      
+
                       const SizedBox(height: AppConstants.spacingXl),
 
                       // ── Breakdown Charts Row ──
@@ -168,7 +175,8 @@ class AdminAnalyticsScreen extends ConsumerWidget {
                               data: state.issuesByCategory,
                               total: state.totalIssues,
                               barColor: AppColors.primaryGreen,
-                              onItemTap: (catName) => navigateToIssues(categoryName: catName),
+                              onItemTap: (catName) =>
+                                  navigateToIssues(categoryName: catName),
                             ),
                           ),
                           const SizedBox(width: AppConstants.spacingLg),
@@ -178,7 +186,8 @@ class AdminAnalyticsScreen extends ConsumerWidget {
                               data: state.issuesByVillage,
                               total: state.totalIssues,
                               barColor: AppColors.secondaryTerracotta,
-                              onItemTap: (vilName) => navigateToIssues(villageName: vilName),
+                              onItemTap: (vilName) =>
+                                  navigateToIssues(villageName: vilName),
                             ),
                           ),
                         ],
@@ -211,7 +220,9 @@ class _SummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('[DIAGNOSTIC] Step 9: _SummaryCard("$title") built with value=$value');
+    debugPrint(
+      '[DIAGNOSTIC] Step 9: _SummaryCard("$title") built with value=$value',
+    );
     return Card(
       color: Colors.white,
       elevation: 0,
@@ -302,15 +313,20 @@ class _BarChartCard extends StatelessWidget {
                 child: Center(
                   child: Text(
                     'No data available',
-                    style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic),
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontStyle: FontStyle.italic,
+                    ),
                   ),
                 ),
               )
             else
               ...sortedEntries.map((entry) {
                 final fraction = entry.value / maxVal;
-                final percentage = (entry.value / total * 100).toStringAsFixed(1);
-                
+                final percentage = (entry.value / total * 100).toStringAsFixed(
+                  1,
+                );
+
                 return InkWell(
                   onTap: onItemTap == null ? null : () => onItemTap!(entry.key),
                   child: Padding(

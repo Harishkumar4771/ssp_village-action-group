@@ -73,7 +73,11 @@ class AdminNotificationsScreen extends ConsumerWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.error_outline, size: 48, color: Colors.grey),
+                    const Icon(
+                      Icons.error_outline,
+                      size: 48,
+                      color: Colors.grey,
+                    ),
                     const SizedBox(height: 12),
                     Text(
                       state.error!,
@@ -97,7 +101,11 @@ class AdminNotificationsScreen extends ConsumerWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.notifications_none_rounded, size: 64, color: Colors.grey),
+                  Icon(
+                    Icons.notifications_none_rounded,
+                    size: 64,
+                    color: Colors.grey,
+                  ),
                   SizedBox(height: 12),
                   Text(
                     'No notifications yet.',
@@ -135,10 +143,14 @@ class AdminNotificationsScreen extends ConsumerWidget {
                     ),
                   ),
                   child: ListTile(
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 6,
+                    ),
                     leading: CircleAvatar(
-                      backgroundColor: const Color(0xFF2E7D32)
-                          .withValues(alpha: isUnread ? 0.15 : 0.05),
+                      backgroundColor: const Color(
+                        0xFF2E7D32,
+                      ).withValues(alpha: isUnread ? 0.15 : 0.05),
                       child: Icon(
                         _iconFor(notif.type),
                         color: isUnread ? const Color(0xFF2E7D32) : Colors.grey,
@@ -147,7 +159,9 @@ class AdminNotificationsScreen extends ConsumerWidget {
                     title: Text(
                       notif.title,
                       style: TextStyle(
-                        fontWeight: isUnread ? FontWeight.bold : FontWeight.normal,
+                        fontWeight: isUnread
+                            ? FontWeight.bold
+                            : FontWeight.normal,
                         fontSize: 14,
                       ),
                     ),
@@ -155,13 +169,18 @@ class AdminNotificationsScreen extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const SizedBox(height: 3),
-                        Text(notif.subtitle, style: const TextStyle(fontSize: 13)),
+                        Text(
+                          notif.subtitle,
+                          style: const TextStyle(fontSize: 13),
+                        ),
                         const SizedBox(height: 4),
                         Text(
                           _timeAgo(notif.createdAt.toUtc()),
                           style: TextStyle(
                             fontSize: 12,
-                            color: isUnread ? const Color(0xFFE64A19) : Colors.grey,
+                            color: isUnread
+                                ? const Color(0xFFE64A19)
+                                : Colors.grey,
                           ),
                         ),
                       ],

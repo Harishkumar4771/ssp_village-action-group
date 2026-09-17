@@ -50,7 +50,10 @@ class AdminLeadersNotifier extends StateNotifier<AdminLeadersState> {
         isLoading: false,
       );
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: 'Failed to load users: $e');
+      state = state.copyWith(
+        isLoading: false,
+        error: 'Failed to load users: $e',
+      );
     }
   }
 
@@ -62,7 +65,7 @@ class AdminLeadersNotifier extends StateNotifier<AdminLeadersState> {
           .from('profiles')
           .update({'active': !currentStatus})
           .eq('id', profileId);
-          
+
       // Update local state
       final updated = state.profiles.map((p) {
         if (p['id'] == profileId) {
@@ -70,7 +73,7 @@ class AdminLeadersNotifier extends StateNotifier<AdminLeadersState> {
         }
         return p;
       }).toList();
-      
+
       state = state.copyWith(profiles: updated);
     } catch (e) {
       state = state.copyWith(error: 'Failed to update user status: $e');
@@ -83,17 +86,18 @@ class AdminLeadersNotifier extends StateNotifier<AdminLeadersState> {
   }
 
   /// Change role and village of a user
-  Future<void> updateUser(String profileId, String newRole, String? newVillageId) async {
+  Future<void> updateUser(
+    String profileId,
+    String newRole,
+    String? newVillageId,
+  ) async {
     try {
       final client = Supabase.instance.client;
       await client
           .from('profiles')
-          .update({
-            'role': newRole,
-            'village_id': newVillageId,
-          })
+          .update({'role': newRole, 'village_id': newVillageId})
           .eq('id', profileId);
-          
+
       // Refresh list to get joined village name
       await fetchLeaders();
     } catch (e) {
@@ -112,24 +116,31 @@ class AdminLeadersNotifier extends StateNotifier<AdminLeadersState> {
     try {
       state = state.copyWith(isLoading: true);
       final client = Supabase.instance.client;
-      
-      await client.rpc('admin_create_user', params: {
-        'p_username': username,
-        'p_password': password,
-        'p_full_name': fullName,
-        'p_role': role,
-        'p_village_id': villageId,
-      });
+
+      await client.rpc(
+        'admin_create_user',
+        params: {
+          'p_username': username,
+          'p_password': password,
+          'p_full_name': fullName,
+          'p_role': role,
+          'p_village_id': villageId,
+        },
+      );
 
       await fetchLeaders();
       return true;
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: 'Failed to create user: $e');
+      state = state.copyWith(
+        isLoading: false,
+        error: 'Failed to create user: $e',
+      );
       return false;
     }
   }
 }
 
-final adminLeadersProvider = StateNotifierProvider<AdminLeadersNotifier, AdminLeadersState>((ref) {
-  return AdminLeadersNotifier();
-});
+final adminLeadersProvider =
+    StateNotifierProvider<AdminLeadersNotifier, AdminLeadersState>((ref) {
+      return AdminLeadersNotifier();
+    });

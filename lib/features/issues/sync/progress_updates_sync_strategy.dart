@@ -49,9 +49,9 @@ class ProgressUpdatesSyncStrategy implements SyncStrategy {
     ProgressUpdateLocalDataSource? localDs,
     ProgressUpdateRemoteDataSource? remoteDs,
     IssueLocalDataSource? issueDs,
-  })  : _localDs = localDs ?? ProgressUpdateLocalDataSource(),
-        _remoteDs = remoteDs ?? ProgressUpdateRemoteDataSource(),
-        _issueDs = issueDs ?? IssueLocalDataSource();
+  }) : _localDs = localDs ?? ProgressUpdateLocalDataSource(),
+       _remoteDs = remoteDs ?? ProgressUpdateRemoteDataSource(),
+       _issueDs = issueDs ?? IssueLocalDataSource();
 
   @override
   String get name => 'ProgressUpdates';
@@ -66,7 +66,9 @@ class ProgressUpdatesSyncStrategy implements SyncStrategy {
   @override
   Future<List<String>> getPendingIds() async {
     final allPending = await _localDs.getPendingSyncUpdates();
-    debugPrint('ProgressUpdatesSyncStrategy: ${allPending.length} candidate updates.');
+    debugPrint(
+      'ProgressUpdatesSyncStrategy: ${allPending.length} candidate updates.',
+    );
 
     final readyIds = <String>[];
 
@@ -111,7 +113,8 @@ class ProgressUpdatesSyncStrategy implements SyncStrategy {
     final model = await _localDs.getUpdateById(id);
     if (model == null) {
       debugPrint(
-          'ProgressUpdatesSyncStrategy: update $id not found locally — skipping.');
+        'ProgressUpdatesSyncStrategy: update $id not found locally — skipping.',
+      );
       return;
     }
 
@@ -124,7 +127,8 @@ class ProgressUpdatesSyncStrategy implements SyncStrategy {
     await _remoteDs.upsertProgressUpdate(model);
 
     debugPrint(
-        'ProgressUpdatesSyncStrategy: ✓ Update "$id" upserted to Supabase.');
+      'ProgressUpdatesSyncStrategy: ✓ Update "$id" upserted to Supabase.',
+    );
   }
 
   // ── Status updates ────────────────────────────────────────────────────────

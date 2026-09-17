@@ -28,21 +28,9 @@ const ProgressUpdateModelSchema = CollectionSchema(
       name: r'createdBy',
       type: IsarType.string,
     ),
-    r'id': PropertySchema(
-      id: 2,
-      name: r'id',
-      type: IsarType.string,
-    ),
-    r'issueId': PropertySchema(
-      id: 3,
-      name: r'issueId',
-      type: IsarType.string,
-    ),
-    r'notes': PropertySchema(
-      id: 4,
-      name: r'notes',
-      type: IsarType.string,
-    ),
+    r'id': PropertySchema(id: 2, name: r'id', type: IsarType.string),
+    r'issueId': PropertySchema(id: 3, name: r'issueId', type: IsarType.string),
+    r'notes': PropertySchema(id: 4, name: r'notes', type: IsarType.string),
     r'progressPercent': PropertySchema(
       id: 5,
       name: r'progressPercent',
@@ -53,7 +41,7 @@ const ProgressUpdateModelSchema = CollectionSchema(
       name: r'syncStatus',
       type: IsarType.byte,
       enumMap: _ProgressUpdateModelsyncStatusEnumValueMap,
-    )
+    ),
   },
   estimateSize: _progressUpdateModelEstimateSize,
   serialize: _progressUpdateModelSerialize,
@@ -71,7 +59,7 @@ const ProgressUpdateModelSchema = CollectionSchema(
           name: r'id',
           type: IndexType.hash,
           caseSensitive: true,
-        )
+        ),
       ],
     ),
     r'issueId': IndexSchema(
@@ -84,7 +72,7 @@ const ProgressUpdateModelSchema = CollectionSchema(
           name: r'issueId',
           type: IndexType.hash,
           caseSensitive: true,
-        )
+        ),
       ],
     ),
     r'syncStatus': IndexSchema(
@@ -97,9 +85,9 @@ const ProgressUpdateModelSchema = CollectionSchema(
           name: r'syncStatus',
           type: IndexType.value,
           caseSensitive: false,
-        )
+        ),
       ],
-    )
+    ),
   },
   links: {},
   embeddedSchemas: {},
@@ -150,8 +138,10 @@ ProgressUpdateModel _progressUpdateModelDeserialize(
   object.issueId = reader.readString(offsets[3]);
   object.notes = reader.readString(offsets[4]);
   object.progressPercent = reader.readLong(offsets[5]);
-  object.syncStatus = _ProgressUpdateModelsyncStatusValueEnumMap[
-          reader.readByteOrNull(offsets[6])] ??
+  object.syncStatus =
+      _ProgressUpdateModelsyncStatusValueEnumMap[reader.readByteOrNull(
+        offsets[6],
+      )] ??
       SyncStatus.pending;
   return object;
 }
@@ -176,9 +166,11 @@ P _progressUpdateModelDeserializeProp<P>(
     case 5:
       return (reader.readLong(offset)) as P;
     case 6:
-      return (_ProgressUpdateModelsyncStatusValueEnumMap[
-              reader.readByteOrNull(offset)] ??
-          SyncStatus.pending) as P;
+      return (_ProgressUpdateModelsyncStatusValueEnumMap[reader.readByteOrNull(
+                offset,
+              )] ??
+              SyncStatus.pending)
+          as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -202,12 +194,16 @@ Id _progressUpdateModelGetId(ProgressUpdateModel object) {
 }
 
 List<IsarLinkBase<dynamic>> _progressUpdateModelGetLinks(
-    ProgressUpdateModel object) {
+  ProgressUpdateModel object,
+) {
   return [];
 }
 
 void _progressUpdateModelAttach(
-    IsarCollection<dynamic> col, Id id, ProgressUpdateModel object) {}
+  IsarCollection<dynamic> col,
+  Id id,
+  ProgressUpdateModel object,
+) {}
 
 extension ProgressUpdateModelByIndex on IsarCollection<ProgressUpdateModel> {
   Future<ProgressUpdateModel?> getById(String id) {
@@ -258,8 +254,10 @@ extension ProgressUpdateModelByIndex on IsarCollection<ProgressUpdateModel> {
     return putAllByIndex(r'id', objects);
   }
 
-  List<Id> putAllByIdSync(List<ProgressUpdateModel> objects,
-      {bool saveLinks = true}) {
+  List<Id> putAllByIdSync(
+    List<ProgressUpdateModel> objects, {
+    bool saveLinks = true,
+  }) {
     return putAllByIndexSync(r'id', objects, saveLinks: saveLinks);
   }
 }
@@ -267,14 +265,14 @@ extension ProgressUpdateModelByIndex on IsarCollection<ProgressUpdateModel> {
 extension ProgressUpdateModelQueryWhereSort
     on QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QWhere> {
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterWhere>
-      anyIsarId() {
+  anyIsarId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterWhere>
-      anySyncStatus() {
+  anySyncStatus() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         const IndexWhereClause.any(indexName: r'syncStatus'),
@@ -286,17 +284,16 @@ extension ProgressUpdateModelQueryWhereSort
 extension ProgressUpdateModelQueryWhere
     on QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QWhereClause> {
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterWhereClause>
-      isarIdEqualTo(Id isarId) {
+  isarIdEqualTo(Id isarId) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IdWhereClause.between(
-        lower: isarId,
-        upper: isarId,
-      ));
+      return query.addWhereClause(
+        IdWhereClause.between(lower: isarId, upper: isarId),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterWhereClause>
-      isarIdNotEqualTo(Id isarId) {
+  isarIdNotEqualTo(Id isarId) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -319,7 +316,7 @@ extension ProgressUpdateModelQueryWhere
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterWhereClause>
-      isarIdGreaterThan(Id isarId, {bool include = false}) {
+  isarIdGreaterThan(Id isarId, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.greaterThan(lower: isarId, includeLower: include),
@@ -328,7 +325,7 @@ extension ProgressUpdateModelQueryWhere
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterWhereClause>
-      isarIdLessThan(Id isarId, {bool include = false}) {
+  isarIdLessThan(Id isarId, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.lessThan(upper: isarId, includeUpper: include),
@@ -337,312 +334,342 @@ extension ProgressUpdateModelQueryWhere
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterWhereClause>
-      isarIdBetween(
+  isarIdBetween(
     Id lowerIsarId,
     Id upperIsarId, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IdWhereClause.between(
-        lower: lowerIsarId,
-        includeLower: includeLower,
-        upper: upperIsarId,
-        includeUpper: includeUpper,
-      ));
+      return query.addWhereClause(
+        IdWhereClause.between(
+          lower: lowerIsarId,
+          includeLower: includeLower,
+          upper: upperIsarId,
+          includeUpper: includeUpper,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterWhereClause>
-      idEqualTo(String id) {
+  idEqualTo(String id) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'id',
-        value: [id],
-      ));
+      return query.addWhereClause(
+        IndexWhereClause.equalTo(indexName: r'id', value: [id]),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterWhereClause>
-      idNotEqualTo(String id) {
+  idNotEqualTo(String id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'id',
-              lower: [],
-              upper: [id],
-              includeUpper: false,
-            ))
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'id',
-              lower: [id],
-              includeLower: false,
-              upper: [],
-            ));
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'id',
+                lower: [],
+                upper: [id],
+                includeUpper: false,
+              ),
+            )
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'id',
+                lower: [id],
+                includeLower: false,
+                upper: [],
+              ),
+            );
       } else {
         return query
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'id',
-              lower: [id],
-              includeLower: false,
-              upper: [],
-            ))
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'id',
-              lower: [],
-              upper: [id],
-              includeUpper: false,
-            ));
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'id',
+                lower: [id],
+                includeLower: false,
+                upper: [],
+              ),
+            )
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'id',
+                lower: [],
+                upper: [id],
+                includeUpper: false,
+              ),
+            );
       }
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterWhereClause>
-      issueIdEqualTo(String issueId) {
+  issueIdEqualTo(String issueId) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'issueId',
-        value: [issueId],
-      ));
+      return query.addWhereClause(
+        IndexWhereClause.equalTo(indexName: r'issueId', value: [issueId]),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterWhereClause>
-      issueIdNotEqualTo(String issueId) {
+  issueIdNotEqualTo(String issueId) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'issueId',
-              lower: [],
-              upper: [issueId],
-              includeUpper: false,
-            ))
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'issueId',
-              lower: [issueId],
-              includeLower: false,
-              upper: [],
-            ));
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'issueId',
+                lower: [],
+                upper: [issueId],
+                includeUpper: false,
+              ),
+            )
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'issueId',
+                lower: [issueId],
+                includeLower: false,
+                upper: [],
+              ),
+            );
       } else {
         return query
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'issueId',
-              lower: [issueId],
-              includeLower: false,
-              upper: [],
-            ))
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'issueId',
-              lower: [],
-              upper: [issueId],
-              includeUpper: false,
-            ));
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'issueId',
+                lower: [issueId],
+                includeLower: false,
+                upper: [],
+              ),
+            )
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'issueId',
+                lower: [],
+                upper: [issueId],
+                includeUpper: false,
+              ),
+            );
       }
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterWhereClause>
-      syncStatusEqualTo(SyncStatus syncStatus) {
+  syncStatusEqualTo(SyncStatus syncStatus) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'syncStatus',
-        value: [syncStatus],
-      ));
+      return query.addWhereClause(
+        IndexWhereClause.equalTo(indexName: r'syncStatus', value: [syncStatus]),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterWhereClause>
-      syncStatusNotEqualTo(SyncStatus syncStatus) {
+  syncStatusNotEqualTo(SyncStatus syncStatus) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'syncStatus',
-              lower: [],
-              upper: [syncStatus],
-              includeUpper: false,
-            ))
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'syncStatus',
-              lower: [syncStatus],
-              includeLower: false,
-              upper: [],
-            ));
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'syncStatus',
+                lower: [],
+                upper: [syncStatus],
+                includeUpper: false,
+              ),
+            )
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'syncStatus',
+                lower: [syncStatus],
+                includeLower: false,
+                upper: [],
+              ),
+            );
       } else {
         return query
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'syncStatus',
-              lower: [syncStatus],
-              includeLower: false,
-              upper: [],
-            ))
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'syncStatus',
-              lower: [],
-              upper: [syncStatus],
-              includeUpper: false,
-            ));
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'syncStatus',
+                lower: [syncStatus],
+                includeLower: false,
+                upper: [],
+              ),
+            )
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'syncStatus',
+                lower: [],
+                upper: [syncStatus],
+                includeUpper: false,
+              ),
+            );
       }
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterWhereClause>
-      syncStatusGreaterThan(
-    SyncStatus syncStatus, {
-    bool include = false,
-  }) {
+  syncStatusGreaterThan(SyncStatus syncStatus, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'syncStatus',
-        lower: [syncStatus],
-        includeLower: include,
-        upper: [],
-      ));
+      return query.addWhereClause(
+        IndexWhereClause.between(
+          indexName: r'syncStatus',
+          lower: [syncStatus],
+          includeLower: include,
+          upper: [],
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterWhereClause>
-      syncStatusLessThan(
-    SyncStatus syncStatus, {
-    bool include = false,
-  }) {
+  syncStatusLessThan(SyncStatus syncStatus, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'syncStatus',
-        lower: [],
-        upper: [syncStatus],
-        includeUpper: include,
-      ));
+      return query.addWhereClause(
+        IndexWhereClause.between(
+          indexName: r'syncStatus',
+          lower: [],
+          upper: [syncStatus],
+          includeUpper: include,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterWhereClause>
-      syncStatusBetween(
+  syncStatusBetween(
     SyncStatus lowerSyncStatus,
     SyncStatus upperSyncStatus, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'syncStatus',
-        lower: [lowerSyncStatus],
-        includeLower: includeLower,
-        upper: [upperSyncStatus],
-        includeUpper: includeUpper,
-      ));
+      return query.addWhereClause(
+        IndexWhereClause.between(
+          indexName: r'syncStatus',
+          lower: [lowerSyncStatus],
+          includeLower: includeLower,
+          upper: [upperSyncStatus],
+          includeUpper: includeUpper,
+        ),
+      );
     });
   }
 }
 
-extension ProgressUpdateModelQueryFilter on QueryBuilder<ProgressUpdateModel,
-    ProgressUpdateModel, QFilterCondition> {
+extension ProgressUpdateModelQueryFilter
+    on
+        QueryBuilder<
+          ProgressUpdateModel,
+          ProgressUpdateModel,
+          QFilterCondition
+        > {
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      createdAtEqualTo(DateTime value) {
+  createdAtEqualTo(DateTime value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'createdAt',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'createdAt', value: value),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      createdAtGreaterThan(
-    DateTime value, {
-    bool include = false,
-  }) {
+  createdAtGreaterThan(DateTime value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'createdAt',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'createdAt',
+          value: value,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      createdAtLessThan(
-    DateTime value, {
-    bool include = false,
-  }) {
+  createdAtLessThan(DateTime value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'createdAt',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'createdAt',
+          value: value,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      createdAtBetween(
+  createdAtBetween(
     DateTime lower,
     DateTime upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'createdAt',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'createdAt',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      createdByEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  createdByEqualTo(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'createdBy',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'createdBy',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      createdByGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'createdBy',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      createdByLessThan(
+  createdByGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'createdBy',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'createdBy',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      createdByBetween(
+  createdByLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'createdBy',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
+  createdByBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -650,135 +677,136 @@ extension ProgressUpdateModelQueryFilter on QueryBuilder<ProgressUpdateModel,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'createdBy',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'createdBy',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      createdByStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  createdByStartsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'createdBy',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.startsWith(
+          property: r'createdBy',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      createdByEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  createdByEndsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'createdBy',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.endsWith(
+          property: r'createdBy',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      createdByContains(String value, {bool caseSensitive = true}) {
+  createdByContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'createdBy',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.contains(
+          property: r'createdBy',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      createdByMatches(String pattern, {bool caseSensitive = true}) {
+  createdByMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'createdBy',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.matches(
+          property: r'createdBy',
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      createdByIsEmpty() {
+  createdByIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'createdBy',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'createdBy', value: ''),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      createdByIsNotEmpty() {
+  createdByIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'createdBy',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(property: r'createdBy', value: ''),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      idEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  idEqualTo(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'id',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'id',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      idGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'id',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      idLessThan(
+  idGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'id',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'id',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      idBetween(
+  idLessThan(String value, {bool include = false, bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'id',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
+  idBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -786,191 +814,195 @@ extension ProgressUpdateModelQueryFilter on QueryBuilder<ProgressUpdateModel,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'id',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'id',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      idStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  idStartsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'id',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.startsWith(
+          property: r'id',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      idEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  idEndsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'id',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.endsWith(
+          property: r'id',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      idContains(String value, {bool caseSensitive = true}) {
+  idContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'id',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.contains(
+          property: r'id',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      idMatches(String pattern, {bool caseSensitive = true}) {
+  idMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'id',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.matches(
+          property: r'id',
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      idIsEmpty() {
+  idIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'id',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'id', value: ''),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      idIsNotEmpty() {
+  idIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'id',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(property: r'id', value: ''),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      isarIdEqualTo(Id value) {
+  isarIdEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'isarId',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'isarId', value: value),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      isarIdGreaterThan(
-    Id value, {
-    bool include = false,
-  }) {
+  isarIdGreaterThan(Id value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'isarId',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'isarId',
+          value: value,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      isarIdLessThan(
-    Id value, {
-    bool include = false,
-  }) {
+  isarIdLessThan(Id value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'isarId',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'isarId',
+          value: value,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      isarIdBetween(
+  isarIdBetween(
     Id lower,
     Id upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'isarId',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'isarId',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      issueIdEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  issueIdEqualTo(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'issueId',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'issueId',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      issueIdGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'issueId',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      issueIdLessThan(
+  issueIdGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'issueId',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'issueId',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      issueIdBetween(
+  issueIdLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'issueId',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
+  issueIdBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -978,135 +1010,140 @@ extension ProgressUpdateModelQueryFilter on QueryBuilder<ProgressUpdateModel,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'issueId',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'issueId',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      issueIdStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  issueIdStartsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'issueId',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.startsWith(
+          property: r'issueId',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      issueIdEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  issueIdEndsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'issueId',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.endsWith(
+          property: r'issueId',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      issueIdContains(String value, {bool caseSensitive = true}) {
+  issueIdContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'issueId',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.contains(
+          property: r'issueId',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      issueIdMatches(String pattern, {bool caseSensitive = true}) {
+  issueIdMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'issueId',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.matches(
+          property: r'issueId',
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      issueIdIsEmpty() {
+  issueIdIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'issueId',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'issueId', value: ''),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      issueIdIsNotEmpty() {
+  issueIdIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'issueId',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(property: r'issueId', value: ''),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      notesEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  notesEqualTo(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'notes',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'notes',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      notesGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'notes',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      notesLessThan(
+  notesGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'notes',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'notes',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      notesBetween(
+  notesLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'notes',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
+  notesBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -1114,301 +1151,311 @@ extension ProgressUpdateModelQueryFilter on QueryBuilder<ProgressUpdateModel,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'notes',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'notes',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      notesStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  notesStartsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'notes',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.startsWith(
+          property: r'notes',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      notesEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  notesEndsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'notes',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.endsWith(
+          property: r'notes',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      notesContains(String value, {bool caseSensitive = true}) {
+  notesContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'notes',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.contains(
+          property: r'notes',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      notesMatches(String pattern, {bool caseSensitive = true}) {
+  notesMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'notes',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.matches(
+          property: r'notes',
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      notesIsEmpty() {
+  notesIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'notes',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'notes', value: ''),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      notesIsNotEmpty() {
+  notesIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'notes',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(property: r'notes', value: ''),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      progressPercentEqualTo(int value) {
+  progressPercentEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'progressPercent',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'progressPercent', value: value),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      progressPercentGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
+  progressPercentGreaterThan(int value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'progressPercent',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'progressPercent',
+          value: value,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      progressPercentLessThan(
-    int value, {
-    bool include = false,
-  }) {
+  progressPercentLessThan(int value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'progressPercent',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'progressPercent',
+          value: value,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      progressPercentBetween(
+  progressPercentBetween(
     int lower,
     int upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'progressPercent',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'progressPercent',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      syncStatusEqualTo(SyncStatus value) {
+  syncStatusEqualTo(SyncStatus value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'syncStatus',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'syncStatus', value: value),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      syncStatusGreaterThan(
-    SyncStatus value, {
-    bool include = false,
-  }) {
+  syncStatusGreaterThan(SyncStatus value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'syncStatus',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'syncStatus',
+          value: value,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      syncStatusLessThan(
-    SyncStatus value, {
-    bool include = false,
-  }) {
+  syncStatusLessThan(SyncStatus value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'syncStatus',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'syncStatus',
+          value: value,
+        ),
+      );
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterFilterCondition>
-      syncStatusBetween(
+  syncStatusBetween(
     SyncStatus lower,
     SyncStatus upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'syncStatus',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'syncStatus',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+        ),
+      );
     });
   }
 }
 
-extension ProgressUpdateModelQueryObject on QueryBuilder<ProgressUpdateModel,
-    ProgressUpdateModel, QFilterCondition> {}
+extension ProgressUpdateModelQueryObject
+    on
+        QueryBuilder<
+          ProgressUpdateModel,
+          ProgressUpdateModel,
+          QFilterCondition
+        > {}
 
-extension ProgressUpdateModelQueryLinks on QueryBuilder<ProgressUpdateModel,
-    ProgressUpdateModel, QFilterCondition> {}
+extension ProgressUpdateModelQueryLinks
+    on
+        QueryBuilder<
+          ProgressUpdateModel,
+          ProgressUpdateModel,
+          QFilterCondition
+        > {}
 
 extension ProgressUpdateModelQuerySortBy
     on QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QSortBy> {
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterSortBy>
-      sortByCreatedAt() {
+  sortByCreatedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'createdAt', Sort.asc);
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterSortBy>
-      sortByCreatedAtDesc() {
+  sortByCreatedAtDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'createdAt', Sort.desc);
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterSortBy>
-      sortByCreatedBy() {
+  sortByCreatedBy() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'createdBy', Sort.asc);
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterSortBy>
-      sortByCreatedByDesc() {
+  sortByCreatedByDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'createdBy', Sort.desc);
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterSortBy>
-      sortById() {
+  sortById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterSortBy>
-      sortByIdDesc() {
+  sortByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterSortBy>
-      sortByIssueId() {
+  sortByIssueId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'issueId', Sort.asc);
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterSortBy>
-      sortByIssueIdDesc() {
+  sortByIssueIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'issueId', Sort.desc);
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterSortBy>
-      sortByNotes() {
+  sortByNotes() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'notes', Sort.asc);
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterSortBy>
-      sortByNotesDesc() {
+  sortByNotesDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'notes', Sort.desc);
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterSortBy>
-      sortByProgressPercent() {
+  sortByProgressPercent() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'progressPercent', Sort.asc);
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterSortBy>
-      sortByProgressPercentDesc() {
+  sortByProgressPercentDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'progressPercent', Sort.desc);
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterSortBy>
-      sortBySyncStatus() {
+  sortBySyncStatus() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'syncStatus', Sort.asc);
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterSortBy>
-      sortBySyncStatusDesc() {
+  sortBySyncStatusDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'syncStatus', Sort.desc);
     });
@@ -1418,112 +1465,112 @@ extension ProgressUpdateModelQuerySortBy
 extension ProgressUpdateModelQuerySortThenBy
     on QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QSortThenBy> {
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterSortBy>
-      thenByCreatedAt() {
+  thenByCreatedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'createdAt', Sort.asc);
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterSortBy>
-      thenByCreatedAtDesc() {
+  thenByCreatedAtDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'createdAt', Sort.desc);
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterSortBy>
-      thenByCreatedBy() {
+  thenByCreatedBy() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'createdBy', Sort.asc);
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterSortBy>
-      thenByCreatedByDesc() {
+  thenByCreatedByDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'createdBy', Sort.desc);
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterSortBy>
-      thenById() {
+  thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterSortBy>
-      thenByIdDesc() {
+  thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterSortBy>
-      thenByIsarId() {
+  thenByIsarId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isarId', Sort.asc);
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterSortBy>
-      thenByIsarIdDesc() {
+  thenByIsarIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isarId', Sort.desc);
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterSortBy>
-      thenByIssueId() {
+  thenByIssueId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'issueId', Sort.asc);
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterSortBy>
-      thenByIssueIdDesc() {
+  thenByIssueIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'issueId', Sort.desc);
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterSortBy>
-      thenByNotes() {
+  thenByNotes() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'notes', Sort.asc);
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterSortBy>
-      thenByNotesDesc() {
+  thenByNotesDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'notes', Sort.desc);
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterSortBy>
-      thenByProgressPercent() {
+  thenByProgressPercent() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'progressPercent', Sort.asc);
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterSortBy>
-      thenByProgressPercentDesc() {
+  thenByProgressPercentDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'progressPercent', Sort.desc);
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterSortBy>
-      thenBySyncStatus() {
+  thenBySyncStatus() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'syncStatus', Sort.asc);
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QAfterSortBy>
-      thenBySyncStatusDesc() {
+  thenBySyncStatusDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'syncStatus', Sort.desc);
     });
@@ -1533,49 +1580,49 @@ extension ProgressUpdateModelQuerySortThenBy
 extension ProgressUpdateModelQueryWhereDistinct
     on QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QDistinct> {
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QDistinct>
-      distinctByCreatedAt() {
+  distinctByCreatedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'createdAt');
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QDistinct>
-      distinctByCreatedBy({bool caseSensitive = true}) {
+  distinctByCreatedBy({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'createdBy', caseSensitive: caseSensitive);
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QDistinct>
-      distinctById({bool caseSensitive = true}) {
+  distinctById({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'id', caseSensitive: caseSensitive);
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QDistinct>
-      distinctByIssueId({bool caseSensitive = true}) {
+  distinctByIssueId({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'issueId', caseSensitive: caseSensitive);
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QDistinct>
-      distinctByNotes({bool caseSensitive = true}) {
+  distinctByNotes({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'notes', caseSensitive: caseSensitive);
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QDistinct>
-      distinctByProgressPercent() {
+  distinctByProgressPercent() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'progressPercent');
     });
   }
 
   QueryBuilder<ProgressUpdateModel, ProgressUpdateModel, QDistinct>
-      distinctBySyncStatus() {
+  distinctBySyncStatus() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'syncStatus');
     });
@@ -1591,14 +1638,14 @@ extension ProgressUpdateModelQueryProperty
   }
 
   QueryBuilder<ProgressUpdateModel, DateTime, QQueryOperations>
-      createdAtProperty() {
+  createdAtProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'createdAt');
     });
   }
 
   QueryBuilder<ProgressUpdateModel, String, QQueryOperations>
-      createdByProperty() {
+  createdByProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'createdBy');
     });
@@ -1611,7 +1658,7 @@ extension ProgressUpdateModelQueryProperty
   }
 
   QueryBuilder<ProgressUpdateModel, String, QQueryOperations>
-      issueIdProperty() {
+  issueIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'issueId');
     });
@@ -1624,14 +1671,14 @@ extension ProgressUpdateModelQueryProperty
   }
 
   QueryBuilder<ProgressUpdateModel, int, QQueryOperations>
-      progressPercentProperty() {
+  progressPercentProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'progressPercent');
     });
   }
 
   QueryBuilder<ProgressUpdateModel, SyncStatus, QQueryOperations>
-      syncStatusProperty() {
+  syncStatusProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'syncStatus');
     });

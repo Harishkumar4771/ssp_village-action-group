@@ -19,7 +19,8 @@ class SupabaseConfig {
 
   /// Supabase publishable key (equivalent to anon/public key).
   /// Safe to include in APK. RLS enforces access control server-side.
-  static const String anonKey = 'sb_publishable_qLBDLp0WGEEscPcx8NiG0A_MSrser4B';
+  static const String anonKey =
+      'sb_publishable_qLBDLp0WGEEscPcx8NiG0A_MSrser4B';
 
   // ── Table names ────────────────────────────────────────────────────────────
   static const String issuesTable = 'issues';
@@ -29,7 +30,8 @@ class SupabaseConfig {
   // ── REST endpoint helpers ──────────────────────────────────────────────────
   static String get restBase => '$url/rest/v1';
   static String get issuesEndpoint => '$restBase/$issuesTable';
-  static String get progressUpdatesEndpoint => '$restBase/$progressUpdatesTable';
+  static String get progressUpdatesEndpoint =>
+      '$restBase/$progressUpdatesTable';
   static String get closureNotificationsEndpoint =>
       '$restBase/$closureNotificationsTable';
 }

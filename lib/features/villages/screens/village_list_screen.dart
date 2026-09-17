@@ -24,13 +24,10 @@ class _VillageListScreenState extends ConsumerState<VillageListScreen> {
     return villages.where((village) {
       final matchesFilter =
           _selectedFilter == 'All' || village.status == _selectedFilter;
-      final matchesSearch = _searchQuery.isEmpty ||
-          village.name
-              .toLowerCase()
-              .contains(_searchQuery.toLowerCase()) ||
-          village.district
-              .toLowerCase()
-              .contains(_searchQuery.toLowerCase());
+      final matchesSearch =
+          _searchQuery.isEmpty ||
+          village.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+          village.district.toLowerCase().contains(_searchQuery.toLowerCase());
       return matchesFilter && matchesSearch;
     }).toList();
   }
@@ -82,17 +79,17 @@ class _VillageListScreenState extends ConsumerState<VillageListScreen> {
                   style: const TextStyle(color: AppColors.textPrimary),
                   decoration: InputDecoration(
                     hintText: 'Search villages...',
-                    hintStyle: TextStyle(
-                      color: AppColors.textHint,
-                    ),
+                    hintStyle: TextStyle(color: AppColors.textHint),
                     prefixIcon: const Icon(
                       Icons.search_rounded,
                       color: AppColors.primaryGreen,
                     ),
                     suffixIcon: _searchQuery.isNotEmpty
                         ? IconButton(
-                            icon: const Icon(Icons.clear_rounded,
-                                color: AppColors.textSecondary),
+                            icon: const Icon(
+                              Icons.clear_rounded,
+                              color: AppColors.textSecondary,
+                            ),
                             onPressed: () {
                               _searchController.clear();
                               setState(() => _searchQuery = '');
@@ -102,8 +99,9 @@ class _VillageListScreenState extends ConsumerState<VillageListScreen> {
                     filled: true,
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
-                      borderRadius:
-                          BorderRadius.circular(AppConstants.radiusLg),
+                      borderRadius: BorderRadius.circular(
+                        AppConstants.radiusLg,
+                      ),
                       borderSide: BorderSide.none,
                     ),
                     contentPadding: const EdgeInsets.symmetric(
@@ -118,7 +116,9 @@ class _VillageListScreenState extends ConsumerState<VillageListScreen> {
                   children: _filters.map((filter) {
                     final isSelected = _selectedFilter == filter;
                     return Padding(
-                      padding: const EdgeInsets.only(right: AppConstants.spacingSm),
+                      padding: const EdgeInsets.only(
+                        right: AppConstants.spacingSm,
+                      ),
                       child: FilterChip(
                         label: Text(
                           filter,
@@ -140,11 +140,18 @@ class _VillageListScreenState extends ConsumerState<VillageListScreen> {
                         checkmarkColor: const Color(0xFF2E7D32),
                         showCheckmark: true,
                         side: isSelected
-                            ? const BorderSide(color: Color(0xFF2E7D32), width: 2)
-                            : const BorderSide(color: Color(0xFFC8C8C8), width: 1),
+                            ? const BorderSide(
+                                color: Color(0xFF2E7D32),
+                                width: 2,
+                              )
+                            : const BorderSide(
+                                color: Color(0xFFC8C8C8),
+                                width: 1,
+                              ),
                         shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(AppConstants.radiusMd),
+                          borderRadius: BorderRadius.circular(
+                            AppConstants.radiusMd,
+                          ),
                         ),
                         padding: const EdgeInsets.symmetric(
                           horizontal: AppConstants.spacingSm,
@@ -191,7 +198,8 @@ class _VillageListScreenState extends ConsumerState<VillageListScreen> {
           Expanded(
             child: asyncVillages.when(
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, st) => Center(child: Text('Error loading villages: $e')),
+              error: (e, st) =>
+                  Center(child: Text('Error loading villages: $e')),
               data: (allVillages) {
                 final filtered = _getFilteredVillages(allVillages);
                 if (filtered.isEmpty) {
@@ -199,9 +207,11 @@ class _VillageListScreenState extends ConsumerState<VillageListScreen> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.location_off_rounded,
-                            size: 64,
-                            color: AppColors.textHint),
+                        Icon(
+                          Icons.location_off_rounded,
+                          size: 64,
+                          color: AppColors.textHint,
+                        ),
                         const SizedBox(height: AppConstants.spacingSm),
                         Text(
                           'No villages found',
@@ -241,10 +251,7 @@ class _VillageCard extends StatelessWidget {
   final Village village;
   final VoidCallback onTap;
 
-  const _VillageCard({
-    required this.village,
-    required this.onTap,
-  });
+  const _VillageCard({required this.village, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -275,8 +282,7 @@ class _VillageCard extends StatelessWidget {
                   color: needsAttention
                       ? AppColors.warning.withValues(alpha: 0.12)
                       : AppColors.primaryGreen.withValues(alpha: 0.12),
-                  borderRadius:
-                      BorderRadius.circular(AppConstants.radiusMd),
+                  borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                 ),
                 child: Icon(
                   needsAttention
@@ -313,10 +319,10 @@ class _VillageCard extends StatelessWidget {
                               vertical: 3,
                             ),
                             decoration: BoxDecoration(
-                              color:
-                                  AppColors.warning.withValues(alpha: 0.12),
+                              color: AppColors.warning.withValues(alpha: 0.12),
                               borderRadius: BorderRadius.circular(
-                                  AppConstants.spacingSm),
+                                AppConstants.spacingSm,
+                              ),
                             ),
                             child: const Text(
                               'Needs Attention',
@@ -340,9 +346,11 @@ class _VillageCard extends StatelessWidget {
                     const SizedBox(height: 6),
                     Row(
                       children: [
-                        Icon(Icons.people_outline_rounded,
-                            size: 15,
-                            color: AppColors.textHint),
+                        Icon(
+                          Icons.people_outline_rounded,
+                          size: 15,
+                          color: AppColors.textHint,
+                        ),
                         const SizedBox(width: 4),
                         Text(
                           '${village.memberCount} members',
@@ -352,9 +360,11 @@ class _VillageCard extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: AppConstants.spacingMd),
-                        Icon(Icons.access_time_rounded,
-                            size: 15,
-                            color: AppColors.textHint),
+                        Icon(
+                          Icons.access_time_rounded,
+                          size: 15,
+                          color: AppColors.textHint,
+                        ),
                         const SizedBox(width: 4),
                         Text(
                           village.lastActivity,
@@ -369,10 +379,7 @@ class _VillageCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: AppConstants.spacingSm),
-              Icon(
-                Icons.chevron_right_rounded,
-                color: AppColors.textHint,
-              ),
+              Icon(Icons.chevron_right_rounded, color: AppColors.textHint),
             ],
           ),
         ),

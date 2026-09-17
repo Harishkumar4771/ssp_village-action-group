@@ -15,7 +15,10 @@ final meetingsProvider = FutureProvider<List<Meeting>>((ref) async {
 });
 
 /// A future provider that fetches a specific meeting by ID
-final meetingByIdProvider = FutureProvider.family<Meeting?, String>((ref, id) async {
+final meetingByIdProvider = FutureProvider.family<Meeting?, String>((
+  ref,
+  id,
+) async {
   final dataSource = ref.watch(meetingLocalDataSourceProvider);
   final model = await dataSource.getMeetingById(id);
   return model?.toDomain();
@@ -25,6 +28,8 @@ final meetingByIdProvider = FutureProvider.family<Meeting?, String>((ref, id) as
 final upcomingMeetingsProvider = FutureProvider<List<Meeting>>((ref) async {
   final meetings = await ref.watch(meetingsProvider.future);
   final now = DateTime.now();
-  return meetings.where((m) => m.date.isAfter(now) || m.status == MeetingStatus.scheduled).toList()
+  return meetings
+      .where((m) => m.date.isAfter(now) || m.status == MeetingStatus.scheduled)
+      .toList()
     ..sort((a, b) => a.date.compareTo(b.date));
 });

@@ -11,15 +11,20 @@ class SyncStatusIndicator extends StatelessWidget {
       stream: Connectivity().onConnectivityChanged,
       builder: (context, snapshot) {
         final results = snapshot.data;
-        final bool isOffline = results == null || 
-                               results.isEmpty || 
-                               results.first == ConnectivityResult.none;
+        final bool isOffline =
+            results == null ||
+            results.isEmpty ||
+            results.first == ConnectivityResult.none;
 
         if (isOffline) {
           return Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.cloud_off_rounded, color: AppColors.secondaryTerracotta, size: 16),
+              Icon(
+                Icons.cloud_off_rounded,
+                color: AppColors.secondaryTerracotta,
+                size: 16,
+              ),
               const SizedBox(width: 4),
               Text(
                 'Offline Mode',
@@ -36,7 +41,11 @@ class SyncStatusIndicator extends StatelessWidget {
         return Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.cloud_done_rounded, color: AppColors.primaryGreen, size: 16),
+            Icon(
+              Icons.cloud_done_rounded,
+              color: AppColors.primaryGreen,
+              size: 16,
+            ),
             const SizedBox(width: 4),
             Text(
               'Synced',

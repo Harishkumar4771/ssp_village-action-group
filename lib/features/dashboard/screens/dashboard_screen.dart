@@ -21,9 +21,7 @@ class DashboardScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: AppColors.backgroundCream,
-      body: SafeArea(
-        child: isMobile ? _MobileDashboard() : _WebDashboard(),
-      ),
+      body: SafeArea(child: isMobile ? _MobileDashboard() : _WebDashboard()),
     );
   }
 }
@@ -84,9 +82,7 @@ class _MobileDashboard extends ConsumerWidget {
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            const SyncStatusIndicator(),
-          ],
+          children: [const SyncStatusIndicator()],
         ),
         const SizedBox(height: AppConstants.spacingSm),
         _buildWelcomeCard(context),
@@ -124,16 +120,16 @@ class _MobileDashboard extends ConsumerWidget {
                   Text(
                     'Namaste, Sunita 🙏',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          color: AppColors.textOnPrimary,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      color: AppColors.textOnPrimary,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     'Here\'s what\'s happening in your villages today.',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: AppColors.textOnPrimary.withValues(alpha: 0.85),
-                        ),
+                      color: AppColors.textOnPrimary.withValues(alpha: 0.85),
+                    ),
                   ),
                 ],
               ),
@@ -142,7 +138,11 @@ class _MobileDashboard extends ConsumerWidget {
             CircleAvatar(
               radius: 26,
               backgroundColor: AppColors.textOnPrimary.withValues(alpha: 0.2),
-              child: const Icon(Icons.wb_sunny_rounded, color: Colors.white, size: 28),
+              child: const Icon(
+                Icons.wb_sunny_rounded,
+                color: Colors.white,
+                size: 28,
+              ),
             ),
           ],
         ),
@@ -351,11 +351,46 @@ class _WebDashboard extends ConsumerWidget {
 
   // Recent activity rows for DataTable
   static final List<_ActivityRow> _rows = [
-    _ActivityRow('ISS-1042', 'Water supply disruption', 'Chandpur', 'Reported', AppColors.statusReported, '2 hrs ago'),
-    _ActivityRow('ISS-1041', 'Road repair needed', 'Devgaon', 'Escalated', AppColors.statusEscalated, '5 hrs ago'),
-    _ActivityRow('ISS-1038', 'Electricity outage', 'Shivneri', 'Resolved', AppColors.statusResolved, '1 day ago'),
-    _ActivityRow('MTG-0087', 'Gram Sabha scheduled', 'Rampur', 'In Progress', AppColors.statusInProgress, '1 day ago'),
-    _ActivityRow('ISS-1035', 'Mid-day meal check', 'Chandpur', 'In Progress', AppColors.statusInProgress, '3 days ago'),
+    _ActivityRow(
+      'ISS-1042',
+      'Water supply disruption',
+      'Chandpur',
+      'Reported',
+      AppColors.statusReported,
+      '2 hrs ago',
+    ),
+    _ActivityRow(
+      'ISS-1041',
+      'Road repair needed',
+      'Devgaon',
+      'Escalated',
+      AppColors.statusEscalated,
+      '5 hrs ago',
+    ),
+    _ActivityRow(
+      'ISS-1038',
+      'Electricity outage',
+      'Shivneri',
+      'Resolved',
+      AppColors.statusResolved,
+      '1 day ago',
+    ),
+    _ActivityRow(
+      'MTG-0087',
+      'Gram Sabha scheduled',
+      'Rampur',
+      'In Progress',
+      AppColors.statusInProgress,
+      '1 day ago',
+    ),
+    _ActivityRow(
+      'ISS-1035',
+      'Mid-day meal check',
+      'Chandpur',
+      'In Progress',
+      AppColors.statusInProgress,
+      '3 days ago',
+    ),
   ];
 
   @override
@@ -386,16 +421,16 @@ class _WebDashboard extends ConsumerWidget {
               Text(
                 'Dashboard',
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.textPrimary,
-                    ),
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textPrimary,
+                ),
               ),
               const SizedBox(height: 4),
               Text(
                 'Overview of programme performance across all villages.',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
+                  color: AppColors.textSecondary,
+                ),
               ),
             ],
           ),
@@ -429,21 +464,30 @@ class _WebDashboard extends ConsumerWidget {
     final List<_KpiData> kpis = [
       _KpiData(
         label: 'Total Villages',
-        value: villagesAsync.maybeWhen(data: (v) => v.length.toString(), orElse: () => '-'),
+        value: villagesAsync.maybeWhen(
+          data: (v) => v.length.toString(),
+          orElse: () => '-',
+        ),
         icon: Icons.location_city_rounded,
         iconColor: AppColors.info,
         delta: 'All loaded',
       ),
       _KpiData(
         label: 'Active Issues',
-        value: activeIssuesAsync.maybeWhen(data: (c) => c.toString(), orElse: () => '-'),
+        value: activeIssuesAsync.maybeWhen(
+          data: (c) => c.toString(),
+          orElse: () => '-',
+        ),
         icon: Icons.report_problem_rounded,
         iconColor: AppColors.warning,
         delta: 'Needs attention',
       ),
       _KpiData(
         label: 'Upcoming Meetings',
-        value: upcomingMeetingsAsync.maybeWhen(data: (m) => m.length.toString(), orElse: () => '-'),
+        value: upcomingMeetingsAsync.maybeWhen(
+          data: (m) => m.length.toString(),
+          orElse: () => '-',
+        ),
         icon: Icons.event_rounded,
         iconColor: AppColors.secondaryTerracotta,
         delta: 'Scheduled',
@@ -491,9 +535,9 @@ class _WebDashboard extends ConsumerWidget {
                 Text(
                   'Recent Activity',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.textPrimary,
-                      ),
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textPrimary,
+                  ),
                 ),
                 TextButton(
                   onPressed: () {},
@@ -515,22 +559,57 @@ class _WebDashboard extends ConsumerWidget {
                 columnSpacing: AppConstants.spacingLg,
                 horizontalMargin: AppConstants.spacingMd,
                 columns: const [
-                  DataColumn(label: Text('ID', style: TextStyle(fontWeight: FontWeight.bold))),
-                  DataColumn(label: Text('Description', style: TextStyle(fontWeight: FontWeight.bold))),
-                  DataColumn(label: Text('Village', style: TextStyle(fontWeight: FontWeight.bold))),
-                  DataColumn(label: Text('Status', style: TextStyle(fontWeight: FontWeight.bold))),
-                  DataColumn(label: Text('Time', style: TextStyle(fontWeight: FontWeight.bold))),
+                  DataColumn(
+                    label: Text(
+                      'ID',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  DataColumn(
+                    label: Text(
+                      'Description',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  DataColumn(
+                    label: Text(
+                      'Village',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  DataColumn(
+                    label: Text(
+                      'Status',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  DataColumn(
+                    label: Text(
+                      'Time',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
                 ],
                 rows: _rows
                     .map(
                       (r) => DataRow(
                         cells: [
-                          DataCell(Text(r.id, style: const TextStyle(fontWeight: FontWeight.w600))),
+                          DataCell(
+                            Text(
+                              r.id,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
                           DataCell(Text(r.description)),
                           DataCell(Text(r.village)),
                           DataCell(
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 4,
+                              ),
                               decoration: BoxDecoration(
                                 color: r.statusColor.withValues(alpha: 0.12),
                                 borderRadius: BorderRadius.circular(20),
@@ -546,7 +625,13 @@ class _WebDashboard extends ConsumerWidget {
                             ),
                           ),
                           DataCell(
-                            Text(r.time, style: const TextStyle(color: AppColors.textHint, fontSize: 12)),
+                            Text(
+                              r.time,
+                              style: const TextStyle(
+                                color: AppColors.textHint,
+                                fontSize: 12,
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -703,7 +788,11 @@ class _QuickActionChip extends StatelessWidget {
     return ActionChip(
       avatar: Icon(icon, color: color, size: 18),
       label: Text(label),
-      labelStyle: TextStyle(color: color, fontWeight: FontWeight.w600, fontSize: 13),
+      labelStyle: TextStyle(
+        color: color,
+        fontWeight: FontWeight.w600,
+        fontSize: 13,
+      ),
       backgroundColor: color.withValues(alpha: 0.08),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppConstants.radiusMd),

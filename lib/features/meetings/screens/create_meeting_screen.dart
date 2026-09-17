@@ -53,8 +53,18 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
   String get _formattedDate {
     if (_selectedDate == null) return '';
     final months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     return '${months[_selectedDate!.month - 1]} ${_selectedDate!.day}, ${_selectedDate!.year}';
   }
@@ -118,15 +128,18 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
                     const SizedBox(height: AppConstants.spacingSm),
                     InkWell(
                       onTap: _pickDate,
-                      borderRadius:
-                          BorderRadius.circular(AppConstants.radiusMd),
+                      borderRadius: BorderRadius.circular(
+                        AppConstants.radiusMd,
+                      ),
                       child: InputDecorator(
                         decoration: _inputDecoration(
                           hint: 'Select date',
                           prefixIcon: Icons.calendar_today_rounded,
                         ),
                         child: Text(
-                          _selectedDate != null ? _formattedDate : 'Select date',
+                          _selectedDate != null
+                              ? _formattedDate
+                              : 'Select date',
                           style: TextStyle(
                             color: _selectedDate != null
                                 ? AppColors.textPrimary
@@ -158,8 +171,9 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
                       validator: (value) =>
                           value == null ? 'Please select a village' : null,
                       dropdownColor: AppColors.surfaceCard,
-                      borderRadius:
-                          BorderRadius.circular(AppConstants.radiusMd),
+                      borderRadius: BorderRadius.circular(
+                        AppConstants.radiusMd,
+                      ),
                     ),
                     const SizedBox(height: AppConstants.spacingMd),
 
@@ -209,13 +223,15 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
                             behavior: SnackBarBehavior.floating,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(
-                                  AppConstants.spacingSm),
+                                AppConstants.spacingSm,
+                              ),
                             ),
                           ),
                         );
                       },
-                      borderRadius:
-                          BorderRadius.circular(AppConstants.radiusMd),
+                      borderRadius: BorderRadius.circular(
+                        AppConstants.radiusMd,
+                      ),
                       child: CustomPaint(
                         painter: _DashedBorderPainter(
                           color: AppColors.primaryGreen.withValues(alpha: 0.5),
@@ -228,10 +244,12 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
                           height: 160,
                           width: double.infinity,
                           decoration: BoxDecoration(
-                            color: AppColors.primaryGreen
-                                .withValues(alpha: 0.05),
+                            color: AppColors.primaryGreen.withValues(
+                              alpha: 0.05,
+                            ),
                             borderRadius: BorderRadius.circular(
-                                AppConstants.radiusMd),
+                              AppConstants.radiusMd,
+                            ),
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -240,8 +258,9 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
                                 width: 56,
                                 height: 56,
                                 decoration: BoxDecoration(
-                                  color: AppColors.primaryGreen
-                                      .withValues(alpha: 0.12),
+                                  color: AppColors.primaryGreen.withValues(
+                                    alpha: 0.12,
+                                  ),
                                   shape: BoxShape.circle,
                                 ),
                                 child: const Icon(
@@ -250,7 +269,9 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
                                   size: 28,
                                 ),
                               ),
-                              const SizedBox(height: AppConstants.spacingSm + 4),
+                              const SizedBox(
+                                height: AppConstants.spacingSm + 4,
+                              ),
                               const Text(
                                 'Tap to attach photo',
                                 style: TextStyle(
@@ -278,10 +299,7 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
               const SizedBox(height: AppConstants.spacingLg),
 
               // Notes Section
-              const _SectionHeader(
-                icon: Icons.notes_rounded,
-                title: 'Notes',
-              ),
+              const _SectionHeader(icon: Icons.notes_rounded, title: 'Notes'),
               const SizedBox(height: AppConstants.spacingMd),
               _FormCard(
                 child: Column(
@@ -313,8 +331,9 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
                     foregroundColor: AppColors.textOnPrimary,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(AppConstants.radiusLg),
+                      borderRadius: BorderRadius.circular(
+                        AppConstants.radiusLg,
+                      ),
                     ),
                     textStyle: const TextStyle(
                       fontSize: 16,
@@ -353,16 +372,19 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
       fillColor: AppColors.backgroundCream,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-        borderSide: BorderSide(color: AppColors.textHint.withValues(alpha: 0.3)),
+        borderSide: BorderSide(
+          color: AppColors.textHint.withValues(alpha: 0.3),
+        ),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-        borderSide: BorderSide(color: AppColors.textHint.withValues(alpha: 0.3)),
+        borderSide: BorderSide(
+          color: AppColors.textHint.withValues(alpha: 0.3),
+        ),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-        borderSide:
-            const BorderSide(color: AppColors.primaryGreen, width: 1.5),
+        borderSide: const BorderSide(color: AppColors.primaryGreen, width: 1.5),
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppConstants.radiusMd),

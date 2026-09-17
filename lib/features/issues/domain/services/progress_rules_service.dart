@@ -26,17 +26,16 @@ class ProgressValidationResult {
   final bool isValid;
   final String? errorMessage;
 
-  const ProgressValidationResult.ok()
-      : isValid = true,
-        errorMessage = null;
+  const ProgressValidationResult.ok() : isValid = true, errorMessage = null;
 
   const ProgressValidationResult.fail(String message)
-      : isValid = false,
-        errorMessage = message;
+    : isValid = false,
+      errorMessage = message;
 
   @override
-  String toString() =>
-      isValid ? 'ProgressValidationResult.ok' : 'ProgressValidationResult.fail($errorMessage)';
+  String toString() => isValid
+      ? 'ProgressValidationResult.ok'
+      : 'ProgressValidationResult.fail($errorMessage)';
 }
 
 /// Centralizes all progress business rules.
@@ -108,9 +107,7 @@ class ProgressRulesService {
   /// Rule R5: 100% → completed. Otherwise → inProgress.
   /// (Closed / reported are driven by other operations, not progress.)
   static IssueStatus computeNewStatus(int newProgress) {
-    return newProgress >= 100
-        ? IssueStatus.completed
-        : IssueStatus.inProgress;
+    return newProgress >= 100 ? IssueStatus.completed : IssueStatus.inProgress;
   }
 
   /// Returns true if a progress update is theoretically possible on [issue].

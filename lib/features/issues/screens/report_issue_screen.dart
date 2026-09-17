@@ -106,17 +106,19 @@ class _ReportIssueScreenState extends ConsumerState<ReportIssueScreen> {
   @override
   Widget build(BuildContext context) {
     final categoriesAsync = ref.watch(issueCategoriesProvider);
-    final subcategoriesAsync =
-        ref.watch(issueSubcategoriesProvider(_selectedCategory?.id));
+    final subcategoriesAsync = ref.watch(
+      issueSubcategoriesProvider(_selectedCategory?.id),
+    );
 
     return Scaffold(
       backgroundColor: AppColors.backgroundCream,
       appBar: AppBar(
         title: const Text('Report an Issue'),
         centerTitle: false,
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.surfaceCard,
         foregroundColor: AppColors.textPrimary,
         elevation: 0,
+        scrolledUnderElevation: 0,
       ),
       body: Form(
         key: _formKey,
@@ -124,24 +126,19 @@ class _ReportIssueScreenState extends ConsumerState<ReportIssueScreen> {
           padding: const EdgeInsets.all(AppConstants.spacingMd),
           children: [
             // ── Step 1: Category ────────────────────────────────────────────
-            _SectionLabel(
-              number: '1',
-              label: 'Category',
-              required: true,
-            ),
+            _SectionLabel(number: '1', label: 'Category', required: true),
             const SizedBox(height: AppConstants.spacingSm),
             categoriesAsync.when(
-              data: (categories) =>
-                  _CategoryGrid(
-                    categories: categories,
-                    selected: _selectedCategory,
-                    onSelect: (cat) {
-                      setState(() {
-                        _selectedCategory = cat;
-                        _selectedSubcategory = null; // reset subcategory
-                      });
-                    },
-                  ),
+              data: (categories) => _CategoryGrid(
+                categories: categories,
+                selected: _selectedCategory,
+                onSelect: (cat) {
+                  setState(() {
+                    _selectedCategory = cat;
+                    _selectedSubcategory = null; // reset subcategory
+                  });
+                },
+              ),
               loading: () => const Center(
                 child: Padding(
                   padding: EdgeInsets.all(16),
@@ -157,11 +154,7 @@ class _ReportIssueScreenState extends ConsumerState<ReportIssueScreen> {
             const SizedBox(height: AppConstants.spacingLg),
 
             // ── Step 2: Subcategory ─────────────────────────────────────────
-            _SectionLabel(
-              number: '2',
-              label: 'Subcategory',
-              required: true,
-            ),
+            _SectionLabel(number: '2', label: 'Subcategory', required: true),
             const SizedBox(height: AppConstants.spacingSm),
             subcategoriesAsync.when(
               data: (subcategories) => _SubcategoryDropdown(
@@ -211,8 +204,7 @@ class _ReportIssueScreenState extends ConsumerState<ReportIssueScreen> {
             const SizedBox(height: AppConstants.spacingMd),
 
             // ── Step 4: Description ─────────────────────────────────────────
-            _SectionLabel(
-                number: '4', label: 'Description', required: true),
+            _SectionLabel(number: '4', label: 'Description', required: true),
             const SizedBox(height: AppConstants.spacingSm),
             TextFormField(
               controller: _descriptionController,
@@ -249,8 +241,11 @@ class _ReportIssueScreenState extends ConsumerState<ReportIssueScreen> {
               ),
               child: Row(
                 children: [
-                  Icon(Icons.attach_file_rounded,
-                      color: AppColors.primaryGreen, size: 20),
+                  Icon(
+                    Icons.attach_file_rounded,
+                    color: AppColors.primaryGreen,
+                    size: 20,
+                  ),
                   const SizedBox(width: AppConstants.spacingSm),
                   Expanded(
                     child: Text(
@@ -310,11 +305,15 @@ class _ReportIssueScreenState extends ConsumerState<ReportIssueScreen> {
       fillColor: AppColors.surfaceCard,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-        borderSide: BorderSide(color: AppColors.textHint.withValues(alpha: 0.3)),
+        borderSide: BorderSide(
+          color: AppColors.textHint.withValues(alpha: 0.3),
+        ),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-        borderSide: BorderSide(color: AppColors.textHint.withValues(alpha: 0.3)),
+        borderSide: BorderSide(
+          color: AppColors.textHint.withValues(alpha: 0.3),
+        ),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppConstants.radiusMd),
@@ -372,15 +371,18 @@ class _SectionLabel extends StatelessWidget {
         Text(
           label,
           style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w700,
-                color: AppColors.textPrimary,
-              ),
+            fontWeight: FontWeight.w700,
+            color: AppColors.textPrimary,
+          ),
         ),
         if (required) ...[
           const SizedBox(width: 4),
           const Text(
             '*',
-            style: TextStyle(color: AppColors.error, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              color: AppColors.error,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ],
       ],
@@ -441,13 +443,19 @@ class _CategoryGrid extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             child: Row(
               children: [
-                Icon(icon, color: isSelected ? color : AppColors.textHint, size: 22),
+                Icon(
+                  icon,
+                  color: isSelected ? color : AppColors.textHint,
+                  size: 22,
+                ),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     cat.name,
                     style: TextStyle(
-                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                      fontWeight: isSelected
+                          ? FontWeight.w700
+                          : FontWeight.w500,
                       color: isSelected ? color : AppColors.textSecondary,
                       fontSize: 13,
                     ),
@@ -500,11 +508,15 @@ class _SubcategoryDropdown extends StatelessWidget {
         fillColor: enabled ? AppColors.surfaceCard : AppColors.surfaceWarm,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-          borderSide: BorderSide(color: AppColors.textHint.withValues(alpha: 0.3)),
+          borderSide: BorderSide(
+            color: AppColors.textHint.withValues(alpha: 0.3),
+          ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-          borderSide: BorderSide(color: AppColors.textHint.withValues(alpha: 0.3)),
+          borderSide: BorderSide(
+            color: AppColors.textHint.withValues(alpha: 0.3),
+          ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppConstants.radiusMd),
@@ -512,7 +524,9 @@ class _SubcategoryDropdown extends StatelessWidget {
         ),
         disabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-          borderSide: BorderSide(color: AppColors.textHint.withValues(alpha: 0.15)),
+          borderSide: BorderSide(
+            color: AppColors.textHint.withValues(alpha: 0.15),
+          ),
         ),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: AppConstants.spacingMd,

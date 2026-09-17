@@ -67,7 +67,8 @@ class IssueCategoryLocalDataSource {
   // ─── Subcategories ────────────────────────────────────────────────────────
 
   Future<List<IssueSubcategory>> getSubcategoriesForCategory(
-      String categoryId) async {
+    String categoryId,
+  ) async {
     if (!LocalDb.isAvailable) {
       return subcategoriesFor(categoryId);
     }

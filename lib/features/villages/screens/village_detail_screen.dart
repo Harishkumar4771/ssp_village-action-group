@@ -97,8 +97,9 @@ class _VillageDetailScreenState extends State<VillageDetailScreen>
                             'Pune District, Maharashtra',
                             style: TextStyle(
                               fontSize: 14,
-                              color: AppColors.textOnPrimary
-                                  .withValues(alpha: 0.8),
+                              color: AppColors.textOnPrimary.withValues(
+                                alpha: 0.8,
+                              ),
                             ),
                           ),
                           const Spacer(),
@@ -139,8 +140,9 @@ class _VillageDetailScreenState extends State<VillageDetailScreen>
                 indicatorColor: AppColors.textOnPrimary,
                 indicatorWeight: 3,
                 labelColor: AppColors.textOnPrimary,
-                unselectedLabelColor:
-                    AppColors.textOnPrimary.withValues(alpha: 0.6),
+                unselectedLabelColor: AppColors.textOnPrimary.withValues(
+                  alpha: 0.6,
+                ),
                 labelStyle: const TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: 13,
@@ -310,44 +312,46 @@ class _MembersTab extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppConstants.spacingSm + 4),
-        ..._members.map((member) => Card(
-              elevation: 0,
-              color: AppColors.surfaceCard,
-              margin: const EdgeInsets.only(bottom: AppConstants.spacingSm),
-              shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(AppConstants.radiusMd),
-              ),
-              child: ListTile(
-                leading: CircleAvatar(
-                  backgroundColor:
-                      AppColors.primaryGreen.withValues(alpha: 0.12),
-                  child: Text(
-                    member['name']![0],
-                    style: const TextStyle(
-                      color: AppColors.primaryGreen,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                title: Text(
-                  member['name']!,
+        ..._members.map(
+          (member) => Card(
+            elevation: 0,
+            color: AppColors.surfaceCard,
+            margin: const EdgeInsets.only(bottom: AppConstants.spacingSm),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+            ),
+            child: ListTile(
+              leading: CircleAvatar(
+                backgroundColor: AppColors.primaryGreen.withValues(alpha: 0.12),
+                child: Text(
+                  member['name']![0],
                   style: const TextStyle(
+                    color: AppColors.primaryGreen,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
                   ),
                 ),
-                subtitle: Text(
-                  member['role']!,
-                  style: const TextStyle(
-                    color: AppColors.textSecondary,
-                    fontSize: 13,
-                  ),
-                ),
-                trailing: const Icon(Icons.chevron_right_rounded,
-                    color: AppColors.textHint),
               ),
-            )),
+              title: Text(
+                member['name']!,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              subtitle: Text(
+                member['role']!,
+                style: const TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 13,
+                ),
+              ),
+              trailing: const Icon(
+                Icons.chevron_right_rounded,
+                color: AppColors.textHint,
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -506,10 +510,7 @@ class _ActivityItem extends StatelessWidget {
               const SizedBox(height: 2),
               Text(
                 subtitle,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: AppColors.textHint,
-                ),
+                style: TextStyle(fontSize: 12, color: AppColors.textHint),
               ),
             ],
           ),
@@ -551,10 +552,7 @@ class _IssueListItem extends StatelessWidget {
         ),
         subtitle: Text(
           date,
-          style: const TextStyle(
-            color: AppColors.textSecondary,
-            fontSize: 13,
-          ),
+          style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
         ),
         trailing: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -625,10 +623,7 @@ class _MeetingListItem extends StatelessWidget {
         ),
         subtitle: Text(
           '$date • ${attendees > 0 ? '$attendees attendees' : 'Upcoming'}',
-          style: const TextStyle(
-            color: AppColors.textSecondary,
-            fontSize: 13,
-          ),
+          style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
         ),
       ),
     );

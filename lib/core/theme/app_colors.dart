@@ -39,16 +39,18 @@ class AppColors {
 
   // ── Category Accent Colors ──────────────────────────────────────
   // Used specifically for the 4 locked categories (FINAL v1)
-  static const Color categoryRoad = Color(0xFFF9A825);         // Mustard/Gold
-  static const Color categoryEducation = Color(0xFF2E7D32);    // Agricultural Green
-  static const Color categoryWater = Color(0xFF0277BD);        // Water Blue
-  static const Color categorySociety = Color(0xFFD84315);      // Terracotta
+  static const Color categoryRoad = Color(0xFFF9A825); // Mustard/Gold
+  static const Color categoryEducation = Color(
+    0xFF2E7D32,
+  ); // Agricultural Green
+  static const Color categoryWater = Color(0xFF0277BD); // Water Blue
+  static const Color categorySociety = Color(0xFFD84315); // Terracotta
 
   // ── Issue Status Colors ─────────────────────────────────────────
-  static const Color statusReported = Color(0xFFE53935);     // Red
-  static const Color statusEscalated = secondaryTerracotta;  // Terracotta
-  static const Color statusInProgress = Color(0xFF1E88E5);   // Blue
-  static const Color statusResolved = primaryGreen;          // Green
+  static const Color statusReported = Color(0xFFE53935); // Red
+  static const Color statusEscalated = secondaryTerracotta; // Terracotta
+  static const Color statusInProgress = Color(0xFF1E88E5); // Blue
+  static const Color statusResolved = primaryGreen; // Green
 
   // ── Text Colors ─────────────────────────────────────────────────
   static const Color textPrimary = Color(0xFF1A1A1A);

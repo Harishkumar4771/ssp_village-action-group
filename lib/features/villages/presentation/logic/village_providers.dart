@@ -15,14 +15,19 @@ final villagesProvider = FutureProvider<List<Village>>((ref) async {
 });
 
 /// A future provider that fetches a specific village by ID
-final villageByIdProvider = FutureProvider.family<Village?, String>((ref, id) async {
+final villageByIdProvider = FutureProvider.family<Village?, String>((
+  ref,
+  id,
+) async {
   final dataSource = ref.watch(villageLocalDataSourceProvider);
   final model = await dataSource.getVillageById(id);
   return model?.toDomain();
 });
 
 /// Provider for UI to track villages needing attention
-final villagesNeedingAttentionProvider = FutureProvider<List<Village>>((ref) async {
+final villagesNeedingAttentionProvider = FutureProvider<List<Village>>((
+  ref,
+) async {
   final villages = await ref.watch(villagesProvider.future);
   return villages.where((v) => v.status == 'Needs Attention').toList();
 });

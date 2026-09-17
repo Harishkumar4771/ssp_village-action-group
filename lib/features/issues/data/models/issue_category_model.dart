@@ -30,12 +30,12 @@ class IssueCategoryModel {
   late int sortOrder;
 
   IssueCategory toDomain() => IssueCategory(
-        id: id,
-        name: name,
-        slug: slug,
-        active: active,
-        sortOrder: sortOrder,
-      );
+    id: id,
+    name: name,
+    slug: slug,
+    active: active,
+    sortOrder: sortOrder,
+  );
 
   static IssueCategoryModel fromDomain(IssueCategory cat) =>
       IssueCategoryModel()
@@ -66,13 +66,13 @@ class IssueSubcategoryModel {
   late int sortOrder;
 
   IssueSubcategory toDomain() => IssueSubcategory(
-        id: id,
-        categoryId: categoryId,
-        name: name,
-        slug: slug,
-        active: active,
-        sortOrder: sortOrder,
-      );
+    id: id,
+    categoryId: categoryId,
+    name: name,
+    slug: slug,
+    active: active,
+    sortOrder: sortOrder,
+  );
 
   static IssueSubcategoryModel fromDomain(IssueSubcategory sub) =>
       IssueSubcategoryModel()

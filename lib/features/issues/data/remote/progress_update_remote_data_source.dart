@@ -26,7 +26,7 @@ class ProgressUpdateRemoteDataSource {
   final SupabaseRestClient _client;
 
   ProgressUpdateRemoteDataSource({SupabaseRestClient? client})
-      : _client = client ?? SupabaseRestClient.instance;
+    : _client = client ?? SupabaseRestClient.instance;
 
   /// Pushes [model] to the Supabase `progress_updates` table using upsert.
   ///

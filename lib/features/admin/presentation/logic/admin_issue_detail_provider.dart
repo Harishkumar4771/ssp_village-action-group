@@ -54,7 +54,9 @@ class AdminIssueDetailNotifier extends StateNotifier<AdminIssueDetailState> {
       // 1. Fetch Issue Data
       final issueResponse = await client
           .from('issues')
-          .select('*, leader:profiles!issues_leader_id_fkey(full_name), villages(name), issue_categories(name)')
+          .select(
+            '*, leader:profiles!issues_leader_id_fkey(full_name), villages(name), issue_categories(name)',
+          )
           .eq('id', issueId)
           .maybeSingle();
 
@@ -93,11 +95,19 @@ class AdminIssueDetailNotifier extends StateNotifier<AdminIssueDetailState> {
         isLoading: false,
       );
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: 'Failed to load issue details: $e');
+      state = state.copyWith(
+        isLoading: false,
+        error: 'Failed to load issue details: $e',
+      );
     }
   }
 }
 
-final adminIssueDetailProvider = StateNotifierProvider.family<AdminIssueDetailNotifier, AdminIssueDetailState, String>((ref, issueId) {
-  return AdminIssueDetailNotifier(issueId);
-});
+final adminIssueDetailProvider =
+    StateNotifierProvider.family<
+      AdminIssueDetailNotifier,
+      AdminIssueDetailState,
+      String
+    >((ref, issueId) {
+      return AdminIssueDetailNotifier(issueId);
+    });

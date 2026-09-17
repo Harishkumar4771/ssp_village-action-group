@@ -12,7 +12,7 @@ class AdminAnalyticsState {
   final int inProgressCount;
   final int completedCount;
   final int closedCount;
-  
+
   // Grouped Metrics
   final Map<String, int> issuesByCategory;
   final Map<String, int> issuesByVillage;
@@ -77,9 +77,15 @@ class AdminAnalyticsState {
       issuesByVillage: issuesByVillage ?? this.issuesByVillage,
       isLoading: isLoading ?? this.isLoading,
       error: clearError ? null : (error ?? this.error),
-      categoryIdFilter: clearCategory ? null : (categoryIdFilter ?? this.categoryIdFilter),
-      villageIdFilter: clearVillage ? null : (villageIdFilter ?? this.villageIdFilter),
-      leaderIdFilter: clearLeader ? null : (leaderIdFilter ?? this.leaderIdFilter),
+      categoryIdFilter: clearCategory
+          ? null
+          : (categoryIdFilter ?? this.categoryIdFilter),
+      villageIdFilter: clearVillage
+          ? null
+          : (villageIdFilter ?? this.villageIdFilter),
+      leaderIdFilter: clearLeader
+          ? null
+          : (leaderIdFilter ?? this.leaderIdFilter),
       startDate: clearStartDate ? null : (startDate ?? this.startDate),
       endDate: clearEndDate ? null : (endDate ?? this.endDate),
     );
@@ -95,33 +101,44 @@ class AdminAnalyticsNotifier extends StateNotifier<AdminAnalyticsState> {
 
   // ── Filter Setters ──
   void setCategoryFilter(String? categoryId) {
-    state = state.copyWith(categoryIdFilter: categoryId, clearCategory: categoryId == null);
+    state = state.copyWith(
+      categoryIdFilter: categoryId,
+      clearCategory: categoryId == null,
+    );
     fetchAnalytics();
   }
 
   void setVillageFilter(String? villageId) {
-    state = state.copyWith(villageIdFilter: villageId, clearVillage: villageId == null);
+    state = state.copyWith(
+      villageIdFilter: villageId,
+      clearVillage: villageId == null,
+    );
     fetchAnalytics();
   }
 
   void setLeaderFilter(String? leaderId) {
-    state = state.copyWith(leaderIdFilter: leaderId, clearLeader: leaderId == null);
+    state = state.copyWith(
+      leaderIdFilter: leaderId,
+      clearLeader: leaderId == null,
+    );
     fetchAnalytics();
   }
 
   void setDateRange(DateTime? start, DateTime? end) {
     state = state.copyWith(
-      startDate: start, clearStartDate: start == null,
-      endDate: end, clearEndDate: end == null,
+      startDate: start,
+      clearStartDate: start == null,
+      endDate: end,
+      clearEndDate: end == null,
     );
     fetchAnalytics();
   }
-  
+
   void setPresetDateRange(String preset) {
     final now = DateTime.now();
     DateTime? start;
     DateTime? end = now;
-    
+
     switch (preset) {
       case 'week':
         start = now.subtract(const Duration(days: 7));
@@ -138,7 +155,7 @@ class AdminAnalyticsNotifier extends StateNotifier<AdminAnalyticsState> {
         end = null;
         break;
     }
-    
+
     setDateRange(start, end);
   }
 
@@ -156,19 +173,23 @@ class AdminAnalyticsNotifier extends StateNotifier<AdminAnalyticsState> {
   Future<void> fetchAnalytics({bool silent = false}) async {
     final currentToken = ++_fetchToken;
 
-    print('[DIAGNOSTIC] Step 3: fetchAnalytics() called with token=$currentToken. Current total=${state.totalIssues}');
-    
+    print(
+      '[DIAGNOSTIC] Step 3: fetchAnalytics() called with token=$currentToken. Current total=${state.totalIssues}',
+    );
+
     if (!silent) {
       state = state.copyWith(isLoading: true, clearError: true);
     }
-    
+
     try {
       final client = Supabase.instance.client;
-      
+
       print('[DIAGNOSTIC] Step 4: Building Supabase query');
       var query = client
           .from('issues')
-          .select('id, status, locked, created_at, category_id, village_id, issue_categories(name), villages(name)');
+          .select(
+            'id, status, locked, created_at, category_id, village_id, issue_categories(name), villages(name)',
+          );
 
       // Apply combinable filters
       if (state.categoryIdFilter != null) {
@@ -181,23 +202,37 @@ class AdminAnalyticsNotifier extends StateNotifier<AdminAnalyticsState> {
         query = query.eq('leader_id', state.leaderIdFilter!);
       }
       if (state.startDate != null) {
-        query = query.gte('created_at', state.startDate!.toUtc().toIso8601String());
+        query = query.gte(
+          'created_at',
+          state.startDate!.toUtc().toIso8601String(),
+        );
       }
       if (state.endDate != null) {
-        final endOfDay = DateTime(state.endDate!.year, state.endDate!.month, state.endDate!.day, 23, 59, 59);
+        final endOfDay = DateTime(
+          state.endDate!.year,
+          state.endDate!.month,
+          state.endDate!.day,
+          23,
+          59,
+          59,
+        );
         query = query.lte('created_at', endOfDay.toUtc().toIso8601String());
       }
 
       print('[DIAGNOSTIC] Step 5: Awaiting Supabase response');
       final response = await query;
-      
+
       if (_fetchToken != currentToken) {
-        print('[DIAGNOSTIC] Token mismatch (stale request). Discarding response.');
+        print(
+          '[DIAGNOSTIC] Token mismatch (stale request). Discarding response.',
+        );
         return;
       }
-      
+
       final data = List<Map<String, dynamic>>.from(response);
-      print('[DIAGNOSTIC] Step 6: Supabase query returned ${data.length} rows.');
+      print(
+        '[DIAGNOSTIC] Step 6: Supabase query returned ${data.length} rows.',
+      );
 
       // Variables to hold aggregated data
       int total = data.length;
@@ -205,7 +240,7 @@ class AdminAnalyticsNotifier extends StateNotifier<AdminAnalyticsState> {
       int prog = 0;
       int comp = 0;
       int clos = 0;
-      
+
       Map<String, int> byCat = {};
       Map<String, int> byVil = {};
 
@@ -213,12 +248,18 @@ class AdminAnalyticsNotifier extends StateNotifier<AdminAnalyticsState> {
         // Status counts
         final status = row['status'] as String?;
         final locked = row['locked'] as bool? ?? false;
-        
-        if (locked) clos++;
-        else if (status?.trim().toLowerCase() == 'reported' || status?.trim().toLowerCase() == 'new') rep++;
-        else if (status?.trim().toLowerCase() == 'in_progress') prog++;
-        else if (status?.trim().toLowerCase() == 'completed') comp++;
-        else if (status?.trim().toLowerCase() == 'closed') clos++;
+
+        if (locked)
+          clos++;
+        else if (status?.trim().toLowerCase() == 'reported' ||
+            status?.trim().toLowerCase() == 'new')
+          rep++;
+        else if (status?.trim().toLowerCase() == 'in_progress')
+          prog++;
+        else if (status?.trim().toLowerCase() == 'completed')
+          comp++;
+        else if (status?.trim().toLowerCase() == 'closed')
+          clos++;
 
         // Category counts
         final catMap = row['issue_categories'] as Map<String, dynamic>?;
@@ -231,8 +272,10 @@ class AdminAnalyticsNotifier extends StateNotifier<AdminAnalyticsState> {
         byVil[vilName] = (byVil[vilName] ?? 0) + 1;
       }
 
-      print('[DIAGNOSTIC] Step 7: Final computed counts: total=$total, rep=$rep, prog=$prog, comp=$comp, clos=$clos');
-      
+      print(
+        '[DIAGNOSTIC] Step 7: Final computed counts: total=$total, rep=$rep, prog=$prog, comp=$comp, clos=$clos',
+      );
+
       state = state.copyWith(
         totalIssues: total,
         reportedCount: rep,
@@ -243,15 +286,18 @@ class AdminAnalyticsNotifier extends StateNotifier<AdminAnalyticsState> {
         issuesByVillage: byVil,
         isLoading: false,
       );
-      
     } catch (e) {
       // ignore: avoid_print
       print('[ANALYTICS] fetchAnalytics() ERROR: $e');
-      state = state.copyWith(isLoading: false, error: 'Failed to load analytics: $e');
+      state = state.copyWith(
+        isLoading: false,
+        error: 'Failed to load analytics: $e',
+      );
     }
   }
 }
 
-final adminAnalyticsProvider = StateNotifierProvider<AdminAnalyticsNotifier, AdminAnalyticsState>((ref) {
-  return AdminAnalyticsNotifier();
-});
+final adminAnalyticsProvider =
+    StateNotifierProvider<AdminAnalyticsNotifier, AdminAnalyticsState>((ref) {
+      return AdminAnalyticsNotifier();
+    });

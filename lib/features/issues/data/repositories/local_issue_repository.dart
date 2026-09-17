@@ -39,9 +39,7 @@ class LocalIssueRepository implements IssueRepository {
   @override
   Future<List<Issue>> getAllIssues() async {
     final models = await _dataSource.getAllIssues();
-    return models
-        .map((m) => m.toDomain())
-        .toList()
+    return models.map((m) => m.toDomain()).toList()
       ..sort((a, b) => b.createdAt.compareTo(a.createdAt)); // newest first
   }
 

@@ -46,7 +46,7 @@ class AdminIssueModel {
       categoryName: category?['name'] as String?,
     );
   }
-  
+
   // Format the status for UI display
   String get displayStatus {
     switch (status) {

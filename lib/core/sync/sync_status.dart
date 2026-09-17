@@ -15,9 +15,4 @@
 /// - [syncing]  → actively being uploaded by SyncManager
 /// - [synced]   → confirmed received by Supabase
 /// - [failed]   → last sync attempt failed; will retry per retry policy
-enum SyncStatus {
-  pending,
-  syncing,
-  synced,
-  failed,
-}
+enum SyncStatus { pending, syncing, synced, failed }

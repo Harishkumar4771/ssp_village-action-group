@@ -48,9 +48,10 @@ class IssueDetailScreen extends ConsumerWidget {
       loading: () => Scaffold(
         appBar: AppBar(
           title: const Text('Issue Details'),
-          backgroundColor: Colors.transparent,
+          backgroundColor: AppColors.surfaceCard,
           foregroundColor: AppColors.textPrimary,
           elevation: 0,
+          scrolledUnderElevation: 0,
         ),
         body: const Center(child: CircularProgressIndicator()),
       ),
@@ -60,7 +61,11 @@ class IssueDetailScreen extends ConsumerWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.error_outline_rounded, size: 48, color: AppColors.error),
+              Icon(
+                Icons.error_outline_rounded,
+                size: 48,
+                color: AppColors.error,
+              ),
               const SizedBox(height: AppConstants.spacingMd),
               const Text('Could not load issue.'),
               const SizedBox(height: AppConstants.spacingMd),
@@ -95,15 +100,12 @@ class _IssueDetailBody extends ConsumerWidget {
     return Scaffold(
       backgroundColor: AppColors.backgroundCream,
       appBar: AppBar(
-        title: Text(
-          issue.title,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
+        title: Text(issue.title, maxLines: 1, overflow: TextOverflow.ellipsis),
         centerTitle: false,
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.surfaceCard,
         foregroundColor: AppColors.textPrimary,
         elevation: 0,
+        scrolledUnderElevation: 0,
         actions: [
           _SyncStatusIcon(syncStatus: issue.syncStatus),
           const SizedBox(width: AppConstants.spacingSm),
@@ -141,12 +143,15 @@ class _IssueDetailBody extends ConsumerWidget {
                   ),
                   error: (_, __) => _PlainText(issue.categoryId),
                 ),
-                if (issue.subcategoryId != null && subcategoryAsync != null) ...[
+                if (issue.subcategoryId != null &&
+                    subcategoryAsync != null) ...[
                   const SizedBox(height: AppConstants.spacingMd),
                   _MetaLabel('Subcategory'),
                   const SizedBox(height: AppConstants.spacingXs),
                   subcategoryAsync.when(
-                    data: (sub) => _SubcategoryBadge(name: sub?.name ?? issue.subcategoryId!),
+                    data: (sub) => _SubcategoryBadge(
+                      name: sub?.name ?? issue.subcategoryId!,
+                    ),
                     loading: () => const SizedBox(
                       height: 16,
                       width: 80,
@@ -257,8 +262,11 @@ class _IssueDetailBody extends ConsumerWidget {
           _SectionCard(
             child: Row(
               children: [
-                Icon(Icons.attach_file_rounded,
-                    color: AppColors.textHint, size: 20),
+                Icon(
+                  Icons.attach_file_rounded,
+                  color: AppColors.textHint,
+                  size: 20,
+                ),
                 const SizedBox(width: AppConstants.spacingSm),
                 Expanded(
                   child: Column(
@@ -296,8 +304,18 @@ class _IssueDetailBody extends ConsumerWidget {
 
   String _formatDateTime(DateTime dt) {
     final months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     final hour = dt.hour > 12 ? dt.hour - 12 : (dt.hour == 0 ? 12 : dt.hour);
     final amPm = dt.hour >= 12 ? 'PM' : 'AM';
@@ -350,8 +368,8 @@ class _LargeProgressBar extends StatelessWidget {
           progress == 0
               ? 'No progress recorded yet'
               : progress == 100
-                  ? 'Problem fully resolved — ready to close'
-                  : '$progress% complete',
+              ? 'Problem fully resolved — ready to close'
+              : '$progress% complete',
           style: TextStyle(fontSize: 12, color: AppColors.textHint),
         ),
       ],
@@ -388,7 +406,7 @@ class _ProgressHistorySection extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: AppConstants.spacingMd),
-          
+
           // Initial Issue Reported Item
           _TimelineItem(
             icon: Icons.flag_rounded,
@@ -397,9 +415,11 @@ class _ProgressHistorySection extends ConsumerWidget {
             subtitle: 'Issue created and saved locally.',
             date: issue.createdAt,
             isFirst: true,
-            isLast: issue.currentProgress == 0 && (updatesAsync.valueOrNull?.isEmpty ?? true),
+            isLast:
+                issue.currentProgress == 0 &&
+                (updatesAsync.valueOrNull?.isEmpty ?? true),
           ),
-          
+
           // Real Updates
           ...updatesAsync.when(
             data: (updates) {
@@ -418,10 +438,13 @@ class _ProgressHistorySection extends ConsumerWidget {
             },
             loading: () => [],
             error: (e, _) => [
-              Text('Failed to load history', style: TextStyle(color: AppColors.statusReported)),
+              Text(
+                'Failed to load history',
+                style: TextStyle(color: AppColors.statusReported),
+              ),
             ],
           ),
-          
+
           // Closed Status
           if (issue.locked)
             _TimelineItem(
@@ -461,8 +484,18 @@ class _TimelineItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     final dateStr = '${date.day} ${months[date.month - 1]} ${date.year}';
 
@@ -476,7 +509,11 @@ class _TimelineItem extends StatelessWidget {
             child: Column(
               children: [
                 if (!isFirst)
-                  Container(width: 2, height: 8, color: AppColors.textHint.withValues(alpha: 0.3)),
+                  Container(
+                    width: 2,
+                    height: 8,
+                    color: AppColors.textHint.withValues(alpha: 0.3),
+                  ),
                 Container(
                   width: 32,
                   height: 32,
@@ -607,18 +644,20 @@ class _EndProjectButton extends ConsumerWidget {
           FilledButton(
             onPressed: () async {
               Navigator.pop(ctx);
-              
+
               final user = ref.read(currentUserProvider);
               if (user == null) return;
-              
+
               final updatedIssue = issue.copyWith(
                 locked: true,
                 closedBy: user.id,
                 closedAt: DateTime.now(),
               );
-              
-              await ref.read(issueNotifierProvider.notifier).updateIssue(updatedIssue);
-              
+
+              await ref
+                  .read(issueNotifierProvider.notifier)
+                  .updateIssue(updatedIssue);
+
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
@@ -659,7 +698,8 @@ class _LockedBanner extends StatelessWidget {
         color: AppColors.textSecondary.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(AppConstants.radiusMd),
         border: Border.all(
-            color: AppColors.textSecondary.withValues(alpha: 0.25)),
+          color: AppColors.textSecondary.withValues(alpha: 0.25),
+        ),
       ),
       child: Row(
         children: [
@@ -793,10 +833,7 @@ class _PlainText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: const TextStyle(
-        fontSize: 14,
-        color: AppColors.textSecondary,
-      ),
+      style: const TextStyle(fontSize: 14, color: AppColors.textSecondary),
     );
   }
 }
@@ -900,8 +937,11 @@ class _SubcategoryBadge extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.subdirectory_arrow_right_rounded,
-              size: 13, color: AppColors.textSecondary),
+          Icon(
+            Icons.subdirectory_arrow_right_rounded,
+            size: 13,
+            color: AppColors.textSecondary,
+          ),
           const SizedBox(width: 5),
           Flexible(
             child: Text(
@@ -971,9 +1011,10 @@ class _NotFoundScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Issue Not Found'),
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.surfaceCard,
         foregroundColor: AppColors.textPrimary,
         elevation: 0,
+        scrolledUnderElevation: 0,
       ),
       body: Center(
         child: Padding(
@@ -981,8 +1022,11 @@ class _NotFoundScreen extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.search_off_rounded,
-                  size: 64, color: AppColors.textHint),
+              Icon(
+                Icons.search_off_rounded,
+                size: 64,
+                color: AppColors.textHint,
+              ),
               const SizedBox(height: AppConstants.spacingMd),
               const Text(
                 'Issue not found',
@@ -995,10 +1039,7 @@ class _NotFoundScreen extends StatelessWidget {
               const SizedBox(height: AppConstants.spacingSm),
               Text(
                 'Could not find an issue with this ID.',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: AppColors.textHint,
-                ),
+                style: TextStyle(fontSize: 14, color: AppColors.textHint),
               ),
               const SizedBox(height: AppConstants.spacingLg),
               OutlinedButton.icon(

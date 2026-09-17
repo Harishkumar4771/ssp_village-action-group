@@ -58,9 +58,15 @@ class AdminIssuesState {
       isLoading: isLoading ?? this.isLoading,
       error: clearError ? null : (error ?? this.error),
       statusFilter: clearStatus ? null : (statusFilter ?? this.statusFilter),
-      categoryIdFilter: clearCategory ? null : (categoryIdFilter ?? this.categoryIdFilter),
-      villageIdFilter: clearVillage ? null : (villageIdFilter ?? this.villageIdFilter),
-      leaderIdFilter: clearLeader ? null : (leaderIdFilter ?? this.leaderIdFilter),
+      categoryIdFilter: clearCategory
+          ? null
+          : (categoryIdFilter ?? this.categoryIdFilter),
+      villageIdFilter: clearVillage
+          ? null
+          : (villageIdFilter ?? this.villageIdFilter),
+      leaderIdFilter: clearLeader
+          ? null
+          : (leaderIdFilter ?? this.leaderIdFilter),
       startDate: clearStartDate ? null : (startDate ?? this.startDate),
       endDate: clearEndDate ? null : (endDate ?? this.endDate),
     );
@@ -103,27 +109,38 @@ class AdminIssuesNotifier extends StateNotifier<AdminIssuesState> {
   }
 
   void setCategoryFilter(String? categoryId) {
-    state = state.copyWith(categoryIdFilter: categoryId, clearCategory: categoryId == null);
+    state = state.copyWith(
+      categoryIdFilter: categoryId,
+      clearCategory: categoryId == null,
+    );
     _currentPage = 0;
     fetchIssues();
   }
 
   void setVillageFilter(String? villageId) {
-    state = state.copyWith(villageIdFilter: villageId, clearVillage: villageId == null);
+    state = state.copyWith(
+      villageIdFilter: villageId,
+      clearVillage: villageId == null,
+    );
     _currentPage = 0;
     fetchIssues();
   }
 
   void setLeaderFilter(String? leaderId) {
-    state = state.copyWith(leaderIdFilter: leaderId, clearLeader: leaderId == null);
+    state = state.copyWith(
+      leaderIdFilter: leaderId,
+      clearLeader: leaderId == null,
+    );
     _currentPage = 0;
     fetchIssues();
   }
 
   void setDateRange(DateTime? start, DateTime? end) {
     state = state.copyWith(
-      startDate: start, clearStartDate: start == null,
-      endDate: end, clearEndDate: end == null,
+      startDate: start,
+      clearStartDate: start == null,
+      endDate: end,
+      clearEndDate: end == null,
     );
     _currentPage = 0;
     fetchIssues();
@@ -152,12 +169,18 @@ class AdminIssuesNotifier extends StateNotifier<AdminIssuesState> {
     DateTime? endDate,
   }) {
     state = state.copyWith(
-      statusFilter: status, clearStatus: status == null,
-      categoryIdFilter: categoryId, clearCategory: categoryId == null,
-      villageIdFilter: villageId, clearVillage: villageId == null,
-      leaderIdFilter: leaderId, clearLeader: leaderId == null,
-      startDate: startDate, clearStartDate: startDate == null,
-      endDate: endDate, clearEndDate: endDate == null,
+      statusFilter: status,
+      clearStatus: status == null,
+      categoryIdFilter: categoryId,
+      clearCategory: categoryId == null,
+      villageIdFilter: villageId,
+      clearVillage: villageId == null,
+      leaderIdFilter: leaderId,
+      clearLeader: leaderId == null,
+      startDate: startDate,
+      clearStartDate: startDate == null,
+      endDate: endDate,
+      clearEndDate: endDate == null,
     );
     _searchQuery = '';
     _currentPage = 0;
@@ -166,15 +189,17 @@ class AdminIssuesNotifier extends StateNotifier<AdminIssuesState> {
 
   Future<void> fetchIssues({bool silent = false}) async {
     // ignore: avoid_print
-    print('[ISSUES] fetchIssues() called — current count=${state.issues.length}');
-    
+    print(
+      '[ISSUES] fetchIssues() called — current count=${state.issues.length}',
+    );
+
     if (!silent) {
       state = state.copyWith(isLoading: true, clearError: true);
     }
-    
+
     try {
       final client = Supabase.instance.client;
-      
+
       // Calculate range for pagination
       final from = _currentPage * _pageSize;
       final to = from + _pageSize - 1;
@@ -182,7 +207,9 @@ class AdminIssuesNotifier extends StateNotifier<AdminIssuesState> {
       // Build the query
       var query = client
           .from('issues')
-          .select('*, leader:profiles!issues_leader_id_fkey(full_name), villages(name), issue_categories(name)');
+          .select(
+            '*, leader:profiles!issues_leader_id_fkey(full_name), villages(name), issue_categories(name)',
+          );
 
       // Apply search if needed
       if (_searchQuery.isNotEmpty) {
@@ -213,11 +240,21 @@ class AdminIssuesNotifier extends StateNotifier<AdminIssuesState> {
         query = query.eq('leader_id', state.leaderIdFilter!);
       }
       if (state.startDate != null) {
-        query = query.gte('created_at', state.startDate!.toUtc().toIso8601String());
+        query = query.gte(
+          'created_at',
+          state.startDate!.toUtc().toIso8601String(),
+        );
       }
       if (state.endDate != null) {
         // Include the entire end day up to 23:59:59
-        final endOfDay = DateTime(state.endDate!.year, state.endDate!.month, state.endDate!.day, 23, 59, 59);
+        final endOfDay = DateTime(
+          state.endDate!.year,
+          state.endDate!.month,
+          state.endDate!.day,
+          23,
+          59,
+          59,
+        );
         query = query.lte('created_at', endOfDay.toUtc().toIso8601String());
       }
 
@@ -235,7 +272,9 @@ class AdminIssuesNotifier extends StateNotifier<AdminIssuesState> {
           .toList();
 
       // ignore: avoid_print
-      print('[ISSUES] fetchIssues() complete — new count=$count loaded=${issues.length}');
+      print(
+        '[ISSUES] fetchIssues() complete — new count=$count loaded=${issues.length}',
+      );
       state = state.copyWith(
         issues: issues,
         totalCount: count,
@@ -260,7 +299,9 @@ class AdminIssuesNotifier extends StateNotifier<AdminIssuesState> {
       // Build the query (without pagination limits to get the full filtered set)
       var query = client
           .from('issues')
-          .select('*, leader:profiles!issues_leader_id_fkey(full_name, district), closer:profiles!issues_closed_by_fkey(full_name), villages(name, district), issue_categories(name), issue_subcategories(name)');
+          .select(
+            '*, leader:profiles!issues_leader_id_fkey(full_name, district), closer:profiles!issues_closed_by_fkey(full_name), villages(name, district), issue_categories(name), issue_subcategories(name)',
+          );
 
       // Apply search if needed
       if (_searchQuery.isNotEmpty) {
@@ -282,10 +323,20 @@ class AdminIssuesNotifier extends StateNotifier<AdminIssuesState> {
         query = query.eq('leader_id', state.leaderIdFilter!);
       }
       if (state.startDate != null) {
-        query = query.gte('created_at', state.startDate!.toUtc().toIso8601String());
+        query = query.gte(
+          'created_at',
+          state.startDate!.toUtc().toIso8601String(),
+        );
       }
       if (state.endDate != null) {
-        final endOfDay = DateTime(state.endDate!.year, state.endDate!.month, state.endDate!.day, 23, 59, 59);
+        final endOfDay = DateTime(
+          state.endDate!.year,
+          state.endDate!.month,
+          state.endDate!.day,
+          23,
+          59,
+          59,
+        );
         query = query.lte('created_at', endOfDay.toUtc().toIso8601String());
       }
 
@@ -299,11 +350,13 @@ class AdminIssuesNotifier extends StateNotifier<AdminIssuesState> {
       // Build CSV String
       final buffer = StringBuffer();
       // CSV Header
-      buffer.writeln('Issue ID,Village,District,Leader,Category,Subcategory,Title,Description,Status,Current Progress,Created At,Updated At,Closed At,Closed By');
+      buffer.writeln(
+        'Issue ID,Village,District,Leader,Category,Subcategory,Title,Description,Status,Current Progress,Created At,Updated At,Closed At,Closed By',
+      );
 
       for (var row in data) {
         final r = row as Map<String, dynamic>;
-        
+
         final leaderProfile = r['leader'] as Map<String, dynamic>?;
         final closerProfile = r['closer'] as Map<String, dynamic>?;
         final village = r['villages'] as Map<String, dynamic>?;
@@ -312,7 +365,8 @@ class AdminIssuesNotifier extends StateNotifier<AdminIssuesState> {
 
         final id = r['id'] ?? '';
         final villageName = village?['name'] ?? '';
-        final district = village?['district'] ?? leaderProfile?['district'] ?? '';
+        final district =
+            village?['district'] ?? leaderProfile?['district'] ?? '';
         final leaderName = leaderProfile?['full_name'] ?? '';
         final categoryName = category?['name'] ?? '';
         final subcategoryName = subcategory?['name'] ?? '';
@@ -320,12 +374,20 @@ class AdminIssuesNotifier extends StateNotifier<AdminIssuesState> {
         final description = _escapeCsv(r['description']?.toString() ?? '');
         final status = r['status'] ?? '';
         final progress = r['current_progress']?.toString() ?? '0';
-        final createdAt = r['created_at'] != null ? DateTime.parse(r['created_at']).toLocal().toString() : '';
-        final updatedAt = r['updated_at'] != null ? DateTime.parse(r['updated_at']).toLocal().toString() : '';
-        final closedAt = r['closed_at'] != null ? DateTime.parse(r['closed_at']).toLocal().toString() : '';
+        final createdAt = r['created_at'] != null
+            ? DateTime.parse(r['created_at']).toLocal().toString()
+            : '';
+        final updatedAt = r['updated_at'] != null
+            ? DateTime.parse(r['updated_at']).toLocal().toString()
+            : '';
+        final closedAt = r['closed_at'] != null
+            ? DateTime.parse(r['closed_at']).toLocal().toString()
+            : '';
         final closedBy = closerProfile?['full_name'] ?? '';
 
-        buffer.writeln('$id,${_escapeCsv(villageName)},${_escapeCsv(district)},${_escapeCsv(leaderName)},${_escapeCsv(categoryName)},${_escapeCsv(subcategoryName)},$title,$description,$status,$progress,$createdAt,$updatedAt,$closedAt,${_escapeCsv(closedBy)}');
+        buffer.writeln(
+          '$id,${_escapeCsv(villageName)},${_escapeCsv(district)},${_escapeCsv(leaderName)},${_escapeCsv(categoryName)},${_escapeCsv(subcategoryName)},$title,$description,$status,$progress,$createdAt,$updatedAt,$closedAt,${_escapeCsv(closedBy)}',
+        );
       }
 
       return buffer.toString();
@@ -336,7 +398,10 @@ class AdminIssuesNotifier extends StateNotifier<AdminIssuesState> {
   }
 
   String _escapeCsv(String value) {
-    if (value.contains(',') || value.contains('"') || value.contains('\n') || value.contains('\r')) {
+    if (value.contains(',') ||
+        value.contains('"') ||
+        value.contains('\n') ||
+        value.contains('\r')) {
       final escaped = value.replaceAll('"', '""');
       return '"$escaped"';
     }
@@ -344,6 +409,7 @@ class AdminIssuesNotifier extends StateNotifier<AdminIssuesState> {
   }
 }
 
-final adminIssuesProvider = StateNotifierProvider<AdminIssuesNotifier, AdminIssuesState>((ref) {
-  return AdminIssuesNotifier();
-});
+final adminIssuesProvider =
+    StateNotifierProvider<AdminIssuesNotifier, AdminIssuesState>((ref) {
+      return AdminIssuesNotifier();
+    });

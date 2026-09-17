@@ -22,7 +22,10 @@ class AdminFiltersWidget extends ConsumerWidget {
       ),
       error: (err, stack) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 16),
-        child: Text('Error loading filters: $err', style: const TextStyle(color: Colors.red)),
+        child: Text(
+          'Error loading filters: $err',
+          style: const TextStyle(color: Colors.red),
+        ),
       ),
       data: (options) {
         return Container(
@@ -44,8 +47,14 @@ class AdminFiltersWidget extends ConsumerWidget {
                 items: const [
                   DropdownMenuItem(value: null, child: Text('All Statuses')),
                   DropdownMenuItem(value: 'reported', child: Text('New')),
-                  DropdownMenuItem(value: 'in_progress', child: Text('In Progress')),
-                  DropdownMenuItem(value: 'completed', child: Text('Completed')),
+                  DropdownMenuItem(
+                    value: 'in_progress',
+                    child: Text('In Progress'),
+                  ),
+                  DropdownMenuItem(
+                    value: 'completed',
+                    child: Text('Completed'),
+                  ),
                   DropdownMenuItem(value: 'closed', child: Text('Closed')),
                 ],
                 onChanged: (val) => notifier.setStatusFilter(val),
@@ -56,11 +65,16 @@ class AdminFiltersWidget extends ConsumerWidget {
                 hint: 'Category',
                 value: issuesState.categoryIdFilter,
                 items: [
-                  const DropdownMenuItem(value: null, child: Text('All Categories')),
-                  ...options.categories.map((c) => DropdownMenuItem(
-                        value: c['id'] as String,
-                        child: Text(c['name'] as String),
-                      )),
+                  const DropdownMenuItem(
+                    value: null,
+                    child: Text('All Categories'),
+                  ),
+                  ...options.categories.map(
+                    (c) => DropdownMenuItem(
+                      value: c['id'] as String,
+                      child: Text(c['name'] as String),
+                    ),
+                  ),
                 ],
                 onChanged: (val) => notifier.setCategoryFilter(val),
               ),
@@ -70,11 +84,16 @@ class AdminFiltersWidget extends ConsumerWidget {
                 hint: 'Village',
                 value: issuesState.villageIdFilter,
                 items: [
-                  const DropdownMenuItem(value: null, child: Text('All Villages')),
-                  ...options.villages.map((v) => DropdownMenuItem(
-                        value: v['id'] as String,
-                        child: Text(v['name'] as String),
-                      )),
+                  const DropdownMenuItem(
+                    value: null,
+                    child: Text('All Villages'),
+                  ),
+                  ...options.villages.map(
+                    (v) => DropdownMenuItem(
+                      value: v['id'] as String,
+                      child: Text(v['name'] as String),
+                    ),
+                  ),
                 ],
                 onChanged: (val) => notifier.setVillageFilter(val),
               ),
@@ -84,11 +103,16 @@ class AdminFiltersWidget extends ConsumerWidget {
                 hint: 'Leader',
                 value: issuesState.leaderIdFilter,
                 items: [
-                  const DropdownMenuItem(value: null, child: Text('All Leaders')),
-                  ...options.leaders.map((l) => DropdownMenuItem(
-                        value: l['id'] as String,
-                        child: Text(l['full_name'] as String),
-                      )),
+                  const DropdownMenuItem(
+                    value: null,
+                    child: Text('All Leaders'),
+                  ),
+                  ...options.leaders.map(
+                    (l) => DropdownMenuItem(
+                      value: l['id'] as String,
+                      child: Text(l['full_name'] as String),
+                    ),
+                  ),
                 ],
                 onChanged: (val) => notifier.setLeaderFilter(val),
               ),
@@ -96,11 +120,17 @@ class AdminFiltersWidget extends ConsumerWidget {
               // ── Date Range Filter ──
               OutlinedButton.icon(
                 icon: const Icon(Icons.date_range, size: 20),
-                label: Text(_dateRangeText(issuesState.startDate, issuesState.endDate)),
+                label: Text(
+                  _dateRangeText(issuesState.startDate, issuesState.endDate),
+                ),
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: issuesState.startDate != null ? AppColors.primaryGreen : AppColors.textSecondary,
+                  foregroundColor: issuesState.startDate != null
+                      ? AppColors.primaryGreen
+                      : AppColors.textSecondary,
                   side: BorderSide(
-                    color: issuesState.startDate != null ? AppColors.primaryGreen : Colors.grey.shade400,
+                    color: issuesState.startDate != null
+                        ? AppColors.primaryGreen
+                        : Colors.grey.shade400,
                   ),
                 ),
                 onPressed: () async {
@@ -109,8 +139,13 @@ class AdminFiltersWidget extends ConsumerWidget {
                     context: context,
                     firstDate: DateTime(2020),
                     lastDate: now,
-                    initialDateRange: issuesState.startDate != null && issuesState.endDate != null
-                        ? DateTimeRange(start: issuesState.startDate!, end: issuesState.endDate!)
+                    initialDateRange:
+                        issuesState.startDate != null &&
+                            issuesState.endDate != null
+                        ? DateTimeRange(
+                            start: issuesState.startDate!,
+                            end: issuesState.endDate!,
+                          )
                         : null,
                   );
                   if (picked != null) {

@@ -20,7 +20,8 @@ class _MeetingListScreenState extends ConsumerState<MeetingListScreen> {
   List<Meeting> _getFilteredMeetings(List<Meeting> meetings) {
     final now = DateTime.now();
     return meetings.where((m) {
-      final isUpcoming = m.date.isAfter(now) || m.status == MeetingStatus.scheduled;
+      final isUpcoming =
+          m.date.isAfter(now) || m.status == MeetingStatus.scheduled;
       return isUpcoming == _showUpcoming;
     }).toList();
   }
@@ -72,8 +73,7 @@ class _MeetingListScreenState extends ConsumerState<MeetingListScreen> {
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
                 color: Colors.white.withValues(alpha: 0.18),
-                borderRadius:
-                    BorderRadius.circular(AppConstants.radiusMd),
+                borderRadius: BorderRadius.circular(AppConstants.radiusMd),
               ),
               child: Row(
                 children: [
@@ -129,17 +129,21 @@ class _MeetingListScreenState extends ConsumerState<MeetingListScreen> {
           Expanded(
             child: asyncMeetings.when(
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, st) => Center(child: Text('Error loading meetings: $e')),
+              error: (e, st) =>
+                  Center(child: Text('Error loading meetings: $e')),
               data: (allMeetings) {
                 final filtered = _getFilteredMeetings(allMeetings);
-                
+
                 if (filtered.isEmpty) {
                   return Center(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.event_busy_rounded,
-                            size: 64, color: AppColors.textHint),
+                        Icon(
+                          Icons.event_busy_rounded,
+                          size: 64,
+                          color: AppColors.textHint,
+                        ),
                         const SizedBox(height: AppConstants.spacingSm),
                         Text(
                           'No meetings found',
@@ -201,8 +205,7 @@ class _ToggleButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
           color: isSelected ? Colors.white : Colors.transparent,
-          borderRadius:
-              BorderRadius.circular(AppConstants.spacingSm + 2),
+          borderRadius: BorderRadius.circular(AppConstants.spacingSm + 2),
         ),
         child: Center(
           child: Text(
@@ -225,14 +228,13 @@ class _MeetingCard extends StatelessWidget {
   final Meeting meeting;
   final VoidCallback onTap;
 
-  const _MeetingCard({
-    required this.meeting,
-    required this.onTap,
-  });
+  const _MeetingCard({required this.meeting, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    final isCompleted = meeting.status == MeetingStatus.completed || meeting.status == MeetingStatus.cancelled;
+    final isCompleted =
+        meeting.status == MeetingStatus.completed ||
+        meeting.status == MeetingStatus.cancelled;
 
     return Card(
       margin: const EdgeInsets.only(bottom: AppConstants.spacingSm + 4),
@@ -256,8 +258,7 @@ class _MeetingCard extends StatelessWidget {
                   color: isCompleted
                       ? AppColors.secondaryTerracotta.withValues(alpha: 0.10)
                       : AppColors.primaryGreen.withValues(alpha: 0.10),
-                  borderRadius:
-                      BorderRadius.circular(AppConstants.radiusMd),
+                  borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                 ),
                 child: Column(
                   children: [
@@ -291,7 +292,8 @@ class _MeetingCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      meeting.villageName, // using villageName as title fallback if title not in Meeting domain model
+                      meeting
+                          .villageName, // using villageName as title fallback if title not in Meeting domain model
                       style: const TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
@@ -301,8 +303,11 @@ class _MeetingCard extends StatelessWidget {
                     const SizedBox(height: 6),
                     Row(
                       children: [
-                        Icon(Icons.location_on_outlined,
-                            size: 14, color: AppColors.textHint),
+                        Icon(
+                          Icons.location_on_outlined,
+                          size: 14,
+                          color: AppColors.textHint,
+                        ),
                         const SizedBox(width: 3),
                         Text(
                           meeting.villageName,
@@ -312,8 +317,11 @@ class _MeetingCard extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: AppConstants.spacingMd),
-                        Icon(Icons.people_outline_rounded,
-                            size: 14, color: AppColors.textHint),
+                        Icon(
+                          Icons.people_outline_rounded,
+                          size: 14,
+                          color: AppColors.textHint,
+                        ),
                         const SizedBox(width: 3),
                         Text(
                           '${meeting.attendeesCount}',
@@ -329,17 +337,19 @@ class _MeetingCard extends StatelessWidget {
               ),
               // Status chip
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 5,
+                ),
                 decoration: BoxDecoration(
                   color: isCompleted
                       ? AppColors.secondaryTerracotta.withValues(alpha: 0.12)
                       : AppColors.info.withValues(alpha: 0.12),
-                  borderRadius:
-                      BorderRadius.circular(AppConstants.spacingSm),
+                  borderRadius: BorderRadius.circular(AppConstants.spacingSm),
                 ),
                 child: Text(
-                  meeting.status.name[0].toUpperCase() + meeting.status.name.substring(1),
+                  meeting.status.name[0].toUpperCase() +
+                      meeting.status.name.substring(1),
                   style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w600,

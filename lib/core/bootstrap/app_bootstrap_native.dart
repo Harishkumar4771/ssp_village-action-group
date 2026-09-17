@@ -8,9 +8,9 @@ Future<void> initLocalDbAndSync() async {
   await LocalDb.init();
   await IssueCategoryLocalDataSource().seedIfEmpty();
   await DataMigrationService.instance.runAll();
-  
+
   // Initialize the Supabase REST client before sync operations can run
   SupabaseRestClient.instance.initialize();
-  
+
   SyncManager.initialize();
 }

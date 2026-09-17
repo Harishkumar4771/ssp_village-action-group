@@ -6,10 +6,7 @@ import 'package:flutter/material.dart';
 class SubmissionDetailScreen extends StatelessWidget {
   final String submissionId;
 
-  const SubmissionDetailScreen({
-    super.key,
-    required this.submissionId,
-  });
+  const SubmissionDetailScreen({super.key, required this.submissionId});
 
   @override
   Widget build(BuildContext context) {

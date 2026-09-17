@@ -14,10 +14,12 @@ class SyncManager {
   static bool _syncRequested = false;
 
   // Stream controller to notify UI (Riverpod) when an item finishes syncing.
-  static final StreamController<void> _syncCompletedController = StreamController<void>.broadcast();
-  
+  static final StreamController<void> _syncCompletedController =
+      StreamController<void>.broadcast();
+
   /// Read-only stream that emits whenever an item's sync status changes in the local DB.
-  static Stream<void> get onSyncStatusChanged => _syncCompletedController.stream;
+  static Stream<void> get onSyncStatusChanged =>
+      _syncCompletedController.stream;
 
   static final List<SyncStrategy> _strategies = [
     IssuesSyncStrategy(),
@@ -27,7 +29,7 @@ class SyncManager {
   /// Starts listening for network changes to trigger background sync.
   static void initialize() {
     if (!LocalDb.isAvailable) return;
-    
+
     final connectivity = Connectivity();
     _subscription = connectivity.onConnectivityChanged.listen((results) {
       if (results.isNotEmpty && results.first != ConnectivityResult.none) {
@@ -52,7 +54,7 @@ class SyncManager {
     }
 
     _isSyncing = true;
-    
+
     try {
       final isar = LocalDb.instance;
       if (isar == null) return;

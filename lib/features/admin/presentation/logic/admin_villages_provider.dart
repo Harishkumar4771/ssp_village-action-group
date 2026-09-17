@@ -49,7 +49,10 @@ class AdminVillagesNotifier extends StateNotifier<AdminVillagesState> {
         isLoading: false,
       );
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: 'Failed to load villages: $e');
+      state = state.copyWith(
+        isLoading: false,
+        error: 'Failed to load villages: $e',
+      );
     }
   }
 
@@ -61,7 +64,7 @@ class AdminVillagesNotifier extends StateNotifier<AdminVillagesState> {
     try {
       state = state.copyWith(isLoading: true);
       final client = Supabase.instance.client;
-      
+
       final newId = const Uuid().v4();
       await client.from('villages').insert({
         'id': newId,
@@ -73,12 +76,16 @@ class AdminVillagesNotifier extends StateNotifier<AdminVillagesState> {
       await fetchVillages();
       return true;
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: 'Failed to create village: $e');
+      state = state.copyWith(
+        isLoading: false,
+        error: 'Failed to create village: $e',
+      );
       return false;
     }
   }
 }
 
-final adminVillagesProvider = StateNotifierProvider<AdminVillagesNotifier, AdminVillagesState>((ref) {
-  return AdminVillagesNotifier();
-});
+final adminVillagesProvider =
+    StateNotifierProvider<AdminVillagesNotifier, AdminVillagesState>((ref) {
+      return AdminVillagesNotifier();
+    });

@@ -34,17 +34,14 @@ class LocalDb {
     }
 
     final dir = await getApplicationDocumentsDirectory();
-    _instance = await Isar.open(
-      [
-        CachedUserModelSchema,
-        IssueModelSchema,
-        IssueCategoryModelSchema,
-        IssueSubcategoryModelSchema,
-        ProgressUpdateModelSchema,
-        MeetingModelSchema,
-        VillageModelSchema,
-      ],
-      directory: dir.path,
-    );
+    _instance = await Isar.open([
+      CachedUserModelSchema,
+      IssueModelSchema,
+      IssueCategoryModelSchema,
+      IssueSubcategoryModelSchema,
+      ProgressUpdateModelSchema,
+      MeetingModelSchema,
+      VillageModelSchema,
+    ], directory: dir.path);
   }
 }

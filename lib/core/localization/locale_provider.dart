@@ -8,7 +8,7 @@ final localeProvider = StateNotifierProvider<LocaleNotifier, Locale>((ref) {
 
 class LocaleNotifier extends StateNotifier<Locale> {
   static const _localeKey = 'vag_dmp_locale';
-  
+
   LocaleNotifier() : super(const Locale('en')) {
     _loadLocale();
   }

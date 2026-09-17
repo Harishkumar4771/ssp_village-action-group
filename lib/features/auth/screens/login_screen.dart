@@ -46,10 +46,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
       duration: const Duration(milliseconds: 800),
     );
     _fadeIn = CurvedAnimation(parent: _animController, curve: Curves.easeOut);
-    _slideUp = Tween<Offset>(
-      begin: const Offset(0, 0.1),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _animController, curve: Curves.easeOutCubic));
+    _slideUp = Tween<Offset>(begin: const Offset(0, 0.1), end: Offset.zero)
+        .animate(
+          CurvedAnimation(parent: _animController, curve: Curves.easeOutCubic),
+        );
     _animController.forward();
   }
 
@@ -100,10 +100,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
         final errorStr = e.toString();
         if (e is AuthException) {
           _errorMessage = e.message;
-        } else if (errorStr.contains('SocketException') || errorStr.contains('Failed host lookup')) {
-          _errorMessage = 'You are currently offline. Please connect to the internet to log in.';
+        } else if (errorStr.contains('SocketException') ||
+            errorStr.contains('Failed host lookup')) {
+          _errorMessage =
+              'You are currently offline. Please connect to the internet to log in.';
         } else {
-          _errorMessage = 'Invalid username or password.\nContact your NGO coordinator if you need access.';
+          _errorMessage =
+              'Invalid username or password.\nContact your NGO coordinator if you need access.';
           debugPrint('Login Error: $errorStr');
         }
       });
@@ -178,11 +181,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                     Text(
                       'Empowering Villages\nTracking Progress',
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        height: 1.3,
-                      ),
+                      style: Theme.of(context).textTheme.headlineMedium
+                          ?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                            height: 1.3,
+                          ),
                     ),
                     const SizedBox(height: 16),
                     Text(
@@ -226,7 +230,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                     child: Card(
                       elevation: 4,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppConstants.radiusXl),
+                        borderRadius: BorderRadius.circular(
+                          AppConstants.radiusXl,
+                        ),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(40),
@@ -313,9 +319,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
         const SizedBox(height: 4),
         Text(
           'Village Action Group Platform',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: AppColors.textSecondary,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary),
         ),
       ],
     );
@@ -381,18 +387,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
             Padding(
               padding: const EdgeInsets.only(bottom: AppConstants.spacingMd),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.error.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-                  border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
+                  border: Border.all(
+                    color: AppColors.error.withValues(alpha: 0.3),
+                  ),
                 ),
                 child: Text(
                   _errorMessage!,
-                  style: TextStyle(
-                    color: AppColors.error,
-                    fontSize: 13,
-                  ),
+                  style: TextStyle(color: AppColors.error, fontSize: 13),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -414,7 +422,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                     )
                   : const Text(
                       'Login',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
             ),
           ),
@@ -424,9 +435,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
           // NGO contact note — no public signup, no self-service reset
           Text(
             'Access is provided by your NGO coordinator.\nContact them if you need an account or to reset your password.',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: AppColors.textSecondary,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
             textAlign: TextAlign.center,
           ),
         ],

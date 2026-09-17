@@ -14,9 +14,17 @@ class SspBranding extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Powered by SSP', style: TextStyle(fontSize: 10, color: AppColors.textHint)),
+            const Text(
+              'Powered by SSP',
+              style: TextStyle(fontSize: 10, color: AppColors.textHint),
+            ),
             const SizedBox(height: 8),
-            Image.asset('assets/images/ssp_logo.png', width: 60, height: 60, fit: BoxFit.contain),
+            Image.asset(
+              'assets/images/ssp_logo.png',
+              width: 60,
+              height: 60,
+              fit: BoxFit.contain,
+            ),
           ],
         ),
       );
@@ -26,7 +34,12 @@ class SspBranding extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Image.asset('assets/images/ssp_logo.png', width: 40, height: 40, fit: BoxFit.contain),
+            Image.asset(
+              'assets/images/ssp_logo.png',
+              width: 40,
+              height: 40,
+              fit: BoxFit.contain,
+            ),
           ],
         ),
       );

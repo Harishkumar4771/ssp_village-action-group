@@ -62,9 +62,10 @@ class _IssueListScreenState extends ConsumerState<IssueListScreen>
       appBar: AppBar(
         title: const Text('My Issues'),
         centerTitle: false,
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.surfaceCard,
         foregroundColor: AppColors.textPrimary,
         elevation: 0,
+        scrolledUnderElevation: 0,
         actions: [
           // Refresh button
           IconButton(
@@ -90,32 +91,29 @@ class _IssueListScreenState extends ConsumerState<IssueListScreen>
             fontSize: 13,
           ),
           tabs: _tabs
-              .map((t) => Tab(
-                    child: allIssuesAsync.when(
-                      data: (issues) {
-                        final count = t.status == null
-                            ? issues.length
-                            : issues
-                                .where((i) => i.status == t.status)
-                                .length;
-                        return Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(t.label),
-                            if (count > 0) ...[
-                              const SizedBox(width: 6),
-                              _CountBadge(
-                                count: count,
-                                active: false,
-                              ),
-                            ],
+              .map(
+                (t) => Tab(
+                  child: allIssuesAsync.when(
+                    data: (issues) {
+                      final count = t.status == null
+                          ? issues.length
+                          : issues.where((i) => i.status == t.status).length;
+                      return Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(t.label),
+                          if (count > 0) ...[
+                            const SizedBox(width: 6),
+                            _CountBadge(count: count, active: false),
                           ],
-                        );
-                      },
-                      loading: () => Text(t.label),
-                      error: (_, __) => Text(t.label),
-                    ),
-                  ))
+                        ],
+                      );
+                    },
+                    loading: () => Text(t.label),
+                    error: (_, __) => Text(t.label),
+                  ),
+                ),
+              )
               .toList(),
         ),
       ),
@@ -130,7 +128,8 @@ class _IssueListScreenState extends ConsumerState<IssueListScreen>
           }).toList(),
         ),
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => _ErrorState(onRetry: () => ref.invalidate(issuesProvider)),
+        error: (e, _) =>
+            _ErrorState(onRetry: () => ref.invalidate(issuesProvider)),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.go('/leader/report'),
@@ -249,8 +248,11 @@ class _IssueCard extends ConsumerWidget {
               // ── Row 3: Village ────────────────────────────────────────
               Row(
                 children: [
-                  Icon(Icons.location_on_outlined,
-                      size: 13, color: AppColors.textHint),
+                  Icon(
+                    Icons.location_on_outlined,
+                    size: 13,
+                    color: AppColors.textHint,
+                  ),
                   const SizedBox(width: 3),
                   Text(
                     issue.villageName,
@@ -270,8 +272,11 @@ class _IssueCard extends ConsumerWidget {
               // ── Row 5: Last updated ───────────────────────────────────
               Row(
                 children: [
-                  Icon(Icons.schedule_rounded,
-                      size: 13, color: AppColors.textHint),
+                  Icon(
+                    Icons.schedule_rounded,
+                    size: 13,
+                    color: AppColors.textHint,
+                  ),
                   const SizedBox(width: 4),
                   Text(
                     _formatDate(issue.updatedAt),
@@ -477,10 +482,7 @@ class _SyncDot extends StatelessWidget {
           Container(
             width: 7,
             height: 7,
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.circle,
-            ),
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
           ),
           const SizedBox(width: 4),
           Text(
@@ -534,7 +536,9 @@ class _EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final label = status == null ? 'issues' : '${status!.displayLabel.toLowerCase()} issues';
+    final label = status == null
+        ? 'issues'
+        : '${status!.displayLabel.toLowerCase()} issues';
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(AppConstants.spacingXl),

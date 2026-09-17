@@ -21,7 +21,7 @@ class IssueRemoteDataSource {
   final SupabaseRestClient _client;
 
   IssueRemoteDataSource({SupabaseRestClient? client})
-      : _client = client ?? SupabaseRestClient.instance;
+    : _client = client ?? SupabaseRestClient.instance;
 
   // ── Upsert issue ───────────────────────────────────────────────────────────
 
@@ -33,10 +33,7 @@ class IssueRemoteDataSource {
   /// Throws [DioException] on network/server error.
   /// Throws [StateError] if Supabase client is not initialized.
   Future<void> upsertIssue(IssueModel model) async {
-    await _client.upsert(
-      SupabaseConfig.issuesTable,
-      _toSupabasePayload(model),
-    );
+    await _client.upsert(SupabaseConfig.issuesTable, _toSupabasePayload(model));
   }
 
   // ── Mapping: IssueModel → Supabase column names ───────────────────────────

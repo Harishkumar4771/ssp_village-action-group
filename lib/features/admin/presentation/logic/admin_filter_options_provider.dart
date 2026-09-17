@@ -16,12 +16,24 @@ class AdminFilterOptions {
 
 /// Fetches the distinct villages, categories, and leaders from Supabase
 /// to populate the filter dropdowns in the Admin Dashboard.
-final adminFilterOptionsProvider = FutureProvider<AdminFilterOptions>((ref) async {
+final adminFilterOptionsProvider = FutureProvider<AdminFilterOptions>((
+  ref,
+) async {
   final client = Supabase.instance.client;
 
-  final villages = await client.from('villages').select('id, name').order('name');
-  final categories = await client.from('issue_categories').select('id, name').order('name');
-  final leaders = await client.from('profiles').select('id, full_name').eq('role', 'leader').order('full_name');
+  final villages = await client
+      .from('villages')
+      .select('id, name')
+      .order('name');
+  final categories = await client
+      .from('issue_categories')
+      .select('id, name')
+      .order('name');
+  final leaders = await client
+      .from('profiles')
+      .select('id, full_name')
+      .eq('role', 'leader')
+      .order('full_name');
 
   return AdminFilterOptions(
     villages: List<Map<String, dynamic>>.from(villages as List),

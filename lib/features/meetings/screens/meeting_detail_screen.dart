@@ -38,8 +38,7 @@ class MeetingDetailScreen extends StatelessWidget {
               elevation: 0,
               color: AppColors.surfaceCard,
               shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(AppConstants.radiusXl),
+                borderRadius: BorderRadius.circular(AppConstants.radiusXl),
               ),
               child: Padding(
                 padding: const EdgeInsets.all(AppConstants.spacingLg),
@@ -60,7 +59,8 @@ class MeetingDetailScreen extends StatelessWidget {
                               ],
                             ),
                             borderRadius: BorderRadius.circular(
-                                AppConstants.radiusMd),
+                              AppConstants.radiusMd,
+                            ),
                           ),
                           child: const Icon(
                             Icons.groups_rounded,
@@ -98,10 +98,12 @@ class MeetingDetailScreen extends StatelessWidget {
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.secondaryTerracotta
-                                .withValues(alpha: 0.12),
+                            color: AppColors.secondaryTerracotta.withValues(
+                              alpha: 0.12,
+                            ),
                             borderRadius: BorderRadius.circular(
-                                AppConstants.spacingSm),
+                              AppConstants.spacingSm,
+                            ),
                           ),
                           child: const Text(
                             'Completed',
@@ -121,8 +123,9 @@ class MeetingDetailScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(AppConstants.spacingMd),
                       decoration: BoxDecoration(
                         color: AppColors.backgroundCream,
-                        borderRadius:
-                            BorderRadius.circular(AppConstants.radiusMd),
+                        borderRadius: BorderRadius.circular(
+                          AppConstants.radiusMd,
+                        ),
                       ),
                       child: Column(
                         children: [
@@ -163,8 +166,9 @@ class MeetingDetailScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(AppConstants.spacingMd),
                       decoration: BoxDecoration(
                         color: AppColors.backgroundCream,
-                        borderRadius:
-                            BorderRadius.circular(AppConstants.radiusMd),
+                        borderRadius: BorderRadius.circular(
+                          AppConstants.radiusMd,
+                        ),
                       ),
                       child: const Text(
                         'Discussed water supply improvements, reviewed budget allocations for road repair, '
@@ -186,8 +190,11 @@ class MeetingDetailScreen extends StatelessWidget {
             // Attendance Section
             Row(
               children: [
-                const Icon(Icons.how_to_reg_rounded,
-                    size: 20, color: AppColors.primaryGreen),
+                const Icon(
+                  Icons.how_to_reg_rounded,
+                  size: 20,
+                  color: AppColors.primaryGreen,
+                ),
                 const SizedBox(width: AppConstants.spacingSm),
                 const Text(
                   'Attendance',
@@ -199,12 +206,15 @@ class MeetingDetailScreen extends StatelessWidget {
                 ),
                 const Spacer(),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
-                    color: AppColors.secondaryTerracotta.withValues(alpha: 0.12),
-                    borderRadius:
-                        BorderRadius.circular(AppConstants.spacingSm),
+                    color: AppColors.secondaryTerracotta.withValues(
+                      alpha: 0.12,
+                    ),
+                    borderRadius: BorderRadius.circular(AppConstants.spacingSm),
                   ),
                   child: const Text(
                     '4/5 Present',
@@ -224,8 +234,7 @@ class MeetingDetailScreen extends StatelessWidget {
               elevation: 0,
               color: AppColors.surfaceCard,
               shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(AppConstants.radiusLg),
+                borderRadius: BorderRadius.circular(AppConstants.radiusLg),
               ),
               child: Column(
                 children: List.generate(_attendees.length, (index) {
@@ -242,8 +251,9 @@ class MeetingDetailScreen extends StatelessWidget {
                         ),
                         leading: CircleAvatar(
                           backgroundColor: isPresent
-                              ? AppColors.secondaryTerracotta
-                                  .withValues(alpha: 0.12)
+                              ? AppColors.secondaryTerracotta.withValues(
+                                  alpha: 0.12,
+                                )
                               : AppColors.error.withValues(alpha: 0.12),
                           child: Text(
                             (attendee['name'] as String)[0],
@@ -269,8 +279,7 @@ class MeetingDetailScreen extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: isPresent
                                 ? AppColors.secondaryTerracotta
-                                : AppColors.error
-                                    .withValues(alpha: 0.12),
+                                : AppColors.error.withValues(alpha: 0.12),
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
@@ -322,10 +331,7 @@ class _DetailRow extends StatelessWidget {
         const SizedBox(width: AppConstants.spacingSm + 4),
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 13,
-            color: AppColors.textSecondary,
-          ),
+          style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
         ),
         const Spacer(),
         Text(

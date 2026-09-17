@@ -35,10 +35,7 @@ class ProgressUpdateLocalDataSource {
   /// Single update by UUID. Returns null if not found.
   Future<ProgressUpdateModel?> getUpdateById(String id) async {
     if (!LocalDb.isAvailable) return null;
-    return await _isar!.progressUpdateModels
-        .filter()
-        .idEqualTo(id)
-        .findFirst();
+    return await _isar!.progressUpdateModels.filter().idEqualTo(id).findFirst();
   }
 
   /// All updates pending sync — used by SyncManager (Phase 15).

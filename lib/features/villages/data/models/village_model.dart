@@ -8,22 +8,22 @@ part 'village_model.g.dart';
 @collection
 class VillageModel {
   Id get isarId => fastHash(id);
-  
+
   @Index(unique: true, replace: true)
   late String id;
-  
+
   late String name;
-  
+
   late String district;
-  
+
   late String state;
-  
+
   late int memberCount;
-  
+
   late String lastActivity;
-  
+
   late String status;
-  
+
   @enumerated
   @Index()
   late SyncStatus syncStatus;

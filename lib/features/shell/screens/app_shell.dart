@@ -52,7 +52,6 @@ class AppShell extends ConsumerWidget {
     ),
   ];
 
-
   static const List<_NavDestination> _adminDestinations = [
     _NavDestination(
       label: 'Dashboard',
@@ -108,7 +107,11 @@ class AppShell extends ConsumerWidget {
     return 0;
   }
 
-  void _onDestinationSelected(BuildContext context, List<_NavDestination> destinations, int index) {
+  void _onDestinationSelected(
+    BuildContext context,
+    List<_NavDestination> destinations,
+    int index,
+  ) {
     context.go(destinations[index].route);
   }
 
@@ -128,19 +131,30 @@ class AppShell extends ConsumerWidget {
     if (isMobile) {
       return _buildMobileShell(context, selectedIndex, destinations);
     }
-    return _buildRailShell(context, selectedIndex, isDesktop, destinations, role);
+    return _buildRailShell(
+      context,
+      selectedIndex,
+      isDesktop,
+      destinations,
+      role,
+    );
   }
 
   // ---------------------------------------------------------------------------
   // Mobile layout – BottomNavigationBar
   // ---------------------------------------------------------------------------
 
-  Widget _buildMobileShell(BuildContext context, int selectedIndex, List<_NavDestination> destinations) {
+  Widget _buildMobileShell(
+    BuildContext context,
+    int selectedIndex,
+    List<_NavDestination> destinations,
+  ) {
     return Scaffold(
       body: child,
       bottomNavigationBar: NavigationBar(
         selectedIndex: selectedIndex,
-        onDestinationSelected: (i) => _onDestinationSelected(context, destinations, i),
+        onDestinationSelected: (i) =>
+            _onDestinationSelected(context, destinations, i),
         backgroundColor: AppColors.surfaceCard,
         indicatorColor: AppColors.primaryGreenLight.withValues(alpha: 0.3),
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
@@ -149,7 +163,10 @@ class AppShell extends ConsumerWidget {
             .map(
               (d) => NavigationDestination(
                 icon: Icon(d.icon, color: AppColors.textSecondary),
-                selectedIcon: Icon(d.selectedIcon, color: AppColors.primaryGreen),
+                selectedIcon: Icon(
+                  d.selectedIcon,
+                  color: AppColors.primaryGreen,
+                ),
                 label: d.label,
               ),
             )
@@ -179,82 +196,117 @@ class AppShell extends ConsumerWidget {
               children: [
                 Expanded(
                   child: NavigationRail(
-            selectedIndex: selectedIndex,
-            onDestinationSelected: (i) => _onDestinationSelected(context, destinations, i),
-            extended: isDesktop,
-            minWidth: 72,
-            minExtendedWidth: 200,
-            backgroundColor: AppColors.surfaceCard,
-            indicatorColor: AppColors.primaryGreenLight.withValues(alpha: 0.25),
-            selectedIconTheme: IconThemeData(color: AppColors.primaryGreen),
-            unselectedIconTheme: IconThemeData(color: AppColors.textSecondary),
-            selectedLabelTextStyle: TextStyle(
-              color: AppColors.primaryGreen,
-              fontWeight: FontWeight.w600,
-              fontSize: 14,
-            ),
-            unselectedLabelTextStyle: TextStyle(
-              color: AppColors.textSecondary,
-              fontSize: 13,
-            ),
-            labelType: isDesktop
-                ? NavigationRailLabelType.none
-                : NavigationRailLabelType.selected,
-            leading: Padding(
-              padding: const EdgeInsets.symmetric(vertical: AppConstants.spacingMd),
-              child: isDesktop
-                  ? Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (role == UserRole.admin) ...[
-                          Image.asset('assets/images/ssp_logo.png', width: 70, fit: BoxFit.contain),
-                          const SizedBox(height: AppConstants.spacingLg),
-                        ],
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.eco_rounded, color: AppColors.secondaryTerracotta, size: 28),
-                            const SizedBox(width: AppConstants.spacingSm),
-                            Text(
-                              'VAG-DMP',
-                              style: TextStyle(
-                                color: AppColors.primaryGreen,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                              ),
-                            ),
-                          ],
-                        ),
-                        if (role != UserRole.admin) ...[
-                          const SizedBox(height: AppConstants.spacingSm),
-                          const SyncStatusIndicator(),
-                        ],
-                      ],
-                    )
-                  : Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (role == UserRole.admin) ...[
-                          Image.asset('assets/images/ssp_logo.png', width: 45, fit: BoxFit.contain),
-                          const SizedBox(height: AppConstants.spacingLg),
-                        ],
-                        Icon(Icons.eco_rounded, color: AppColors.secondaryTerracotta, size: 28),
-                        if (role != UserRole.admin) ...[
-                          const SizedBox(height: AppConstants.spacingSm),
-                          const SyncStatusIndicator(),
-                        ],
-                      ],
+                    selectedIndex: selectedIndex,
+                    onDestinationSelected: (i) =>
+                        _onDestinationSelected(context, destinations, i),
+                    extended: isDesktop,
+                    minWidth: 72,
+                    minExtendedWidth: 200,
+                    backgroundColor: AppColors.surfaceCard,
+                    indicatorColor: AppColors.primaryGreenLight.withValues(
+                      alpha: 0.25,
                     ),
-            ),
-            destinations: destinations
-                .map(
-                  (d) => NavigationRailDestination(
-                    icon: Icon(d.icon),
-                    selectedIcon: Icon(d.selectedIcon),
-                    label: Text(d.label),
-                  ),
-                )
-                .toList(),
+                    selectedIconTheme: IconThemeData(
+                      color: AppColors.primaryGreen,
+                    ),
+                    unselectedIconTheme: IconThemeData(
+                      color: AppColors.textSecondary,
+                    ),
+                    selectedLabelTextStyle: TextStyle(
+                      color: AppColors.primaryGreen,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
+                    unselectedLabelTextStyle: TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 13,
+                    ),
+                    labelType: isDesktop
+                        ? NavigationRailLabelType.none
+                        : NavigationRailLabelType.selected,
+                    leading: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: AppConstants.spacingMd,
+                      ),
+                      child: isDesktop
+                          ? Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (role == UserRole.admin) ...[
+                                  Image.asset(
+                                    'assets/images/ssp_logo.png',
+                                    width: 70,
+                                    fit: BoxFit.contain,
+                                  ),
+                                  const SizedBox(
+                                    height: AppConstants.spacingLg,
+                                  ),
+                                ],
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.eco_rounded,
+                                      color: AppColors.secondaryTerracotta,
+                                      size: 28,
+                                    ),
+                                    const SizedBox(
+                                      width: AppConstants.spacingSm,
+                                    ),
+                                    Text(
+                                      'VAG-DMP',
+                                      style: TextStyle(
+                                        color: AppColors.primaryGreen,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                if (role != UserRole.admin) ...[
+                                  const SizedBox(
+                                    height: AppConstants.spacingSm,
+                                  ),
+                                  const SyncStatusIndicator(),
+                                ],
+                              ],
+                            )
+                          : Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (role == UserRole.admin) ...[
+                                  Image.asset(
+                                    'assets/images/ssp_logo.png',
+                                    width: 45,
+                                    fit: BoxFit.contain,
+                                  ),
+                                  const SizedBox(
+                                    height: AppConstants.spacingLg,
+                                  ),
+                                ],
+                                Icon(
+                                  Icons.eco_rounded,
+                                  color: AppColors.secondaryTerracotta,
+                                  size: 28,
+                                ),
+                                if (role != UserRole.admin) ...[
+                                  const SizedBox(
+                                    height: AppConstants.spacingSm,
+                                  ),
+                                  const SyncStatusIndicator(),
+                                ],
+                              ],
+                            ),
+                    ),
+                    destinations: destinations
+                        .map(
+                          (d) => NavigationRailDestination(
+                            icon: Icon(d.icon),
+                            selectedIcon: Icon(d.selectedIcon),
+                            label: Text(d.label),
+                          ),
+                        )
+                        .toList(),
                   ),
                 ),
               ],

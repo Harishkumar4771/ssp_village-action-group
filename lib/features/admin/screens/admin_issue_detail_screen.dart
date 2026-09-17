@@ -75,7 +75,10 @@ class AdminIssueDetailScreen extends ConsumerWidget {
                     children: [
                       if (isClosed) ...[
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
                           decoration: BoxDecoration(
                             color: Colors.green.shade50,
                             borderRadius: BorderRadius.circular(4),
@@ -98,39 +101,62 @@ class AdminIssueDetailScreen extends ConsumerWidget {
                         ),
                         const SizedBox(height: AppConstants.spacingLg),
                       ],
-                      _InfoRow(icon: Icons.category, label: 'Category', value: issue.categoryName ?? 'Unknown'),
-                      _InfoRow(icon: Icons.location_city, label: 'Village', value: issue.villageName ?? 'Unknown'),
-                      _InfoRow(icon: Icons.person, label: 'Leader', value: issue.leaderName ?? 'Unknown'),
+                      _InfoRow(
+                        icon: Icons.category,
+                        label: 'Category',
+                        value: issue.categoryName ?? 'Unknown',
+                      ),
+                      _InfoRow(
+                        icon: Icons.location_city,
+                        label: 'Village',
+                        value: issue.villageName ?? 'Unknown',
+                      ),
+                      _InfoRow(
+                        icon: Icons.person,
+                        label: 'Leader',
+                        value: issue.leaderName ?? 'Unknown',
+                      ),
                       _InfoRow(
                         icon: Icons.calendar_today,
                         label: 'Created',
-                        value: DateFormat('dd MMM yyyy, hh:mm a').format(issue.createdAt.toLocal()),
+                        value: DateFormat(
+                          'dd MMM yyyy, hh:mm a',
+                        ).format(issue.createdAt.toLocal()),
                       ),
                       const SizedBox(height: AppConstants.spacingLg),
                       const Divider(),
                       const SizedBox(height: AppConstants.spacingMd),
                       const Text(
                         'Description',
-                        style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.textSecondary),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textSecondary,
+                        ),
                       ),
                       const SizedBox(height: AppConstants.spacingSm),
                       Text(
                         issue.description,
                         style: const TextStyle(fontSize: 15, height: 1.5),
                       ),
-                      
+
                       // Attachments
                       if (state.attachments.isNotEmpty) ...[
                         const SizedBox(height: AppConstants.spacingXl),
                         const Text(
                           'Attachments',
-                          style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.textSecondary),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textSecondary,
+                          ),
                         ),
                         const SizedBox(height: AppConstants.spacingSm),
                         ...state.attachments.map((att) {
                           return ListTile(
                             contentPadding: EdgeInsets.zero,
-                            leading: const Icon(Icons.picture_as_pdf, color: Colors.red),
+                            leading: const Icon(
+                              Icons.picture_as_pdf,
+                              color: Colors.red,
+                            ),
                             title: const Text('PDF Document'),
                             subtitle: Text('Added by leader'),
                             trailing: IconButton(
@@ -138,7 +164,9 @@ class AdminIssueDetailScreen extends ConsumerWidget {
                               onPressed: () {
                                 // PDF viewing/downloading logic can be added here later
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('PDF Download coming soon')),
+                                  const SnackBar(
+                                    content: Text('PDF Download coming soon'),
+                                  ),
                                 );
                               },
                             ),
@@ -150,9 +178,9 @@ class AdminIssueDetailScreen extends ConsumerWidget {
                 ),
               ),
             ),
-            
+
             const SizedBox(width: AppConstants.spacingLg),
-            
+
             // Right Column: Timeline / Progress Updates
             Expanded(
               flex: 2,
@@ -173,27 +201,35 @@ class AdminIssueDetailScreen extends ConsumerWidget {
                         children: [
                           const Text(
                             'Progress Timeline',
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           Text(
                             '${issue.currentProgress}% Complete',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: isClosed ? AppColors.success : AppColors.primaryGreen,
+                              color: isClosed
+                                  ? AppColors.success
+                                  : AppColors.primaryGreen,
                             ),
                           ),
                         ],
                       ),
                       const SizedBox(height: AppConstants.spacingLg),
-                      
+
                       if (state.progressUpdates.isEmpty)
                         const Padding(
                           padding: EdgeInsets.all(32.0),
                           child: Center(
                             child: Text(
                               'No progress updates yet.',
-                              style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic),
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontStyle: FontStyle.italic,
+                              ),
                             ),
                           ),
                         )
@@ -204,22 +240,29 @@ class AdminIssueDetailScreen extends ConsumerWidget {
                           itemCount: state.progressUpdates.length,
                           itemBuilder: (context, index) {
                             final update = state.progressUpdates[index];
-                            final createdAt = DateTime.parse(update['created_at']).toLocal();
-                            final progress = update['progress_percentage'] as int;
+                            final createdAt = DateTime.parse(
+                              update['created_at'],
+                            ).toLocal();
+                            final progress =
+                                update['progress_percentage'] as int;
                             final description = update['description'] as String;
-                            
+
                             return _TimelineItem(
-                              date: DateFormat('dd MMM yyyy, hh:mm a').format(createdAt),
+                              date: DateFormat(
+                                'dd MMM yyyy, hh:mm a',
+                              ).format(createdAt),
                               progress: progress,
                               description: description,
                               isLast: index == state.progressUpdates.length - 1,
                             );
                           },
                         ),
-                        
+
                       // Original Report entry at the bottom of the timeline
                       _TimelineItem(
-                        date: DateFormat('dd MMM yyyy, hh:mm a').format(issue.createdAt.toLocal()),
+                        date: DateFormat(
+                          'dd MMM yyyy, hh:mm a',
+                        ).format(issue.createdAt.toLocal()),
                         progress: 0,
                         description: 'Original issue reported by Leader.',
                         isLast: true,
@@ -242,7 +285,11 @@ class _InfoRow extends StatelessWidget {
   final String label;
   final String value;
 
-  const _InfoRow({required this.icon, required this.label, required this.value});
+  const _InfoRow({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -256,8 +303,20 @@ class _InfoRow extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(label, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
-              Text(value, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+              Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: AppColors.textSecondary,
+                ),
+              ),
+              Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ],
           ),
         ],
@@ -303,15 +362,12 @@ class _TimelineItem extends StatelessWidget {
                 ),
                 if (!isLast)
                   Expanded(
-                    child: Container(
-                      width: 2,
-                      color: Colors.grey.shade300,
-                    ),
+                    child: Container(width: 2, color: Colors.grey.shade300),
                   ),
               ],
             ),
           ),
-          
+
           // Content
           Expanded(
             child: Padding(
@@ -331,9 +387,16 @@ class _TimelineItem extends StatelessWidget {
                       ),
                       const Spacer(),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 2,
+                        ),
                         decoration: BoxDecoration(
-                          color: isOriginal ? Colors.grey.shade100 : AppColors.primaryGreenLight.withValues(alpha: 0.1),
+                          color: isOriginal
+                              ? Colors.grey.shade100
+                              : AppColors.primaryGreenLight.withValues(
+                                  alpha: 0.1,
+                                ),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
@@ -341,7 +404,9 @@ class _TimelineItem extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
-                            color: isOriginal ? Colors.grey.shade700 : AppColors.primaryGreenDark,
+                            color: isOriginal
+                                ? Colors.grey.shade700
+                                : AppColors.primaryGreenDark,
                           ),
                         ),
                       ),

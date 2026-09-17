@@ -29,7 +29,7 @@ class ClosureNotificationRemoteDataSource {
   final SupabaseRestClient _client;
 
   ClosureNotificationRemoteDataSource({SupabaseRestClient? client})
-      : _client = client ?? SupabaseRestClient.instance;
+    : _client = client ?? SupabaseRestClient.instance;
 
   /// Creates a closure notification row for [model] if it is closed (locked).
   ///

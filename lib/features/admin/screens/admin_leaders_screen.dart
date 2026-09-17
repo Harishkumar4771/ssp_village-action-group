@@ -37,95 +37,117 @@ class AdminLeadersScreen extends ConsumerWidget {
       body: state.isLoading && state.profiles.isEmpty
           ? const Center(child: CircularProgressIndicator())
           : state.error != null
-              ? Center(
-                  child: Text(
-                    state.error!,
-                    style: const TextStyle(color: Colors.red, fontSize: 16),
-                  ),
-                )
-              : ListView.builder(
-                  padding: const EdgeInsets.all(AppConstants.spacingLg),
-                  itemCount: state.profiles.length,
-                  itemBuilder: (context, index) {
-                    final profile = state.profiles[index];
-                    final isActive = profile['active'] as bool? ?? true;
-                    final role = profile['role'] as String;
-                    
-                    final villageMap = profile['villages'] as Map<String, dynamic>?;
-                    final villageName = villageMap?['name'] as String? ?? 'No Village Assigned';
+          ? Center(
+              child: Text(
+                state.error!,
+                style: const TextStyle(color: Colors.red, fontSize: 16),
+              ),
+            )
+          : ListView.builder(
+              padding: const EdgeInsets.all(AppConstants.spacingLg),
+              itemCount: state.profiles.length,
+              itemBuilder: (context, index) {
+                final profile = state.profiles[index];
+                final isActive = profile['active'] as bool? ?? true;
+                final role = profile['role'] as String;
 
-                    return Card(
-                      color: isActive ? Colors.white : Colors.grey.shade100,
-                      elevation: 0,
-                      margin: const EdgeInsets.only(bottom: AppConstants.spacingMd),
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(color: Colors.grey.shade200),
-                        borderRadius: BorderRadius.circular(8),
+                final villageMap = profile['villages'] as Map<String, dynamic>?;
+                final villageName =
+                    villageMap?['name'] as String? ?? 'No Village Assigned';
+
+                return Card(
+                  color: isActive ? Colors.white : Colors.grey.shade100,
+                  elevation: 0,
+                  margin: const EdgeInsets.only(bottom: AppConstants.spacingMd),
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(color: Colors.grey.shade200),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: _getRoleColor(
+                        role,
+                      ).withValues(alpha: 0.1),
+                      child: Icon(Icons.person, color: _getRoleColor(role)),
+                    ),
+                    title: Text(
+                      profile['full_name'] as String,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        decoration: isActive
+                            ? null
+                            : TextDecoration.lineThrough,
+                        color: isActive ? Colors.black87 : Colors.grey,
                       ),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: _getRoleColor(role).withValues(alpha: 0.1),
-                          child: Icon(Icons.person, color: _getRoleColor(role)),
-                        ),
-                        title: Text(
-                          profile['full_name'] as String,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            decoration: isActive ? null : TextDecoration.lineThrough,
-                            color: isActive ? Colors.black87 : Colors.grey,
+                    ),
+                    subtitle: Text(
+                      '${profile['username']} • $villageName',
+                      style: TextStyle(
+                        color: isActive ? Colors.black54 : Colors.grey,
+                      ),
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: _getRoleColor(role).withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: _getRoleColor(role)),
+                          ),
+                          child: Text(
+                            role.toUpperCase(),
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              color: _getRoleColor(role),
+                            ),
                           ),
                         ),
-                        subtitle: Text(
-                          '${profile['username']} • $villageName',
-                          style: TextStyle(color: isActive ? Colors.black54 : Colors.grey),
+                        const SizedBox(width: AppConstants.spacingMd),
+                        Switch(
+                          value: isActive,
+                          activeColor: AppColors.primaryGreen,
+                          onChanged: (val) {
+                            notifier.toggleUserStatus(
+                              profile['id'] as String,
+                              !val,
+                            );
+                          },
                         ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: _getRoleColor(role).withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: _getRoleColor(role)),
-                              ),
-                              child: Text(
-                                role.toUpperCase(),
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.bold,
-                                  color: _getRoleColor(role),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: AppConstants.spacingMd),
-                            Switch(
-                              value: isActive,
-                              activeColor: AppColors.primaryGreen,
-                              onChanged: (val) {
-                                notifier.toggleUserStatus(profile['id'] as String, !val);
-                              },
-                            ),
-                          ],
-                        ),
-                        onTap: () => _showEditUserDialog(context, ref, notifier, profile),
-                      ),
-                    );
-                  },
-                ),
+                      ],
+                    ),
+                    onTap: () =>
+                        _showEditUserDialog(context, ref, notifier, profile),
+                  ),
+                );
+              },
+            ),
     );
   }
 
   Color _getRoleColor(String role) {
     switch (role.toLowerCase()) {
-      case 'admin': return Colors.purple;
-      case 'supervisor': return Colors.blue;
-      case 'leader': return AppColors.primaryGreen;
-      default: return Colors.grey;
+      case 'admin':
+        return Colors.purple;
+      case 'supervisor':
+        return Colors.blue;
+      case 'leader':
+        return AppColors.primaryGreen;
+      default:
+        return Colors.grey;
     }
   }
 
-  void _showCreateUserDialog(BuildContext context, WidgetRef ref, AdminLeadersNotifier notifier) {
+  void _showCreateUserDialog(
+    BuildContext context,
+    WidgetRef ref,
+    AdminLeadersNotifier notifier,
+  ) {
     // Clear any stale error from a previous attempt.
     notifier.clearError();
 
@@ -148,7 +170,10 @@ class AdminLeadersScreen extends ConsumerWidget {
               final leadersState = ref.watch(adminLeadersProvider);
 
               return optionsAsync.when(
-                loading: () => const SizedBox(height: 100, child: Center(child: CircularProgressIndicator())),
+                loading: () => const SizedBox(
+                  height: 100,
+                  child: Center(child: CircularProgressIndicator()),
+                ),
                 error: (e, _) => Text('Error loading villages: $e'),
                 data: (options) {
                   return SingleChildScrollView(
@@ -169,7 +194,10 @@ class AdminLeadersScreen extends ConsumerWidget {
                             ),
                             child: Text(
                               leadersState.error!,
-                              style: const TextStyle(color: Colors.red, fontSize: 13),
+                              style: const TextStyle(
+                                color: Colors.red,
+                                fontSize: 13,
+                              ),
                             ),
                           ),
                         // ── Form fields ──────────────────────────────────
@@ -179,37 +207,61 @@ class AdminLeadersScreen extends ConsumerWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               TextFormField(
-                                decoration: const InputDecoration(labelText: 'Username (e.g. VAG020)'),
-                                validator: (v) => v!.isEmpty ? 'Required' : null,
+                                decoration: const InputDecoration(
+                                  labelText: 'Username (e.g. VAG020)',
+                                ),
+                                validator: (v) =>
+                                    v!.isEmpty ? 'Required' : null,
                                 onSaved: (v) => username = v!,
                               ),
                               TextFormField(
-                                decoration: const InputDecoration(labelText: 'Full Name'),
-                                validator: (v) => v!.isEmpty ? 'Required' : null,
+                                decoration: const InputDecoration(
+                                  labelText: 'Full Name',
+                                ),
+                                validator: (v) =>
+                                    v!.isEmpty ? 'Required' : null,
                                 onSaved: (v) => fullName = v!,
                               ),
                               TextFormField(
-                                decoration: const InputDecoration(labelText: 'Password'),
+                                decoration: const InputDecoration(
+                                  labelText: 'Password',
+                                ),
                                 obscureText: true,
-                                validator: (v) => v!.length < 6 ? 'Min 6 chars' : null,
+                                validator: (v) =>
+                                    v!.length < 6 ? 'Min 6 chars' : null,
                                 onSaved: (v) => password = v!,
                               ),
                               const SizedBox(height: 16),
                               DropdownButtonFormField<String>(
                                 value: role,
-                                decoration: const InputDecoration(labelText: 'Role'),
+                                decoration: const InputDecoration(
+                                  labelText: 'Role',
+                                ),
                                 items: const [
-                                  DropdownMenuItem(value: 'leader', child: Text('Leader')),
-                                  DropdownMenuItem(value: 'supervisor', child: Text('Supervisor')),
-                                  DropdownMenuItem(value: 'admin', child: Text('Admin')),
+                                  DropdownMenuItem(
+                                    value: 'leader',
+                                    child: Text('Leader'),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: 'supervisor',
+                                    child: Text('Supervisor'),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: 'admin',
+                                    child: Text('Admin'),
+                                  ),
                                 ],
                                 onChanged: (v) => role = v!,
                               ),
                               const SizedBox(height: 16),
                               DropdownButtonFormField<String>(
                                 value: villageId,
-                                decoration: const InputDecoration(labelText: 'Assigned Village'),
-                                validator: (v) => v == null ? 'Please select a village' : null,
+                                decoration: const InputDecoration(
+                                  labelText: 'Assigned Village',
+                                ),
+                                validator: (v) => v == null
+                                    ? 'Please select a village'
+                                    : null,
                                 items: options.villages.map((v) {
                                   return DropdownMenuItem(
                                     value: v['id'] as String,
@@ -260,8 +312,12 @@ class AdminLeadersScreen extends ConsumerWidget {
                         },
                   child: isLoading
                       ? const SizedBox(
-                          width: 18, height: 18,
-                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
                         )
                       : const Text('Create'),
                 );
@@ -273,7 +329,12 @@ class AdminLeadersScreen extends ConsumerWidget {
     );
   }
 
-  void _showEditUserDialog(BuildContext context, WidgetRef ref, AdminLeadersNotifier notifier, Map<String, dynamic> profile) {
+  void _showEditUserDialog(
+    BuildContext context,
+    WidgetRef ref,
+    AdminLeadersNotifier notifier,
+    Map<String, dynamic> profile,
+  ) {
     final formKey = GlobalKey<FormState>();
     String role = profile['role'] as String;
     String? villageId = profile['village_id'] as String?;
@@ -287,7 +348,10 @@ class AdminLeadersScreen extends ConsumerWidget {
             builder: (context, ref, _) {
               final optionsAsync = ref.watch(adminFilterOptionsProvider);
               return optionsAsync.when(
-                loading: () => const SizedBox(height: 100, child: Center(child: CircularProgressIndicator())),
+                loading: () => const SizedBox(
+                  height: 100,
+                  child: Center(child: CircularProgressIndicator()),
+                ),
                 error: (e, _) => Text('Error loading villages: $e'),
                 data: (options) {
                   return Form(
@@ -299,16 +363,27 @@ class AdminLeadersScreen extends ConsumerWidget {
                           value: role,
                           decoration: const InputDecoration(labelText: 'Role'),
                           items: const [
-                            DropdownMenuItem(value: 'leader', child: Text('Leader')),
-                            DropdownMenuItem(value: 'supervisor', child: Text('Supervisor')),
-                            DropdownMenuItem(value: 'admin', child: Text('Admin')),
+                            DropdownMenuItem(
+                              value: 'leader',
+                              child: Text('Leader'),
+                            ),
+                            DropdownMenuItem(
+                              value: 'supervisor',
+                              child: Text('Supervisor'),
+                            ),
+                            DropdownMenuItem(
+                              value: 'admin',
+                              child: Text('Admin'),
+                            ),
                           ],
                           onChanged: (v) => role = v!,
                         ),
                         const SizedBox(height: 16),
                         DropdownButtonFormField<String>(
                           value: villageId,
-                          decoration: const InputDecoration(labelText: 'Assigned Village'),
+                          decoration: const InputDecoration(
+                            labelText: 'Assigned Village',
+                          ),
                           items: options.villages.map((v) {
                             return DropdownMenuItem(
                               value: v['id'] as String,
@@ -325,12 +400,19 @@ class AdminLeadersScreen extends ConsumerWidget {
             },
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('Cancel'),
+            ),
             ElevatedButton(
               onPressed: () async {
                 if (formKey.currentState!.validate()) {
                   formKey.currentState!.save();
-                  await notifier.updateUser(profile['id'] as String, role, villageId);
+                  await notifier.updateUser(
+                    profile['id'] as String,
+                    role,
+                    villageId,
+                  );
                   if (ctx.mounted) {
                     Navigator.pop(ctx);
                   }

@@ -27,11 +27,12 @@ import 'issue_providers.dart';
 
 final progressUpdateDataSourceProvider =
     Provider<ProgressUpdateLocalDataSource>((ref) {
-  return ProgressUpdateLocalDataSource();
-});
+      return ProgressUpdateLocalDataSource();
+    });
 
-final progressUpdateRepositoryProvider =
-    Provider<ProgressUpdateRepository>((ref) {
+final progressUpdateRepositoryProvider = Provider<ProgressUpdateRepository>((
+  ref,
+) {
   return LocalProgressUpdateRepository(
     ref.watch(progressUpdateDataSourceProvider),
   );
@@ -43,15 +44,19 @@ final progressUpdateRepositoryProvider =
 /// Used to render the timeline in IssueDetailScreen.
 final progressUpdatesForIssueProvider =
     FutureProvider.family<List<ProgressUpdate>, String>((ref, issueId) async {
-  return ref
-      .watch(progressUpdateRepositoryProvider)
-      .getUpdatesForIssue(issueId);
-});
+      return ref
+          .watch(progressUpdateRepositoryProvider)
+          .getUpdatesForIssue(issueId);
+    });
 
 /// Count of progress updates for an issue (used for the timeline badge).
-final progressUpdateCountProvider =
-    FutureProvider.family<int, String>((ref, issueId) async {
-  final updates = await ref.watch(progressUpdatesForIssueProvider(issueId).future);
+final progressUpdateCountProvider = FutureProvider.family<int, String>((
+  ref,
+  issueId,
+) async {
+  final updates = await ref.watch(
+    progressUpdatesForIssueProvider(issueId).future,
+  );
   return updates.length;
 });
 
@@ -90,9 +95,7 @@ class ProgressUpdateNotifier extends AsyncNotifier<void> {
       }
 
       // ── Phase 1: Save the progress update ──────────────────────────────
-      await ref
-          .read(progressUpdateRepositoryProvider)
-          .saveUpdate(update);
+      await ref.read(progressUpdateRepositoryProvider).saveUpdate(update);
 
       // ── Phase 2: Compute the new issue state (Layer 3) ─────────────────
       final newStatus = ProgressRulesService.computeNewStatus(
@@ -121,5 +124,5 @@ class ProgressUpdateNotifier extends AsyncNotifier<void> {
 
 final progressUpdateNotifierProvider =
     AsyncNotifierProvider<ProgressUpdateNotifier, void>(
-  ProgressUpdateNotifier.new,
-);
+      ProgressUpdateNotifier.new,
+    );

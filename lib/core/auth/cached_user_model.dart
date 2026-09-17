@@ -54,13 +54,15 @@ class CachedUserStore {
     if (!LocalDb.isAvailable) return null;
     final model = await _db.cachedUserModels.get(1);
     if (model == null) return null;
-    
+
     // Check 30-day expiration (default to valid if missing during migration)
     final lastAuth = model.lastAuthenticated ?? DateTime.now();
     final now = DateTime.now();
     final difference = now.difference(lastAuth);
     if (difference.inDays > 30) {
-      debugPrint('[Auth] Cached user expired (last authenticated ${difference.inDays} days ago).');
+      debugPrint(
+        '[Auth] Cached user expired (last authenticated ${difference.inDays} days ago).',
+      );
       return null;
     }
 

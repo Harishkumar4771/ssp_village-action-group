@@ -45,9 +45,7 @@ class AppTheme {
         color: AppColors.surfaceCard,
         elevation: 2,
         shadowColor: Colors.black.withValues(alpha: 0.1),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       ),
 
@@ -91,7 +89,10 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.surfaceCard,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: Colors.grey.shade300),
@@ -137,8 +138,14 @@ class AppTheme {
       // Navigation Rail (web/tablet)
       navigationRailTheme: NavigationRailThemeData(
         backgroundColor: AppColors.surfaceCard,
-        selectedIconTheme: const IconThemeData(color: AppColors.primaryGreen, size: 28),
-        unselectedIconTheme: const IconThemeData(color: AppColors.textHint, size: 24),
+        selectedIconTheme: const IconThemeData(
+          color: AppColors.primaryGreen,
+          size: 28,
+        ),
+        unselectedIconTheme: const IconThemeData(
+          color: AppColors.textHint,
+          size: 24,
+        ),
         selectedLabelTextStyle: AppTypography.textTheme.labelMedium?.copyWith(
           color: AppColors.primaryGreen,
           fontWeight: FontWeight.w700,
@@ -157,9 +164,7 @@ class AppTheme {
         disabledColor: Colors.grey.shade100,
         checkmarkColor: const Color(0xFF2E7D32),
         side: const BorderSide(color: Color(0xFFC8C8C8), width: 1),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         labelStyle: AppTypography.textTheme.labelMedium?.copyWith(
           color: const Color(0xFF333333),
           fontWeight: FontWeight.w400,
@@ -182,9 +187,7 @@ class AppTheme {
 
       // Dialog
       dialogTheme: DialogThemeData(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         backgroundColor: AppColors.surfaceCard,
       ),
     );
@@ -228,9 +231,7 @@ class AppTheme {
       cardTheme: CardThemeData(
         color: AppColors.darkSurfaceCard,
         elevation: 2,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       ),
 
@@ -250,7 +251,10 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.darkSurfaceCard,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: Colors.grey.shade700),
@@ -261,7 +265,10 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.primaryGreenLight, width: 2),
+          borderSide: const BorderSide(
+            color: AppColors.primaryGreenLight,
+            width: 2,
+          ),
         ),
       ),
 
@@ -283,8 +290,14 @@ class AppTheme {
 
       navigationRailTheme: NavigationRailThemeData(
         backgroundColor: AppColors.darkSurface,
-        selectedIconTheme: const IconThemeData(color: AppColors.primaryGreenLight, size: 28),
-        unselectedIconTheme: const IconThemeData(color: AppColors.textHint, size: 24),
+        selectedIconTheme: const IconThemeData(
+          color: AppColors.primaryGreenLight,
+          size: 28,
+        ),
+        unselectedIconTheme: const IconThemeData(
+          color: AppColors.textHint,
+          size: 24,
+        ),
         selectedLabelTextStyle: AppTypography.textTheme.labelMedium?.copyWith(
           color: AppColors.primaryGreenLight,
           fontWeight: FontWeight.w700,

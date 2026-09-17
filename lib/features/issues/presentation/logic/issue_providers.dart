@@ -29,15 +29,21 @@ final issueRepositoryProvider = Provider<IssueRepository>((ref) {
 
 /// All issues for the current leader, newest first.
 final issuesProvider = FutureProvider<List<Issue>>((ref) async {
-  final sub = SyncManager.onSyncStatusChanged.listen((_) => ref.invalidateSelf());
+  final sub = SyncManager.onSyncStatusChanged.listen(
+    (_) => ref.invalidateSelf(),
+  );
   ref.onDispose(() => sub.cancel());
   return ref.watch(issueRepositoryProvider).getAllIssues();
 });
 
 /// Single issue by UUID.
-final issueByIdProvider =
-    FutureProvider.family<Issue?, String>((ref, id) async {
-  final sub = SyncManager.onSyncStatusChanged.listen((_) => ref.invalidateSelf());
+final issueByIdProvider = FutureProvider.family<Issue?, String>((
+  ref,
+  id,
+) async {
+  final sub = SyncManager.onSyncStatusChanged.listen(
+    (_) => ref.invalidateSelf(),
+  );
   ref.onDispose(() => sub.cancel());
   return ref.watch(issueRepositoryProvider).getIssueById(id);
 });
@@ -49,18 +55,26 @@ final activeIssuesCountProvider = FutureProvider<int>((ref) async {
 });
 
 /// Issues filtered by status. Null = all issues.
-final issuesByStatusProvider =
-    FutureProvider.family<List<Issue>, IssueStatus?>((ref, status) async {
-  final sub = SyncManager.onSyncStatusChanged.listen((_) => ref.invalidateSelf());
-  ref.onDispose(() => sub.cancel());
-  if (status == null) return ref.watch(issueRepositoryProvider).getAllIssues();
-  return ref.watch(issueRepositoryProvider).getIssuesByStatus(status);
-});
+final issuesByStatusProvider = FutureProvider.family<List<Issue>, IssueStatus?>(
+  (ref, status) async {
+    final sub = SyncManager.onSyncStatusChanged.listen(
+      (_) => ref.invalidateSelf(),
+    );
+    ref.onDispose(() => sub.cancel());
+    if (status == null)
+      return ref.watch(issueRepositoryProvider).getAllIssues();
+    return ref.watch(issueRepositoryProvider).getIssuesByStatus(status);
+  },
+);
 
 /// Issues filtered by categoryId UUID. Null = all issues.
-final issuesByCategoryProvider =
-    FutureProvider.family<List<Issue>, String?>((ref, categoryId) async {
-  final sub = SyncManager.onSyncStatusChanged.listen((_) => ref.invalidateSelf());
+final issuesByCategoryProvider = FutureProvider.family<List<Issue>, String?>((
+  ref,
+  categoryId,
+) async {
+  final sub = SyncManager.onSyncStatusChanged.listen(
+    (_) => ref.invalidateSelf(),
+  );
   ref.onDispose(() => sub.cancel());
   if (categoryId == null) {
     return ref.watch(issueRepositoryProvider).getAllIssues();
@@ -106,5 +120,6 @@ class IssueNotifier extends AsyncNotifier<void> {
   }
 }
 
-final issueNotifierProvider =
-    AsyncNotifierProvider<IssueNotifier, void>(IssueNotifier.new);
+final issueNotifierProvider = AsyncNotifierProvider<IssueNotifier, void>(
+  IssueNotifier.new,
+);

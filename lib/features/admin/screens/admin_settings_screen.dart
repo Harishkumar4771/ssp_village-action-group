@@ -21,9 +21,9 @@ class AdminSettingsScreen extends ConsumerWidget {
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error signing out: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error signing out: $e')));
       }
     }
   }
@@ -95,13 +95,20 @@ class AdminSettingsScreen extends ConsumerWidget {
                             const SizedBox(height: 4),
                             Text(
                               '@${user?.username ?? 'unknown'}',
-                              style: const TextStyle(color: AppColors.textSecondary),
+                              style: const TextStyle(
+                                color: AppColors.textSecondary,
+                              ),
                             ),
                             const SizedBox(height: 4),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 2,
+                              ),
                               decoration: BoxDecoration(
-                                color: AppColors.primaryGreenLight.withValues(alpha: 0.2),
+                                color: AppColors.primaryGreenLight.withValues(
+                                  alpha: 0.2,
+                                ),
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: Text(
@@ -121,22 +128,46 @@ class AdminSettingsScreen extends ConsumerWidget {
                   const Divider(height: 32),
                   ListTile(
                     contentPadding: EdgeInsets.zero,
-                    leading: const Icon(Icons.person_outline, color: AppColors.textSecondary),
-                    title: Text(l10n?.editProfile ?? 'Edit Profile', style: const TextStyle(color: AppColors.textHint)),
-                    trailing: const Text('Coming Soon', style: TextStyle(fontSize: 12, color: AppColors.textHint)),
+                    leading: const Icon(
+                      Icons.person_outline,
+                      color: AppColors.textSecondary,
+                    ),
+                    title: Text(
+                      l10n?.editProfile ?? 'Edit Profile',
+                      style: const TextStyle(color: AppColors.textHint),
+                    ),
+                    trailing: const Text(
+                      'Coming Soon',
+                      style: TextStyle(fontSize: 12, color: AppColors.textHint),
+                    ),
                   ),
                   ListTile(
                     contentPadding: EdgeInsets.zero,
-                    leading: const Icon(Icons.lock_outline, color: AppColors.textSecondary),
-                    title: Text(l10n?.changePassword ?? 'Change Password', style: const TextStyle(color: AppColors.textHint)),
-                    trailing: const Text('Coming Soon', style: TextStyle(fontSize: 12, color: AppColors.textHint)),
+                    leading: const Icon(
+                      Icons.lock_outline,
+                      color: AppColors.textSecondary,
+                    ),
+                    title: Text(
+                      l10n?.changePassword ?? 'Change Password',
+                      style: const TextStyle(color: AppColors.textHint),
+                    ),
+                    trailing: const Text(
+                      'Coming Soon',
+                      style: TextStyle(fontSize: 12, color: AppColors.textHint),
+                    ),
                   ),
                   ListTile(
                     contentPadding: EdgeInsets.zero,
-                    leading: const Icon(Icons.logout, color: AppColors.secondaryTerracotta),
+                    leading: const Icon(
+                      Icons.logout,
+                      color: AppColors.secondaryTerracotta,
+                    ),
                     title: Text(
                       l10n?.signOut ?? 'Sign Out',
-                      style: const TextStyle(color: AppColors.secondaryTerracotta, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        color: AppColors.secondaryTerracotta,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     onTap: () => _handleSignOut(context, ref),
                   ),
@@ -158,7 +189,10 @@ class AdminSettingsScreen extends ConsumerWidget {
             child: Column(
               children: [
                 ListTile(
-                  leading: const Icon(Icons.language, color: AppColors.primaryGreen),
+                  leading: const Icon(
+                    Icons.language,
+                    color: AppColors.primaryGreen,
+                  ),
                   title: Text(l10n?.language ?? 'Language'),
                   trailing: DropdownButton<String>(
                     value: currentLocale.languageCode,
@@ -170,16 +204,27 @@ class AdminSettingsScreen extends ConsumerWidget {
                     ],
                     onChanged: (val) {
                       if (val != null) {
-                        ref.read(localeProvider.notifier).setLocale(Locale(val));
+                        ref
+                            .read(localeProvider.notifier)
+                            .setLocale(Locale(val));
                       }
                     },
                   ),
                 ),
                 const Divider(height: 1),
                 ListTile(
-                  leading: const Icon(Icons.sync, color: AppColors.textSecondary),
-                  title: const Text('Sync Status', style: TextStyle(color: AppColors.textHint)),
-                  trailing: const Text('Managed by core sync', style: TextStyle(fontSize: 12, color: AppColors.textHint)),
+                  leading: const Icon(
+                    Icons.sync,
+                    color: AppColors.textSecondary,
+                  ),
+                  title: const Text(
+                    'Sync Status',
+                    style: TextStyle(color: AppColors.textHint),
+                  ),
+                  trailing: const Text(
+                    'Managed by core sync',
+                    style: TextStyle(fontSize: 12, color: AppColors.textHint),
+                  ),
                 ),
               ],
             ),
@@ -198,15 +243,33 @@ class AdminSettingsScreen extends ConsumerWidget {
             child: Column(
               children: [
                 ListTile(
-                  leading: const Icon(Icons.shield_outlined, color: AppColors.textSecondary),
-                  title: const Text('Audit Logs', style: TextStyle(color: AppColors.textHint)),
-                  trailing: const Text('Coming Soon', style: TextStyle(fontSize: 12, color: AppColors.textHint)),
+                  leading: const Icon(
+                    Icons.shield_outlined,
+                    color: AppColors.textSecondary,
+                  ),
+                  title: const Text(
+                    'Audit Logs',
+                    style: TextStyle(color: AppColors.textHint),
+                  ),
+                  trailing: const Text(
+                    'Coming Soon',
+                    style: TextStyle(fontSize: 12, color: AppColors.textHint),
+                  ),
                 ),
                 const Divider(height: 1),
                 ListTile(
-                  leading: const Icon(Icons.key, color: AppColors.textSecondary),
-                  title: const Text('API Keys', style: TextStyle(color: AppColors.textHint)),
-                  trailing: const Text('Coming Soon', style: TextStyle(fontSize: 12, color: AppColors.textHint)),
+                  leading: const Icon(
+                    Icons.key,
+                    color: AppColors.textSecondary,
+                  ),
+                  title: const Text(
+                    'API Keys',
+                    style: TextStyle(color: AppColors.textHint),
+                  ),
+                  trailing: const Text(
+                    'Coming Soon',
+                    style: TextStyle(fontSize: 12, color: AppColors.textHint),
+                  ),
                 ),
               ],
             ),
@@ -225,21 +288,42 @@ class AdminSettingsScreen extends ConsumerWidget {
             child: Column(
               children: [
                 ListTile(
-                  leading: const Icon(Icons.info_outline, color: AppColors.primaryGreen),
+                  leading: const Icon(
+                    Icons.info_outline,
+                    color: AppColors.primaryGreen,
+                  ),
                   title: Text(l10n?.appTitle ?? 'VAG-DMP'),
                   subtitle: Text(l10n?.appVersion ?? 'App Version 1.0.0'),
                 ),
                 const Divider(height: 1),
                 ListTile(
-                  leading: const Icon(Icons.privacy_tip_outlined, color: AppColors.textSecondary),
-                  title: Text(l10n?.privacyPolicy ?? 'Privacy Policy', style: const TextStyle(color: AppColors.textHint)),
-                  trailing: const Text('Coming Soon', style: TextStyle(fontSize: 12, color: AppColors.textHint)),
+                  leading: const Icon(
+                    Icons.privacy_tip_outlined,
+                    color: AppColors.textSecondary,
+                  ),
+                  title: Text(
+                    l10n?.privacyPolicy ?? 'Privacy Policy',
+                    style: const TextStyle(color: AppColors.textHint),
+                  ),
+                  trailing: const Text(
+                    'Coming Soon',
+                    style: TextStyle(fontSize: 12, color: AppColors.textHint),
+                  ),
                 ),
                 const Divider(height: 1),
                 ListTile(
-                  leading: const Icon(Icons.description_outlined, color: AppColors.textSecondary),
-                  title: Text(l10n?.termsOfService ?? 'Terms of Service', style: const TextStyle(color: AppColors.textHint)),
-                  trailing: const Text('Coming Soon', style: TextStyle(fontSize: 12, color: AppColors.textHint)),
+                  leading: const Icon(
+                    Icons.description_outlined,
+                    color: AppColors.textSecondary,
+                  ),
+                  title: Text(
+                    l10n?.termsOfService ?? 'Terms of Service',
+                    style: const TextStyle(color: AppColors.textHint),
+                  ),
+                  trailing: const Text(
+                    'Coming Soon',
+                    style: TextStyle(fontSize: 12, color: AppColors.textHint),
+                  ),
                 ),
               ],
             ),

@@ -27,35 +27,41 @@ class SupabaseRestClient {
 
   /// Call once from main() AFTER Supabase credentials are available.
   void initialize() {
-    _dio = Dio(BaseOptions(
-      baseUrl: SupabaseConfig.restBase,
-      connectTimeout: const Duration(seconds: 15),
-      receiveTimeout: const Duration(seconds: 15),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'apikey': SupabaseConfig.anonKey,
-      },
-    ));
+    _dio = Dio(
+      BaseOptions(
+        baseUrl: SupabaseConfig.restBase,
+        connectTimeout: const Duration(seconds: 15),
+        receiveTimeout: const Duration(seconds: 15),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'apikey': SupabaseConfig.anonKey,
+        },
+      ),
+    );
 
     // Interceptor to dynamically inject the Bearer token
-    _dio.interceptors.add(InterceptorsWrapper(
-      onRequest: (options, handler) {
-        final session = Supabase.instance.client.auth.currentSession;
-        final token = session?.accessToken ?? SupabaseConfig.anonKey;
-        options.headers['Authorization'] = 'Bearer $token';
-        return handler.next(options);
-      },
-    ));
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          final session = Supabase.instance.client.auth.currentSession;
+          final token = session?.accessToken ?? SupabaseConfig.anonKey;
+          options.headers['Authorization'] = 'Bearer $token';
+          return handler.next(options);
+        },
+      ),
+    );
 
     // Debug logging in debug mode only
     assert(() {
-      _dio.interceptors.add(LogInterceptor(
-        requestBody: true,
-        responseBody: true,
-        error: true,
-        logPrint: (obj) => _log('$obj'),
-      ));
+      _dio.interceptors.add(
+        LogInterceptor(
+          requestBody: true,
+          responseBody: true,
+          error: true,
+          logPrint: (obj) => _log('$obj'),
+        ),
+      );
       return true;
     }());
 
@@ -81,9 +87,11 @@ class SupabaseRestClient {
     final response = await _dio.post(
       '/$table',
       data: data,
-      options: Options(headers: {
-        'Prefer': 'resolution=merge-duplicates,return=representation',
-      }),
+      options: Options(
+        headers: {
+          'Prefer': 'resolution=merge-duplicates,return=representation',
+        },
+      ),
     );
     // PostgREST returns a JSON array — take the first (and only) element
     final body = response.data;
@@ -109,9 +117,9 @@ class SupabaseRestClient {
     await _dio.post(
       '/$table',
       data: data,
-      options: Options(headers: {
-        'Prefer': 'resolution=ignore-duplicates,return=minimal',
-      }),
+      options: Options(
+        headers: {'Prefer': 'resolution=ignore-duplicates,return=minimal'},
+      ),
     );
   }
 

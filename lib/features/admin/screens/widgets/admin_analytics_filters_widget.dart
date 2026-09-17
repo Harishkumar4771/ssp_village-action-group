@@ -22,7 +22,10 @@ class AdminAnalyticsFiltersWidget extends ConsumerWidget {
       ),
       error: (err, stack) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 16),
-        child: Text('Error loading filters: $err', style: const TextStyle(color: Colors.red)),
+        child: Text(
+          'Error loading filters: $err',
+          style: const TextStyle(color: Colors.red),
+        ),
       ),
       data: (options) {
         return Container(
@@ -41,18 +44,37 @@ class AdminAnalyticsFiltersWidget extends ConsumerWidget {
                 runSpacing: AppConstants.spacingMd,
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
-                  const Text('Time Range:', style: TextStyle(fontWeight: FontWeight.bold)),
-                  _DatePresetButton(label: 'All Time', onPressed: () => notifier.setPresetDateRange('all')),
-                  _DatePresetButton(label: 'Last 7 Days', onPressed: () => notifier.setPresetDateRange('week')),
-                  _DatePresetButton(label: 'Last 30 Days', onPressed: () => notifier.setPresetDateRange('month')),
-                  _DatePresetButton(label: 'Last Year', onPressed: () => notifier.setPresetDateRange('year')),
+                  const Text(
+                    'Time Range:',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  _DatePresetButton(
+                    label: 'All Time',
+                    onPressed: () => notifier.setPresetDateRange('all'),
+                  ),
+                  _DatePresetButton(
+                    label: 'Last 7 Days',
+                    onPressed: () => notifier.setPresetDateRange('week'),
+                  ),
+                  _DatePresetButton(
+                    label: 'Last 30 Days',
+                    onPressed: () => notifier.setPresetDateRange('month'),
+                  ),
+                  _DatePresetButton(
+                    label: 'Last Year',
+                    onPressed: () => notifier.setPresetDateRange('year'),
+                  ),
                   OutlinedButton.icon(
                     icon: const Icon(Icons.date_range, size: 18),
                     label: Text(_dateRangeText(state.startDate, state.endDate)),
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: state.startDate != null ? AppColors.primaryGreen : AppColors.textSecondary,
+                      foregroundColor: state.startDate != null
+                          ? AppColors.primaryGreen
+                          : AppColors.textSecondary,
                       side: BorderSide(
-                        color: state.startDate != null ? AppColors.primaryGreen : Colors.grey.shade400,
+                        color: state.startDate != null
+                            ? AppColors.primaryGreen
+                            : Colors.grey.shade400,
                       ),
                     ),
                     onPressed: () async {
@@ -61,8 +83,12 @@ class AdminAnalyticsFiltersWidget extends ConsumerWidget {
                         context: context,
                         firstDate: DateTime(2020),
                         lastDate: now,
-                        initialDateRange: state.startDate != null && state.endDate != null
-                            ? DateTimeRange(start: state.startDate!, end: state.endDate!)
+                        initialDateRange:
+                            state.startDate != null && state.endDate != null
+                            ? DateTimeRange(
+                                start: state.startDate!,
+                                end: state.endDate!,
+                              )
                             : null,
                       );
                       if (picked != null) {
@@ -84,11 +110,16 @@ class AdminAnalyticsFiltersWidget extends ConsumerWidget {
                     hint: 'Category',
                     value: state.categoryIdFilter,
                     items: [
-                      const DropdownMenuItem(value: null, child: Text('All Categories')),
-                      ...options.categories.map((c) => DropdownMenuItem(
-                            value: c['id'] as String,
-                            child: Text(c['name'] as String),
-                          )),
+                      const DropdownMenuItem(
+                        value: null,
+                        child: Text('All Categories'),
+                      ),
+                      ...options.categories.map(
+                        (c) => DropdownMenuItem(
+                          value: c['id'] as String,
+                          child: Text(c['name'] as String),
+                        ),
+                      ),
                     ],
                     onChanged: (val) => notifier.setCategoryFilter(val),
                   ),
@@ -98,11 +129,16 @@ class AdminAnalyticsFiltersWidget extends ConsumerWidget {
                     hint: 'Village',
                     value: state.villageIdFilter,
                     items: [
-                      const DropdownMenuItem(value: null, child: Text('All Villages')),
-                      ...options.villages.map((v) => DropdownMenuItem(
-                            value: v['id'] as String,
-                            child: Text(v['name'] as String),
-                          )),
+                      const DropdownMenuItem(
+                        value: null,
+                        child: Text('All Villages'),
+                      ),
+                      ...options.villages.map(
+                        (v) => DropdownMenuItem(
+                          value: v['id'] as String,
+                          child: Text(v['name'] as String),
+                        ),
+                      ),
                     ],
                     onChanged: (val) => notifier.setVillageFilter(val),
                   ),
@@ -112,11 +148,16 @@ class AdminAnalyticsFiltersWidget extends ConsumerWidget {
                     hint: 'Leader',
                     value: state.leaderIdFilter,
                     items: [
-                      const DropdownMenuItem(value: null, child: Text('All Leaders')),
-                      ...options.leaders.map((l) => DropdownMenuItem(
-                            value: l['id'] as String,
-                            child: Text(l['full_name'] as String),
-                          )),
+                      const DropdownMenuItem(
+                        value: null,
+                        child: Text('All Leaders'),
+                      ),
+                      ...options.leaders.map(
+                        (l) => DropdownMenuItem(
+                          value: l['id'] as String,
+                          child: Text(l['full_name'] as String),
+                        ),
+                      ),
                     ],
                     onChanged: (val) => notifier.setLeaderFilter(val),
                   ),
@@ -126,7 +167,9 @@ class AdminAnalyticsFiltersWidget extends ConsumerWidget {
                     TextButton.icon(
                       icon: const Icon(Icons.clear, size: 20),
                       label: const Text('Clear Filters'),
-                      style: TextButton.styleFrom(foregroundColor: AppColors.error),
+                      style: TextButton.styleFrom(
+                        foregroundColor: AppColors.error,
+                      ),
                       onPressed: () => notifier.clearAllFilters(),
                     ),
                 ],

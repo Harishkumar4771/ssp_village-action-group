@@ -76,10 +76,14 @@ class SupabaseAuthService {
         email: email,
         password: password,
       );
-      debugPrint('[Auth] signInWithPassword SUCCESS. userId=${response.user?.id}');
+      debugPrint(
+        '[Auth] signInWithPassword SUCCESS. userId=${response.user?.id}',
+      );
     } on AuthException catch (e) {
-      debugPrint('[Auth] signInWithPassword FAILED — AuthException: '
-          'message="${e.message}" statusCode=${e.statusCode}');
+      debugPrint(
+        '[Auth] signInWithPassword FAILED — AuthException: '
+        'message="${e.message}" statusCode=${e.statusCode}',
+      );
       rethrow;
     } catch (e) {
       debugPrint('[Auth] signInWithPassword FAILED — unexpected error: $e');
@@ -88,7 +92,9 @@ class SupabaseAuthService {
 
     final user = response.user;
     if (user == null) {
-      debugPrint('[Auth] ERROR: signInWithPassword returned null user despite no exception.');
+      debugPrint(
+        '[Auth] ERROR: signInWithPassword returned null user despite no exception.',
+      );
       throw const AuthException('Authentication failed. User is null.');
     }
 
@@ -96,13 +102,17 @@ class SupabaseAuthService {
     debugPrint('[Auth] Fetching profile for userId=${user.id}');
     try {
       final appUser = await _fetchProfile(user.id, username);
-      debugPrint('[Auth] Profile fetch SUCCESS: name="${appUser.name}" '
-          'role=${appUser.role} village="${appUser.villageName}" active=${appUser.active}');
+      debugPrint(
+        '[Auth] Profile fetch SUCCESS: name="${appUser.name}" '
+        'role=${appUser.role} village="${appUser.villageName}" active=${appUser.active}',
+      );
 
       if (!appUser.active) {
         debugPrint('[Auth] ERROR: User account is disabled.');
         await _client.auth.signOut(); // Clean up session
-        throw const AuthException('Your account has been disabled by an administrator.');
+        throw const AuthException(
+          'Your account has been disabled by an administrator.',
+        );
       }
 
       // ── Cache locally for offline restart ───────────────────────────────
@@ -111,8 +121,10 @@ class SupabaseAuthService {
 
       return appUser;
     } on PostgrestException catch (e) {
-      debugPrint('[Auth] Profile fetch FAILED — PostgrestException: '
-          'message="${e.message}" code="${e.code}" details="${e.details}"');
+      debugPrint(
+        '[Auth] Profile fetch FAILED — PostgrestException: '
+        'message="${e.message}" code="${e.code}" details="${e.details}"',
+      );
       rethrow;
     } catch (e) {
       debugPrint('[Auth] Profile fetch FAILED — unexpected error: $e');
@@ -158,7 +170,9 @@ class SupabaseAuthService {
       if (!isOnline) {
         // OFFLINE path: restore from local cache — no network touch at all
         debugPrint('[Auth] No network available');
-        debugPrint('[Auth] Restoring cached local user: ${cachedUser.username}');
+        debugPrint(
+          '[Auth] Restoring cached local user: ${cachedUser.username}',
+        );
         debugPrint('[Auth] Offline session restored successfully');
         return cachedUser;
       }
@@ -178,13 +192,17 @@ class SupabaseAuthService {
           final freshUser = await _fetchProfile(user.id, username);
           // Update Isar cache with fresh data
           await CachedUserStore.instance.save(freshUser);
-          debugPrint('[Auth] Restoring cached local user: ${freshUser.username}');
+          debugPrint(
+            '[Auth] Restoring cached local user: ${freshUser.username}',
+          );
           debugPrint('[Auth] Offline session restored successfully');
           return freshUser;
         } catch (e) {
           // Network request failed despite being "online" — possibly a brief
           // connectivity hiccup. Fall back to cache.
-          debugPrint('[Auth] Supabase profile refresh failed ($e) — using cached profile');
+          debugPrint(
+            '[Auth] Supabase profile refresh failed ($e) — using cached profile',
+          );
           return cachedUser;
         }
       } else {
@@ -192,8 +210,12 @@ class SupabaseAuthService {
         // Return cached user so they can keep working offline.
         // SyncManager will need re-auth when they try to sync, but
         // local data remains fully usable.
-        debugPrint('[Auth] Supabase session expired but local cache exists — restoring cached user');
-        debugPrint('[Auth] Restoring cached local user: ${cachedUser.username}');
+        debugPrint(
+          '[Auth] Supabase session expired but local cache exists — restoring cached user',
+        );
+        debugPrint(
+          '[Auth] Restoring cached local user: ${cachedUser.username}',
+        );
         debugPrint('[Auth] Offline session restored successfully');
         return cachedUser;
       }
@@ -201,17 +223,23 @@ class SupabaseAuthService {
 
     // ── Priority 2: No local cache — try Supabase (requires internet) ────
     if (!hasLocalSession) {
-      debugPrint('[Auth] restoreSession: no persisted session or local cache found.');
+      debugPrint(
+        '[Auth] restoreSession: no persisted session or local cache found.',
+      );
       return null;
     }
 
     final user = _client.auth.currentUser;
     if (user == null) {
-      debugPrint('[Auth] restoreSession: session exists but currentUser is null.');
+      debugPrint(
+        '[Auth] restoreSession: session exists but currentUser is null.',
+      );
       return null;
     }
 
-    debugPrint('[Auth] restoreSession: found Supabase session for userId=${user.id}, fetching profile...');
+    debugPrint(
+      '[Auth] restoreSession: found Supabase session for userId=${user.id}, fetching profile...',
+    );
 
     try {
       final email = user.email ?? '';
@@ -219,11 +247,15 @@ class SupabaseAuthService {
       final appUser = await _fetchProfile(user.id, username);
       // Populate the Isar cache so next restart works offline
       await CachedUserStore.instance.save(appUser);
-      debugPrint('[Auth] restoreSession: profile fetched and cached for "${appUser.name}"');
+      debugPrint(
+        '[Auth] restoreSession: profile fetched and cached for "${appUser.name}"',
+      );
       return appUser;
     } catch (e) {
       // No cache and offline — cannot restore session
-      debugPrint('[Auth] restoreSession: profile fetch failed ($e) — cannot restore session offline.');
+      debugPrint(
+        '[Auth] restoreSession: profile fetch failed ($e) — cannot restore session offline.',
+      );
       return null;
     }
   }
@@ -238,7 +270,8 @@ class SupabaseAuthService {
   Future<bool> _checkConnectivity() async {
     try {
       final result = await Connectivity().checkConnectivity();
-      return result.isNotEmpty && result.any((r) => r != ConnectivityResult.none);
+      return result.isNotEmpty &&
+          result.any((r) => r != ConnectivityResult.none);
     } catch (_) {
       return false;
     }
@@ -252,7 +285,9 @@ class SupabaseAuthService {
     debugPrint('[Auth] _fetchProfile: querying profiles WHERE id=$userId');
     final data = await _client
         .from('profiles')
-        .select('id, username, full_name, role, village_id, district, state, active, villages(name)')
+        .select(
+          'id, username, full_name, role, village_id, district, state, active, villages(name)',
+        )
         .eq('id', userId)
         .single();
 
@@ -261,7 +296,10 @@ class SupabaseAuthService {
   }
 
   /// Maps a `profiles` table row to the [AppUser] domain model.
-  static AppUser _profileToAppUser(Map<String, dynamic> data, String fallbackUsername) {
+  static AppUser _profileToAppUser(
+    Map<String, dynamic> data,
+    String fallbackUsername,
+  ) {
     final role = _parseRole(data['role'] as String? ?? 'leader');
     final fullName = data['full_name'] as String? ?? fallbackUsername;
 
@@ -277,8 +315,10 @@ class SupabaseAuthService {
     final villagesJoin = data['villages'] as Map<String, dynamic>?;
     final villageName = villagesJoin?['name'] as String?;
 
-    debugPrint('[Auth] _profileToAppUser: fullName="$fullName" role=$role '
-        'villageId=${data['village_id']} villageName=$villageName');
+    debugPrint(
+      '[Auth] _profileToAppUser: fullName="$fullName" role=$role '
+      'villageId=${data['village_id']} villageName=$villageName',
+    );
 
     return AppUser(
       id: data['id'] as String,

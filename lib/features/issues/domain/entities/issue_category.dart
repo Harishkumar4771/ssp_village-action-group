@@ -32,8 +32,7 @@ class IssueCategory {
   });
 
   @override
-  bool operator ==(Object other) =>
-      other is IssueCategory && other.id == id;
+  bool operator ==(Object other) => other is IssueCategory && other.id == id;
 
   @override
   int get hashCode => id.hashCode;
@@ -61,8 +60,7 @@ class IssueSubcategory {
   });
 
   @override
-  bool operator ==(Object other) =>
-      other is IssueSubcategory && other.id == id;
+  bool operator ==(Object other) => other is IssueSubcategory && other.id == id;
 
   @override
   int get hashCode => id.hashCode;

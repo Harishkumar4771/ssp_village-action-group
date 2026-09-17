@@ -37,9 +37,9 @@ class IssuesSyncStrategy implements SyncStrategy {
     IssueLocalDataSource? localDs,
     IssueRemoteDataSource? remoteDs,
     ClosureNotificationRemoteDataSource? closureDs,
-  })  : _localDs = localDs ?? IssueLocalDataSource(),
-        _remoteDs = remoteDs ?? IssueRemoteDataSource(),
-        _closureDs = closureDs ?? ClosureNotificationRemoteDataSource();
+  }) : _localDs = localDs ?? IssueLocalDataSource(),
+       _remoteDs = remoteDs ?? IssueRemoteDataSource(),
+       _closureDs = closureDs ?? ClosureNotificationRemoteDataSource();
 
   @override
   String get name => 'Issues';
@@ -88,14 +88,16 @@ class IssuesSyncStrategy implements SyncStrategy {
       try {
         await _closureDs.createIfClosed(model);
         debugPrint(
-            'IssuesSyncStrategy: ✓ Closure notification ensured for "$id".');
+          'IssuesSyncStrategy: ✓ Closure notification ensured for "$id".',
+        );
       } catch (e) {
         // Notification failure is non-fatal:
         // The issue itself is already synced — we don't retry the whole upsert.
         // The notification will be retried on the next sync cycle because
         // markSynced has NOT been called yet (that happens after uploadItem returns).
         debugPrint(
-            'IssuesSyncStrategy: ⚠ Closure notification failed for "$id": $e');
+          'IssuesSyncStrategy: ⚠ Closure notification failed for "$id": $e',
+        );
         rethrow; // Re-throw so SyncManager marks the issue as failed → retry
       }
     }

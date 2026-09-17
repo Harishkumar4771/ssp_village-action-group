@@ -50,13 +50,17 @@ class _IssuesRealtimeNotifier extends AsyncNotifier<void> {
             debugPrint('REALTIME EVENT RECEIVED');
             debugPrint('TABLE NAME: issues');
             debugPrint('EVENT TYPE: ${payload.eventType}');
-            final issueId = payload.newRecord['id'] as String? ?? payload.oldRecord['id'] as String?;
+            final issueId =
+                payload.newRecord['id'] as String? ??
+                payload.oldRecord['id'] as String?;
             debugPrint('RECORD ID: $issueId');
-            
+
             _refresh();
-            
+
             if (issueId != null) {
-              ref.read(adminIssueDetailProvider(issueId).notifier).fetchDetail();
+              ref
+                  .read(adminIssueDetailProvider(issueId).notifier)
+                  .fetchDetail();
             }
           },
         )
@@ -68,13 +72,17 @@ class _IssuesRealtimeNotifier extends AsyncNotifier<void> {
             debugPrint('REALTIME EVENT RECEIVED');
             debugPrint('TABLE NAME: progress_updates');
             debugPrint('EVENT TYPE: ${payload.eventType}');
-            final issueId = payload.newRecord['issue_id'] as String? ?? payload.oldRecord['issue_id'] as String?;
+            final issueId =
+                payload.newRecord['issue_id'] as String? ??
+                payload.oldRecord['issue_id'] as String?;
             debugPrint('RECORD ID: $issueId');
-            
+
             _refresh();
 
             if (issueId != null) {
-              ref.read(adminIssueDetailProvider(issueId).notifier).fetchDetail();
+              ref
+                  .read(adminIssueDetailProvider(issueId).notifier)
+                  .fetchDetail();
             }
           },
         );
@@ -82,7 +90,7 @@ class _IssuesRealtimeNotifier extends AsyncNotifier<void> {
     _channel!.subscribe((RealtimeSubscribeStatus status, [Object? error]) {
       debugPrint('REALTIME SUBSCRIPTION STATUS: $status');
       if (error != null) debugPrint('REALTIME ERROR: $error');
-      
+
       if (status == RealtimeSubscribeStatus.channelError ||
           status == RealtimeSubscribeStatus.timedOut) {
         final ch = _channel;
@@ -98,13 +106,17 @@ class _IssuesRealtimeNotifier extends AsyncNotifier<void> {
 
   Future<void> _refresh() async {
     debugPrint('[DIAGNOSTIC] Step 1: _refresh() executing');
-    debugPrint('[REALTIME] 🔄 _refresh() called — triggering fetchAnalytics + fetchIssues');
+    debugPrint(
+      '[REALTIME] 🔄 _refresh() called — triggering fetchAnalytics + fetchIssues',
+    );
 
     // Add micro-delay to prevent PostgREST race condition where queries execute before transaction commits
     await Future.delayed(const Duration(milliseconds: 500));
 
     try {
-      debugPrint('[DIAGNOSTIC] Step 2: Reading adminAnalyticsProvider.notifier to call fetchAnalytics');
+      debugPrint(
+        '[DIAGNOSTIC] Step 2: Reading adminAnalyticsProvider.notifier to call fetchAnalytics',
+      );
       ref.read(adminAnalyticsProvider.notifier).fetchAnalytics(silent: true);
       debugPrint('[REALTIME] 🔄 fetchAnalytics() invoked');
     } catch (e) {
@@ -122,5 +134,5 @@ class _IssuesRealtimeNotifier extends AsyncNotifier<void> {
 /// Watch this provider in any admin screen that should react to `issues` changes.
 final issuesRealtimeProvider =
     AsyncNotifierProvider<_IssuesRealtimeNotifier, void>(
-  _IssuesRealtimeNotifier.new,
-);
+      _IssuesRealtimeNotifier.new,
+    );

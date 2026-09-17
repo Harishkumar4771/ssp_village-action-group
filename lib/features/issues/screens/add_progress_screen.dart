@@ -62,9 +62,7 @@ class _AddProgressScreenState extends ConsumerState<AddProgressScreen> {
   ];
 
   List<_Milestone> _availableMilestones(int currentProgress) {
-    return _allMilestones
-        .where((m) => m.percent > currentProgress)
-        .toList();
+    return _allMilestones.where((m) => m.percent > currentProgress).toList();
   }
 
   // ─── Save ──────────────────────────────────────────────────────────────────
@@ -99,10 +97,9 @@ class _AddProgressScreenState extends ConsumerState<AddProgressScreen> {
         createdBy: user.id,
       );
 
-      await ref.read(progressUpdateNotifierProvider.notifier).addUpdate(
-            update: update,
-            currentIssue: issue,
-          );
+      await ref
+          .read(progressUpdateNotifierProvider.notifier)
+          .addUpdate(update: update, currentIssue: issue);
 
       if (mounted) {
         final wasCompleted = _selectedPercent == 100;
@@ -176,9 +173,10 @@ class _AddProgressScreenState extends ConsumerState<AddProgressScreen> {
       loading: () => Scaffold(
         appBar: AppBar(
           title: const Text('Add Progress'),
-          backgroundColor: Colors.transparent,
+          backgroundColor: AppColors.surfaceCard,
           foregroundColor: AppColors.textPrimary,
           elevation: 0,
+          scrolledUnderElevation: 0,
         ),
         body: const Center(child: CircularProgressIndicator()),
       ),
@@ -200,7 +198,7 @@ class _AddProgressScreenState extends ConsumerState<AddProgressScreen> {
         backgroundColor: AppColors.backgroundCream,
         foregroundColor: AppColors.textPrimary,
         elevation: 0,
-        scrolledUnderElevation: 1,
+        scrolledUnderElevation: 0,
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.dark,
@@ -242,8 +240,7 @@ class _AddProgressScreenState extends ConsumerState<AddProgressScreen> {
             const SizedBox(height: AppConstants.spacingLg),
 
             // ── Notes ──────────────────────────────────────────────────────
-            _SectionLabel(
-                number: '2', label: 'What was done?', required: true),
+            _SectionLabel(number: '2', label: 'What was done?', required: true),
             const SizedBox(height: AppConstants.spacingSm),
             Text(
               'Describe the work completed since the last update.',
@@ -264,25 +261,31 @@ class _AddProgressScreenState extends ConsumerState<AddProgressScreen> {
                     'e.g. Submitted repair request to panchayat. Work order issued.',
                 prefixIcon: const Padding(
                   padding: EdgeInsets.only(bottom: 64),
-                  child: Icon(Icons.edit_note_rounded,
-                      color: AppColors.primaryGreen),
+                  child: Icon(
+                    Icons.edit_note_rounded,
+                    color: AppColors.primaryGreen,
+                  ),
                 ),
                 filled: true,
                 fillColor: AppColors.surfaceCard,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-                  borderSide:
-                      BorderSide(color: AppColors.textHint.withValues(alpha: 0.3)),
+                  borderSide: BorderSide(
+                    color: AppColors.textHint.withValues(alpha: 0.3),
+                  ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-                  borderSide:
-                      BorderSide(color: AppColors.textHint.withValues(alpha: 0.3)),
+                  borderSide: BorderSide(
+                    color: AppColors.textHint.withValues(alpha: 0.3),
+                  ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                   borderSide: const BorderSide(
-                      color: AppColors.primaryGreen, width: 2),
+                    color: AppColors.primaryGreen,
+                    width: 2,
+                  ),
                 ),
                 errorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(AppConstants.radiusMd),
@@ -319,22 +322,30 @@ class _AddProgressScreenState extends ConsumerState<AddProgressScreen> {
                       width: 18,
                       height: 18,
                       child: CircularProgressIndicator(
-                          strokeWidth: 2, color: Colors.white),
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
                     )
                   : const Icon(Icons.trending_up_rounded),
-              label: Text(_isSaving
-                  ? 'Saving…'
-                  : _selectedPercent == 100
-                      ? 'Mark as 100% Complete'
-                      : 'Save Progress Update'),
+              label: Text(
+                _isSaving
+                    ? 'Saving…'
+                    : _selectedPercent == 100
+                    ? 'Mark as 100% Complete'
+                    : 'Save Progress Update',
+              ),
               style: FilledButton.styleFrom(
                 backgroundColor: _selectedPercent == 100
                     ? AppColors.primaryGreen
                     : AppColors.primaryGreen,
-                disabledBackgroundColor: AppColors.textHint.withValues(alpha: 0.3),
+                disabledBackgroundColor: AppColors.textHint.withValues(
+                  alpha: 0.3,
+                ),
                 minimumSize: const Size(double.infinity, 52),
                 textStyle: const TextStyle(
-                    fontSize: 15, fontWeight: FontWeight.w600),
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
             const SizedBox(height: AppConstants.spacingLg),
@@ -516,8 +527,9 @@ class _MilestoneGrid extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 10,
                     color: isSelected ? color : AppColors.textHint,
-                    fontWeight:
-                        isSelected ? FontWeight.w600 : FontWeight.normal,
+                    fontWeight: isSelected
+                        ? FontWeight.w600
+                        : FontWeight.normal,
                   ),
                   textAlign: TextAlign.center,
                   maxLines: 1,
@@ -545,12 +557,16 @@ class _FullyResolvedNote extends StatelessWidget {
         color: AppColors.primaryGreen.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(AppConstants.radiusMd),
         border: Border.all(
-            color: AppColors.primaryGreen.withValues(alpha: 0.2)),
+          color: AppColors.primaryGreen.withValues(alpha: 0.2),
+        ),
       ),
       child: Row(
         children: [
-          Icon(Icons.check_circle_rounded,
-              color: AppColors.primaryGreen, size: 20),
+          Icon(
+            Icons.check_circle_rounded,
+            color: AppColors.primaryGreen,
+            size: 20,
+          ),
           const SizedBox(width: AppConstants.spacingSm),
           Expanded(
             child: Text(
@@ -581,13 +597,17 @@ class _CompletionWarningCard extends StatelessWidget {
         color: AppColors.primaryGreen.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(AppConstants.radiusMd),
         border: Border.all(
-            color: AppColors.primaryGreen.withValues(alpha: 0.25)),
+          color: AppColors.primaryGreen.withValues(alpha: 0.25),
+        ),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.info_outline_rounded,
-              color: AppColors.primaryGreen, size: 20),
+          Icon(
+            Icons.info_outline_rounded,
+            color: AppColors.primaryGreen,
+            size: 20,
+          ),
           const SizedBox(width: AppConstants.spacingSm),
           Expanded(
             child: Text(
@@ -647,16 +667,18 @@ class _SectionLabel extends StatelessWidget {
         Text(
           label,
           style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w700,
-                color: AppColors.textPrimary,
-              ),
+            fontWeight: FontWeight.w700,
+            color: AppColors.textPrimary,
+          ),
         ),
         if (required) ...[
           const SizedBox(width: 4),
           const Text(
             '*',
             style: TextStyle(
-                color: AppColors.error, fontWeight: FontWeight.bold),
+              color: AppColors.error,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ],
       ],

@@ -27,9 +27,10 @@ class ProfileScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Profile'),
         centerTitle: true,
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.surfaceCard,
         foregroundColor: AppColors.textPrimary,
         elevation: 0,
+        scrolledUnderElevation: 0,
       ),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingMd),
@@ -38,8 +39,10 @@ class ProfileScreen extends ConsumerWidget {
           _buildProfileHeader(context, user),
           const SizedBox(height: AppConstants.spacingLg),
           _buildDevToolsSection(context, ref, isAdmin),
-          const SizedBox(height: AppConstants.spacingMd),
+          const SizedBox(height: AppConstants.spacingLg),
           _buildSettingsSection(context),
+          const SizedBox(height: AppConstants.spacingLg),
+          _buildSupportSection(context),
           const SizedBox(height: AppConstants.spacingLg),
           _buildLogoutTile(context, ref),
           const SizedBox(height: AppConstants.spacingLg),
@@ -90,9 +93,9 @@ class ProfileScreen extends ConsumerWidget {
             Text(
               user.name,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary,
-                  ),
+                fontWeight: FontWeight.bold,
+                color: AppColors.textPrimary,
+              ),
             ),
             const SizedBox(height: 2),
 
@@ -116,7 +119,11 @@ class ProfileScreen extends ConsumerWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.lock_outline_rounded, size: 12, color: roleBadgeColor),
+                  Icon(
+                    Icons.lock_outline_rounded,
+                    size: 12,
+                    color: roleBadgeColor,
+                  ),
                   const SizedBox(width: 4),
                   Text(
                     user.displayRole,
@@ -174,7 +181,11 @@ class ProfileScreen extends ConsumerWidget {
   // Developer Tools – RBAC toggle
   // ---------------------------------------------------------------------------
 
-  Widget _buildDevToolsSection(BuildContext context, WidgetRef ref, bool isAdmin) {
+  Widget _buildDevToolsSection(
+    BuildContext context,
+    WidgetRef ref,
+    bool isAdmin,
+  ) {
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -191,11 +202,18 @@ class ProfileScreen extends ConsumerWidget {
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(
-              AppConstants.spacingMd, AppConstants.spacingMd, AppConstants.spacingMd, 0,
+              AppConstants.spacingMd,
+              AppConstants.spacingMd,
+              AppConstants.spacingMd,
+              0,
             ),
             child: Row(
               children: [
-                Icon(Icons.developer_mode_rounded, color: AppColors.tertiaryGoldDark, size: 20),
+                Icon(
+                  Icons.developer_mode_rounded,
+                  color: AppColors.tertiaryGoldDark,
+                  size: 20,
+                ),
                 const SizedBox(width: AppConstants.spacingSm),
                 Text(
                   'Developer Tools',
@@ -220,10 +238,7 @@ class ProfileScreen extends ConsumerWidget {
               isAdmin
                   ? 'Viewing as NGO Supervisor'
                   : 'Viewing as Village Action Leader',
-              style: const TextStyle(
-                color: AppColors.textHint,
-                fontSize: 12,
-              ),
+              style: const TextStyle(color: AppColors.textHint, fontSize: 12),
             ),
             value: isAdmin,
             activeThumbColor: AppColors.primaryGreen,
@@ -247,48 +262,98 @@ class ProfileScreen extends ConsumerWidget {
   // ---------------------------------------------------------------------------
 
   Widget _buildSettingsSection(BuildContext context) {
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
-      ),
-      color: AppColors.surfaceCard,
-      clipBehavior: Clip.antiAlias,
-      child: Column(
-        children: [
-          _SettingsTile(
-            icon: Icons.language_rounded,
-            iconColor: AppColors.info,
-            title: 'Language',
-            subtitle: 'मराठी (Marathi)',
-            onTap: () {},
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.only(left: 16, bottom: 8),
+          child: Text(
+            'Settings',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: AppColors.textSecondary,
+            ),
           ),
-          const Divider(height: 1, indent: 56),
-          _SettingsTile(
-            icon: Icons.notifications_outlined,
-            iconColor: AppColors.tertiaryGold,
-            title: 'Notifications',
-            subtitle: 'Enabled',
-            onTap: () {},
+        ),
+        Card(
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppConstants.radiusLg),
           ),
-          const Divider(height: 1, indent: 56),
-          _SettingsTile(
-            icon: Icons.help_outline_rounded,
-            iconColor: AppColors.secondaryTerracotta,
-            title: 'Help & Support',
-            subtitle: 'FAQs, contact us',
-            onTap: () {},
+          color: AppColors.surfaceCard,
+          clipBehavior: Clip.antiAlias,
+          child: Column(
+            children: [
+              _SettingsTile(
+                icon: Icons.language_rounded,
+                iconColor: AppColors.info,
+                title: 'Language',
+                subtitle: 'मराठी (Marathi)',
+                onTap: () {},
+              ),
+              const Divider(height: 1, indent: 56),
+              _SettingsTile(
+                icon: Icons.notifications_outlined,
+                iconColor: AppColors.tertiaryGold,
+                title: 'Notifications',
+                subtitle: 'Enabled',
+                onTap: () {},
+              ),
+            ],
           ),
-          const Divider(height: 1, indent: 56),
-          _SettingsTile(
-            icon: Icons.info_outline_rounded,
-            iconColor: AppColors.primaryGreen,
-            title: 'About',
-            subtitle: 'VAG-DMP v2.0.0',
-            onTap: () {},
+        ),
+      ],
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // Support / About section
+  // ---------------------------------------------------------------------------
+
+  Widget _buildSupportSection(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.only(left: 16, bottom: 8),
+          child: Text(
+            'Support',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: AppColors.textSecondary,
+            ),
           ),
-        ],
-      ),
+        ),
+        Card(
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppConstants.radiusLg),
+          ),
+          color: AppColors.surfaceCard,
+          clipBehavior: Clip.antiAlias,
+          child: Column(
+            children: [
+              _SettingsTile(
+                icon: Icons.help_outline_rounded,
+                iconColor: AppColors.secondaryTerracotta,
+                title: 'Help & Support',
+                subtitle: 'FAQs, contact us',
+                onTap: () {},
+              ),
+              const Divider(height: 1, indent: 56),
+              _SettingsTile(
+                icon: Icons.info_outline_rounded,
+                iconColor: AppColors.primaryGreen,
+                title: 'About',
+                subtitle: 'VAG-DMP v2.0.0',
+                onTap: () {},
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -312,10 +377,7 @@ class ProfileScreen extends ConsumerWidget {
         ),
         title: Text(
           'Logout',
-          style: TextStyle(
-            color: AppColors.error,
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(color: AppColors.error, fontWeight: FontWeight.w600),
         ),
         subtitle: Text(
           'Sign out of your account',
@@ -324,7 +386,10 @@ class ProfileScreen extends ConsumerWidget {
             fontSize: 12,
           ),
         ),
-        trailing: Icon(Icons.chevron_right_rounded, color: AppColors.error.withValues(alpha: 0.5)),
+        trailing: Icon(
+          Icons.chevron_right_rounded,
+          color: AppColors.error.withValues(alpha: 0.5),
+        ),
         onTap: () {
           showDialog(
             context: context,
@@ -398,10 +463,7 @@ class _SettingsTile extends StatelessWidget {
       ),
       subtitle: Text(
         subtitle,
-        style: const TextStyle(
-          color: AppColors.textHint,
-          fontSize: 12,
-        ),
+        style: const TextStyle(color: AppColors.textHint, fontSize: 12),
       ),
       trailing: Icon(
         Icons.chevron_right_rounded,

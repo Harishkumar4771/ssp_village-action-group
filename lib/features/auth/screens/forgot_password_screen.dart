@@ -18,7 +18,8 @@ class ForgotPasswordScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isWide = MediaQuery.of(context).size.width >= AppConstants.mobileBreakpoint;
+    final isWide =
+        MediaQuery.of(context).size.width >= AppConstants.mobileBreakpoint;
 
     return Scaffold(
       appBar: AppBar(
@@ -33,7 +34,9 @@ class ForgotPasswordScreen extends StatelessWidget {
           padding: const EdgeInsets.all(AppConstants.spacingLg),
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              maxWidth: isWide ? AppConstants.loginCardMaxWidth : double.infinity,
+              maxWidth: isWide
+                  ? AppConstants.loginCardMaxWidth
+                  : double.infinity,
             ),
             child: Card(
               elevation: 2,
@@ -65,9 +68,8 @@ class ForgotPasswordScreen extends StatelessWidget {
                     const SizedBox(height: 20),
                     Text(
                       'Contact Your NGO Coordinator',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(fontWeight: FontWeight.w700),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 12),

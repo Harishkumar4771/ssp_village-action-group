@@ -8,26 +8,26 @@ part 'meeting_model.g.dart';
 @collection
 class MeetingModel {
   Id get isarId => fastHash(id);
-  
+
   @Index(unique: true, replace: true)
   late String id;
-  
+
   @Index()
   late String villageId;
-  
+
   late String villageName;
-  
+
   late DateTime date;
-  
+
   late int attendeesCount;
-  
+
   @enumerated
   late MeetingStatus status;
-  
+
   String? notes;
-  
+
   String? photoUrl;
-  
+
   @enumerated
   @Index()
   late SyncStatus syncStatus;

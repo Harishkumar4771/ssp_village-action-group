@@ -34,54 +34,63 @@ class AdminVillagesScreen extends ConsumerWidget {
       body: state.isLoading && state.villages.isEmpty
           ? const Center(child: CircularProgressIndicator())
           : state.error != null
-              ? Center(
-                  child: Text(
-                    state.error!,
-                    style: const TextStyle(color: Colors.red, fontSize: 16),
+          ? Center(
+              child: Text(
+                state.error!,
+                style: const TextStyle(color: Colors.red, fontSize: 16),
+              ),
+            )
+          : ListView.builder(
+              padding: const EdgeInsets.all(AppConstants.spacingLg),
+              itemCount: state.villages.length,
+              itemBuilder: (context, index) {
+                final village = state.villages[index];
+
+                return Card(
+                  color: Colors.white,
+                  elevation: 0,
+                  margin: const EdgeInsets.only(bottom: AppConstants.spacingMd),
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(color: Colors.grey.shade200),
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                )
-              : ListView.builder(
-                  padding: const EdgeInsets.all(AppConstants.spacingLg),
-                  itemCount: state.villages.length,
-                  itemBuilder: (context, index) {
-                    final village = state.villages[index];
-                    
-                    return Card(
-                      color: Colors.white,
-                      elevation: 0,
-                      margin: const EdgeInsets.only(bottom: AppConstants.spacingMd),
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(color: Colors.grey.shade200),
-                        borderRadius: BorderRadius.circular(8),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: AppColors.primaryGreen.withValues(
+                        alpha: 0.1,
                       ),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: AppColors.primaryGreen.withValues(alpha: 0.1),
-                          child: const Icon(Icons.location_city, color: AppColors.primaryGreen),
-                        ),
-                        title: Text(
-                          village['name'] as String,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black87,
-                          ),
-                        ),
-                        subtitle: Text(
-                          '${village['district'] ?? 'N/A'}, ${village['state'] ?? 'N/A'}',
-                          style: const TextStyle(color: Colors.black54),
-                        ),
+                      child: const Icon(
+                        Icons.location_city,
+                        color: AppColors.primaryGreen,
                       ),
-                    );
-                  },
-                ),
+                    ),
+                    title: Text(
+                      village['name'] as String,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    subtitle: Text(
+                      '${village['district'] ?? 'N/A'}, ${village['state'] ?? 'N/A'}',
+                      style: const TextStyle(color: Colors.black54),
+                    ),
+                  ),
+                );
+              },
+            ),
     );
   }
 
-  void _showAddVillageDialog(BuildContext context, WidgetRef ref, AdminVillagesNotifier notifier) {
+  void _showAddVillageDialog(
+    BuildContext context,
+    WidgetRef ref,
+    AdminVillagesNotifier notifier,
+  ) {
     notifier.clearError();
 
     final formKey = GlobalKey<FormState>();
-    
+
     String name = '';
     String district = '';
     String stateName = '';
@@ -94,7 +103,7 @@ class AdminVillagesScreen extends ConsumerWidget {
           content: Consumer(
             builder: (context, ref, _) {
               final state = ref.watch(adminVillagesProvider);
-              
+
               return SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -112,7 +121,10 @@ class AdminVillagesScreen extends ConsumerWidget {
                         ),
                         child: Text(
                           state.error!,
-                          style: const TextStyle(color: Colors.red, fontSize: 13),
+                          style: const TextStyle(
+                            color: Colors.red,
+                            fontSize: 13,
+                          ),
                         ),
                       ),
                     Form(
@@ -121,20 +133,29 @@ class AdminVillagesScreen extends ConsumerWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           TextFormField(
-                            decoration: const InputDecoration(labelText: 'Village Name'),
-                            validator: (v) => v!.trim().isEmpty ? 'Required' : null,
+                            decoration: const InputDecoration(
+                              labelText: 'Village Name',
+                            ),
+                            validator: (v) =>
+                                v!.trim().isEmpty ? 'Required' : null,
                             onSaved: (v) => name = v!.trim(),
                           ),
                           const SizedBox(height: 8),
                           TextFormField(
-                            decoration: const InputDecoration(labelText: 'District'),
-                            validator: (v) => v!.trim().isEmpty ? 'Required' : null,
+                            decoration: const InputDecoration(
+                              labelText: 'District',
+                            ),
+                            validator: (v) =>
+                                v!.trim().isEmpty ? 'Required' : null,
                             onSaved: (v) => district = v!.trim(),
                           ),
                           const SizedBox(height: 8),
                           TextFormField(
-                            decoration: const InputDecoration(labelText: 'State'),
-                            validator: (v) => v!.trim().isEmpty ? 'Required' : null,
+                            decoration: const InputDecoration(
+                              labelText: 'State',
+                            ),
+                            validator: (v) =>
+                                v!.trim().isEmpty ? 'Required' : null,
                             onSaved: (v) => stateName = v!.trim(),
                           ),
                         ],
@@ -162,13 +183,13 @@ class AdminVillagesScreen extends ConsumerWidget {
                       : () async {
                           if (formKey.currentState!.validate()) {
                             formKey.currentState!.save();
-                            
+
                             final success = await notifier.createVillage(
                               name: name,
                               district: district,
                               stateName: stateName,
                             );
-                            
+
                             if (success && ctx.mounted) {
                               Navigator.pop(ctx);
                             }
@@ -176,8 +197,12 @@ class AdminVillagesScreen extends ConsumerWidget {
                         },
                   child: isLoading
                       ? const SizedBox(
-                          width: 18, height: 18,
-                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
                         )
                       : const Text('Create Village'),
                 );

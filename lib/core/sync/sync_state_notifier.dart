@@ -44,7 +44,8 @@ class SyncUiState {
   int get pending => (total - completed - failed).clamp(0, total);
 
   /// True when all items in this cycle finished (success or failure).
-  bool get isDone => isUploading == false && total > 0 && (completed + failed) >= total;
+  bool get isDone =>
+      isUploading == false && total > 0 && (completed + failed) >= total;
 
   SyncUiState copyWith({
     bool? isUploading,
@@ -76,7 +77,12 @@ class SyncStateNotifier extends StateNotifier<SyncUiState> {
   /// Called at the start of a sync cycle with the total number of items.
   void onCycleStarted(int total) {
     debugPrint('[SyncUI] Upload started — $total items pending');
-    state = SyncUiState(isUploading: true, total: total, completed: 0, failed: 0);
+    state = SyncUiState(
+      isUploading: true,
+      total: total,
+      completed: 0,
+      failed: 0,
+    );
   }
 
   /// Called after each SUCCESSFUL item upload.
@@ -89,7 +95,9 @@ class SyncStateNotifier extends StateNotifier<SyncUiState> {
   /// Called after each FAILED item upload.
   void onItemFailed(String id) {
     final newFailed = state.failed + 1;
-    debugPrint('[SyncUI] Upload failed ${state.completed}/${state.total} ($id)');
+    debugPrint(
+      '[SyncUI] Upload failed ${state.completed}/${state.total} ($id)',
+    );
     state = state.copyWith(failed: newFailed);
   }
 
@@ -109,7 +117,6 @@ class SyncStateNotifier extends StateNotifier<SyncUiState> {
 }
 
 /// Global provider — watch this in any widget to observe upload progress.
-final syncStateProvider =
-    StateNotifierProvider<SyncStateNotifier, SyncUiState>(
+final syncStateProvider = StateNotifierProvider<SyncStateNotifier, SyncUiState>(
   (ref) => SyncStateNotifier(),
 );

@@ -18,7 +18,8 @@ class AdminIssueListScreen extends ConsumerStatefulWidget {
   const AdminIssueListScreen({super.key});
 
   @override
-  ConsumerState<AdminIssueListScreen> createState() => _AdminIssueListScreenState();
+  ConsumerState<AdminIssueListScreen> createState() =>
+      _AdminIssueListScreenState();
 }
 
 class _AdminIssueListScreenState extends ConsumerState<AdminIssueListScreen> {
@@ -78,7 +79,9 @@ class _AdminIssueListScreenState extends ConsumerState<AdminIssueListScreen> {
                                 child: SizedBox(
                                   width: 16,
                                   height: 16,
-                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
                                 ),
                               )
                             : IconButton(
@@ -91,25 +94,30 @@ class _AdminIssueListScreenState extends ConsumerState<AdminIssueListScreen> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 0,
+                        ),
                       ),
-                      onSubmitted: (value) => notifier.setSearchQuery(value.trim()),
+                      onSubmitted: (value) =>
+                          notifier.setSearchQuery(value.trim()),
                     ),
                   ),
                 ),
                 const SizedBox(width: AppConstants.spacingMd),
                 ElevatedButton(
-                  onPressed: () => notifier.setSearchQuery(_searchController.text.trim()),
+                  onPressed: () =>
+                      notifier.setSearchQuery(_searchController.text.trim()),
                   child: const Text('Search'),
                 ),
               ],
             ),
-            
+
             const SizedBox(height: AppConstants.spacingMd),
 
             // ── Filters ───────────────────────────────────────────────────────
             const AdminFiltersWidget(),
-            
+
             const SizedBox(height: AppConstants.spacingLg),
 
             // ── Error Message ─────────────────────────────────────────────────
@@ -122,11 +130,16 @@ class _AdminIssueListScreenState extends ConsumerState<AdminIssueListScreen> {
                   children: [
                     const Icon(Icons.error_outline, color: Colors.red),
                     const SizedBox(width: AppConstants.spacingSm),
-                    Expanded(child: Text(state.error!, style: const TextStyle(color: Colors.red))),
+                    Expanded(
+                      child: Text(
+                        state.error!,
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    ),
                     IconButton(
                       icon: const Icon(Icons.refresh),
                       onPressed: () => notifier.fetchIssues(),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -147,55 +160,81 @@ class _AdminIssueListScreenState extends ConsumerState<AdminIssueListScreen> {
                       child: state.isLoading && state.issues.isEmpty
                           ? const Center(child: CircularProgressIndicator())
                           : state.issues.isEmpty
-                              ? const Center(child: Text('No issues found.'))
-                              : SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: SingleChildScrollView(
-                                    child: DataTable(
-                                      showCheckboxColumn: false,
-                                      headingRowColor: WidgetStateProperty.all(Colors.grey.shade50),
-                                      columns: const [
-                                        DataColumn(label: Text('Status')),
-                                        DataColumn(label: Text('Title')),
-                                        DataColumn(label: Text('Category')),
-                                        DataColumn(label: Text('Village')),
-                                        DataColumn(label: Text('Leader')),
-                                        DataColumn(label: Text('Progress')),
-                                        DataColumn(label: Text('Date')),
-                                      ],
-                                      rows: state.issues.map((issue) {
-                                        return DataRow(
-                                          onSelectChanged: (_) {
-                                            context.go('/admin/issues/${issue.id}');
-                                          },
-                                          cells: [
-                                            DataCell(_StatusBadge(status: issue.status, displayStatus: issue.displayStatus)),
-                                            DataCell(SizedBox(
-                                              width: 250,
-                                              child: Text(
-                                                issue.title,
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            )),
-                                            DataCell(Text(issue.categoryName ?? '—')),
-                                            DataCell(Text(issue.villageName ?? '—')),
-                                            DataCell(Text(issue.leaderName ?? '—')),
-                                            DataCell(Text('${issue.currentProgress}%')),
-                                            DataCell(Text(DateFormat('dd MMM yyyy').format(issue.createdAt))),
-                                          ],
-                                        );
-                                      }).toList(),
-                                    ),
+                          ? const Center(child: Text('No issues found.'))
+                          : SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: SingleChildScrollView(
+                                child: DataTable(
+                                  showCheckboxColumn: false,
+                                  headingRowColor: WidgetStateProperty.all(
+                                    Colors.grey.shade50,
                                   ),
+                                  columns: const [
+                                    DataColumn(label: Text('Status')),
+                                    DataColumn(label: Text('Title')),
+                                    DataColumn(label: Text('Category')),
+                                    DataColumn(label: Text('Village')),
+                                    DataColumn(label: Text('Leader')),
+                                    DataColumn(label: Text('Progress')),
+                                    DataColumn(label: Text('Date')),
+                                  ],
+                                  rows: state.issues.map((issue) {
+                                    return DataRow(
+                                      onSelectChanged: (_) {
+                                        context.go('/admin/issues/${issue.id}');
+                                      },
+                                      cells: [
+                                        DataCell(
+                                          _StatusBadge(
+                                            status: issue.status,
+                                            displayStatus: issue.displayStatus,
+                                          ),
+                                        ),
+                                        DataCell(
+                                          SizedBox(
+                                            width: 250,
+                                            child: Text(
+                                              issue.title,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ),
+                                        DataCell(
+                                          Text(issue.categoryName ?? '—'),
+                                        ),
+                                        DataCell(
+                                          Text(issue.villageName ?? '—'),
+                                        ),
+                                        DataCell(Text(issue.leaderName ?? '—')),
+                                        DataCell(
+                                          Text('${issue.currentProgress}%'),
+                                        ),
+                                        DataCell(
+                                          Text(
+                                            DateFormat(
+                                              'dd MMM yyyy',
+                                            ).format(issue.createdAt),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  }).toList(),
                                 ),
+                              ),
+                            ),
                     ),
 
                     // ── Pagination Footer ──────────────────────────────────────
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                       decoration: BoxDecoration(
-                        border: Border(top: BorderSide(color: Colors.grey.shade200)),
+                        border: Border(
+                          top: BorderSide(color: Colors.grey.shade200),
+                        ),
                         color: Colors.white,
                       ),
                       child: Wrap(
@@ -208,7 +247,10 @@ class _AdminIssueListScreenState extends ConsumerState<AdminIssueListScreen> {
                             'Showing ${state.totalCount == 0 ? 0 : (notifier.currentPage * notifier.pageSize) + 1} '
                             'to ${(notifier.currentPage * notifier.pageSize) + state.issues.length} '
                             'of ${state.totalCount} entries',
-                            style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
+                            style: TextStyle(
+                              color: Colors.grey.shade600,
+                              fontSize: 13,
+                            ),
                           ),
                           Row(
                             mainAxisSize: MainAxisSize.min,
@@ -216,14 +258,22 @@ class _AdminIssueListScreenState extends ConsumerState<AdminIssueListScreen> {
                               IconButton(
                                 icon: const Icon(Icons.chevron_left),
                                 onPressed: notifier.currentPage > 0
-                                    ? () => notifier.setPage(notifier.currentPage - 1)
+                                    ? () => notifier.setPage(
+                                        notifier.currentPage - 1,
+                                      )
                                     : null,
                               ),
-                              Text('Page ${notifier.currentPage + 1} of ${notifier.totalPages == 0 ? 1 : notifier.totalPages}'),
+                              Text(
+                                'Page ${notifier.currentPage + 1} of ${notifier.totalPages == 0 ? 1 : notifier.totalPages}',
+                              ),
                               IconButton(
                                 icon: const Icon(Icons.chevron_right),
-                                onPressed: notifier.currentPage < notifier.totalPages - 1
-                                    ? () => notifier.setPage(notifier.currentPage + 1)
+                                onPressed:
+                                    notifier.currentPage <
+                                        notifier.totalPages - 1
+                                    ? () => notifier.setPage(
+                                        notifier.currentPage + 1,
+                                      )
                                     : null,
                               ),
                             ],
@@ -243,7 +293,7 @@ class _AdminIssueListScreenState extends ConsumerState<AdminIssueListScreen> {
 
   Future<void> _exportCsv(BuildContext context, WidgetRef ref) async {
     final notifier = ref.read(adminIssuesProvider.notifier);
-    
+
     // Show loading dialog
     showDialog(
       context: context,
@@ -280,9 +330,9 @@ class _AdminIssueListScreenState extends ConsumerState<AdminIssueListScreen> {
     } catch (e) {
       if (!context.mounted) return;
       Navigator.pop(context); // hide loading
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error exporting CSV: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error exporting CSV: $e')));
     }
   }
 }

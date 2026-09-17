@@ -8,10 +8,7 @@ import 'package:flutter/material.dart';
 class AdminReviewScreen extends StatelessWidget {
   final String submissionId;
 
-  const AdminReviewScreen({
-    super.key,
-    required this.submissionId,
-  });
+  const AdminReviewScreen({super.key, required this.submissionId});
 
   @override
   Widget build(BuildContext context) {

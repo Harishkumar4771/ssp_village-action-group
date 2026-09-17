@@ -27,10 +27,14 @@ import '../models/progress_update_model.dart';
 
 /// Maps old fake category IDs → real Supabase UUIDs.
 const _kCategoryIdMap = {
-  'cat-00000001-0000-0000-0000-000000000001': '00000000-0000-0000-0001-000000000001',
-  'cat-00000002-0000-0000-0000-000000000002': '00000000-0000-0000-0001-000000000002',
-  'cat-00000003-0000-0000-0000-000000000003': '00000000-0000-0000-0001-000000000003',
-  'cat-00000004-0000-0000-0000-000000000004': '00000000-0000-0000-0001-000000000004',
+  'cat-00000001-0000-0000-0000-000000000001':
+      '00000000-0000-0000-0001-000000000001',
+  'cat-00000002-0000-0000-0000-000000000002':
+      '00000000-0000-0000-0001-000000000002',
+  'cat-00000003-0000-0000-0000-000000000003':
+      '00000000-0000-0000-0001-000000000003',
+  'cat-00000004-0000-0000-0000-000000000004':
+      '00000000-0000-0000-0001-000000000004',
 };
 
 /// Maps old fake subcategory IDs → real Supabase UUIDs.
@@ -95,25 +99,36 @@ class DataMigrationService {
   /// Re-marks the issue as pending so SyncManager re-uploads it.
   Future<void> _migrateIssueCategoryIds() async {
     final allIssues = await _isar!.issueModels.where().findAll();
-    final toFix = allIssues.where((m) =>
-        _kCategoryIdMap.containsKey(m.categoryId) ||
-        (m.subcategoryId != null && _kSubcategoryIdMap.containsKey(m.subcategoryId))).toList();
+    final toFix = allIssues
+        .where(
+          (m) =>
+              _kCategoryIdMap.containsKey(m.categoryId) ||
+              (m.subcategoryId != null &&
+                  _kSubcategoryIdMap.containsKey(m.subcategoryId)),
+        )
+        .toList();
 
     if (toFix.isEmpty) {
-      debugPrint('[Migration] Category IDs: all issues already have correct UUIDs.');
+      debugPrint(
+        '[Migration] Category IDs: all issues already have correct UUIDs.',
+      );
       return;
     }
 
-    debugPrint('[Migration] Fixing category UUIDs in ${toFix.length} issue(s)…');
+    debugPrint(
+      '[Migration] Fixing category UUIDs in ${toFix.length} issue(s)…',
+    );
 
     await _isar!.writeTxn(() async {
       for (final model in toFix) {
         final oldCat = model.categoryId;
         final oldSub = model.subcategoryId;
 
-        model.categoryId = _kCategoryIdMap[model.categoryId] ?? model.categoryId;
+        model.categoryId =
+            _kCategoryIdMap[model.categoryId] ?? model.categoryId;
         if (model.subcategoryId != null) {
-          model.subcategoryId = _kSubcategoryIdMap[model.subcategoryId] ?? model.subcategoryId;
+          model.subcategoryId =
+              _kSubcategoryIdMap[model.subcategoryId] ?? model.subcategoryId;
         }
 
         // Re-queue for upload so Supabase gets the corrected payload
@@ -131,7 +146,9 @@ class DataMigrationService {
       }
     });
 
-    debugPrint('[Migration] ✓ Category UUID migration complete. ${toFix.length} issues fixed.');
+    debugPrint(
+      '[Migration] ✓ Category UUID migration complete. ${toFix.length} issues fixed.',
+    );
   }
 
   // ── Migration 2: Fix progress update createdBy ────────────────────────────
@@ -146,11 +163,15 @@ class DataMigrationService {
     final toFix = allUpdates.where((m) => !_isValidUuid(m.createdBy)).toList();
 
     if (toFix.isEmpty) {
-      debugPrint('[Migration] createdBy: all progress updates have valid UUIDs.');
+      debugPrint(
+        '[Migration] createdBy: all progress updates have valid UUIDs.',
+      );
       return;
     }
 
-    debugPrint('[Migration] Fixing createdBy in ${toFix.length} progress update(s)…');
+    debugPrint(
+      '[Migration] Fixing createdBy in ${toFix.length} progress update(s)…',
+    );
 
     await _isar!.writeTxn(() async {
       for (final model in toFix) {
@@ -170,7 +191,9 @@ class DataMigrationService {
       }
     });
 
-    debugPrint('[Migration] ✓ createdBy migration complete. ${toFix.length} records fixed.');
+    debugPrint(
+      '[Migration] ✓ createdBy migration complete. ${toFix.length} records fixed.',
+    );
   }
 
   // ── Helpers ───────────────────────────────────────────────────────────────
