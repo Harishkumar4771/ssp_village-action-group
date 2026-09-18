@@ -7,7 +7,7 @@ import 'package:vag_dmp_frontend/core/auth/user_role.dart';
 import 'package:vag_dmp_frontend/core/theme/app_colors.dart';
 import 'package:vag_dmp_frontend/core/constants/app_constants.dart';
 import 'package:vag_dmp_frontend/core/sync/sync_status_indicator.dart';
-
+import '../../notifications/presentation/widgets/notification_bell.dart';
 /// Adaptive app shell that provides role-based navigation.
 ///
 /// **Leader** (mobile-optimized): Submit Activity → My Submissions → Meetings → Profile
@@ -210,6 +210,8 @@ class AppShell extends ConsumerWidget {
                         ),
                         const SizedBox(height: AppConstants.spacingSm),
                         const SyncStatusIndicator(),
+                        const SizedBox(height: AppConstants.spacingSm),
+                        const NotificationBell(),
                       ],
                     )
                   : Column(
@@ -218,6 +220,8 @@ class AppShell extends ConsumerWidget {
                         Icon(Icons.eco_rounded, color: AppColors.secondaryTerracotta, size: 28),
                         const SizedBox(height: AppConstants.spacingSm),
                         const SyncStatusIndicator(),
+                        const SizedBox(height: AppConstants.spacingSm),
+                        const NotificationBell(),
                       ],
                     ),
             ),

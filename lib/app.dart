@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:vag_dmp_frontend/l10n/app_localizations.dart';
 import 'core/router/app_router.dart';
+import 'core/realtime/live_updates_service.dart';
 import 'core/theme/app_theme.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,6 +14,8 @@ class VagDmpApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Start the Supabase Realtime listener once for the whole application.
+    ref.watch(liveUpdatesProvider);
     final router = ref.watch(routerProvider);
 
     return MaterialApp.router(
