@@ -41,15 +41,12 @@ class _MeetingListScreenState extends ConsumerState<MeetingListScreen> {
         foregroundColor: AppColors.textOnPrimary,
         elevation: 0,
       ),
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: FloatingActionButton(
         onPressed: () => context.push('/meetings/create'),
+        tooltip: 'New Meeting',
         backgroundColor: AppColors.secondaryTerracotta,
         foregroundColor: AppColors.textOnPrimary,
-        icon: const Icon(Icons.add_rounded),
-        label: const Text(
-          'New Meeting',
-          style: TextStyle(fontWeight: FontWeight.w600),
-        ),
+        child: const Icon(Icons.add_rounded),
       ),
       body: Column(
         children: [

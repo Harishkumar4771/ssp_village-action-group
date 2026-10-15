@@ -7,6 +7,7 @@ import 'package:vag_dmp_frontend/core/constants/app_constants.dart';
 import 'package:vag_dmp_frontend/core/auth/auth_providers.dart';
 import 'package:vag_dmp_frontend/core/auth/user_role.dart';
 import 'package:vag_dmp_frontend/core/auth/supabase_auth_service.dart';
+import 'package:vag_dmp_frontend/core/localization/locale_provider.dart';
 
 /// Profile screen showing user information, app settings, and RBAC toggle.
 ///
@@ -19,8 +20,6 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(currentUserProvider);
     if (user == null) return const SizedBox.shrink();
-
-    final isAdmin = ref.watch(isAdminProvider);
 
     return Scaffold(
       backgroundColor: AppColors.backgroundCream,
@@ -38,11 +37,7 @@ class ProfileScreen extends ConsumerWidget {
           const SizedBox(height: AppConstants.spacingMd),
           _buildProfileHeader(context, user),
           const SizedBox(height: AppConstants.spacingLg),
-          _buildDevToolsSection(context, ref, isAdmin),
-          const SizedBox(height: AppConstants.spacingLg),
-          _buildSettingsSection(context),
-          const SizedBox(height: AppConstants.spacingLg),
-          _buildSupportSection(context),
+          _buildSettingsSection(context, ref),
           const SizedBox(height: AppConstants.spacingLg),
           _buildLogoutTile(context, ref),
           const SizedBox(height: AppConstants.spacingLg),
@@ -178,90 +173,15 @@ class ProfileScreen extends ConsumerWidget {
   }
 
   // ---------------------------------------------------------------------------
-  // Developer Tools – RBAC toggle
-  // ---------------------------------------------------------------------------
-
-  Widget _buildDevToolsSection(
-    BuildContext context,
-    WidgetRef ref,
-    bool isAdmin,
-  ) {
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
-        side: BorderSide(
-          color: AppColors.tertiaryGold.withValues(alpha: 0.4),
-          width: 1.5,
-        ),
-      ),
-      color: AppColors.tertiaryGoldLight.withValues(alpha: 0.08),
-      clipBehavior: Clip.antiAlias,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(
-              AppConstants.spacingMd,
-              AppConstants.spacingMd,
-              AppConstants.spacingMd,
-              0,
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.developer_mode_rounded,
-                  color: AppColors.tertiaryGoldDark,
-                  size: 20,
-                ),
-                const SizedBox(width: AppConstants.spacingSm),
-                Text(
-                  'Developer Tools',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.tertiaryGoldDark,
-                    fontSize: 14,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SwitchListTile(
-            title: const Text(
-              'Admin Mode',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
-              ),
-            ),
-            subtitle: Text(
-              isAdmin
-                  ? 'Viewing as NGO Supervisor'
-                  : 'Viewing as Village Action Leader',
-              style: const TextStyle(color: AppColors.textHint, fontSize: 12),
-            ),
-            value: isAdmin,
-            activeThumbColor: AppColors.primaryGreen,
-            onChanged: (value) {
-              if (value) {
-                ref.read(currentUserProvider.notifier).state = mockAdminUser;
-                context.go('/admin/dashboard');
-              } else {
-                ref.read(currentUserProvider.notifier).state = mockLeaderUser;
-                context.go('/leader/submit');
-              }
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ---------------------------------------------------------------------------
   // Settings section
   // ---------------------------------------------------------------------------
 
-  Widget _buildSettingsSection(BuildContext context) {
+  Widget _buildSettingsSection(BuildContext context, WidgetRef ref) {
+    final currentLocale = ref.watch(localeProvider);
+    String languageSubtitle = 'English';
+    if (currentLocale.languageCode == 'mr') languageSubtitle = 'मराठी (Marathi)';
+    if (currentLocale.languageCode == 'hi') languageSubtitle = 'हिन्दी (Hindi)';
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -289,16 +209,8 @@ class ProfileScreen extends ConsumerWidget {
                 icon: Icons.language_rounded,
                 iconColor: AppColors.info,
                 title: 'Language',
-                subtitle: 'मराठी (Marathi)',
-                onTap: () {},
-              ),
-              const Divider(height: 1, indent: 56),
-              _SettingsTile(
-                icon: Icons.notifications_outlined,
-                iconColor: AppColors.tertiaryGold,
-                title: 'Notifications',
-                subtitle: 'Enabled',
-                onTap: () {},
+                subtitle: languageSubtitle,
+                onTap: () => _showLanguageSelector(context, ref, currentLocale),
               ),
             ],
           ),
@@ -307,56 +219,46 @@ class ProfileScreen extends ConsumerWidget {
     );
   }
 
-  // ---------------------------------------------------------------------------
-  // Support / About section
-  // ---------------------------------------------------------------------------
-
-  Widget _buildSupportSection(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Padding(
-          padding: EdgeInsets.only(left: 16, bottom: 8),
-          child: Text(
-            'Support',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              color: AppColors.textSecondary,
+  void _showLanguageSelector(BuildContext context, WidgetRef ref, Locale currentLocale) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppConstants.radiusLg),
+        ),
+        title: const Text('Select Language'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: const Text('English'),
+              trailing: currentLocale.languageCode == 'en' ? const Icon(Icons.check, color: AppColors.primaryGreen) : null,
+              onTap: () {
+                ref.read(localeProvider.notifier).setLocale(const Locale('en'));
+                Navigator.pop(ctx);
+              },
             ),
-          ),
+            ListTile(
+              title: const Text('हिन्दी (Hindi)'),
+              trailing: currentLocale.languageCode == 'hi' ? const Icon(Icons.check, color: AppColors.primaryGreen) : null,
+              onTap: () {
+                ref.read(localeProvider.notifier).setLocale(const Locale('hi'));
+                Navigator.pop(ctx);
+              },
+            ),
+            ListTile(
+              title: const Text('मराठी (Marathi)'),
+              trailing: currentLocale.languageCode == 'mr' ? const Icon(Icons.check, color: AppColors.primaryGreen) : null,
+              onTap: () {
+                ref.read(localeProvider.notifier).setLocale(const Locale('mr'));
+                Navigator.pop(ctx);
+              },
+            ),
+          ],
         ),
-        Card(
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppConstants.radiusLg),
-          ),
-          color: AppColors.surfaceCard,
-          clipBehavior: Clip.antiAlias,
-          child: Column(
-            children: [
-              _SettingsTile(
-                icon: Icons.help_outline_rounded,
-                iconColor: AppColors.secondaryTerracotta,
-                title: 'Help & Support',
-                subtitle: 'FAQs, contact us',
-                onTap: () {},
-              ),
-              const Divider(height: 1, indent: 56),
-              _SettingsTile(
-                icon: Icons.info_outline_rounded,
-                iconColor: AppColors.primaryGreen,
-                title: 'About',
-                subtitle: 'VAG-DMP v2.0.0',
-                onTap: () {},
-              ),
-            ],
-          ),
-        ),
-      ],
+      ),
     );
   }
-
   // ---------------------------------------------------------------------------
   // Logout tile (separate card, red accent)
   // ---------------------------------------------------------------------------
