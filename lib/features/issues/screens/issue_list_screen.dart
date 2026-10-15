@@ -131,12 +131,12 @@ class _IssueListScreenState extends ConsumerState<IssueListScreen>
         error: (e, _) =>
             _ErrorState(onRetry: () => ref.invalidate(issuesProvider)),
       ),
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: FloatingActionButton(
         onPressed: () => context.go('/leader/report'),
-        icon: const Icon(Icons.add_rounded),
-        label: const Text('Report Issue'),
+        tooltip: 'Report Issue',
         backgroundColor: AppColors.primaryGreen,
         foregroundColor: Colors.white,
+        child: const Icon(Icons.add_rounded),
       ),
     );
   }
